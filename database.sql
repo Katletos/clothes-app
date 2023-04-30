@@ -8,6 +8,7 @@ CREATE TABLE products (
   id bigserial,
   brand_id bigint NOT NULL,
   category_id bigint NOT NULL,
+  name text NOT NULL UNIQUE,
   price money NOT NULL,
   quantity bigint NOT NULL,
   created_at timestamp NOT NULL,
@@ -20,7 +21,7 @@ CREATE TYPE user_type AS ENUM ('admin', 'customer');
 CREATE TABLE users (
   id bigserial,
   user_type user_type NOT NULL,
-  email text NOT NULL,
+  email text NOT NULL UNIQUE,
   password text NOT NULL,
   phone text,
   first_name text,
@@ -82,17 +83,17 @@ CREATE TABLE media (
 CREATE TABLE categories (
   id bigserial,
   parent_category_id bigint,
-  name text NOT NULL,
+  name text NOT NULL UNIQUE,
   PRIMARY KEY (id),
-  FOREIGN KEY (parent_category_id) REFERENCES categories (id)
+  FOREIGN KEY (parent_category_id) REFERENCES categories (id) ON DELETE CASCADE
 );
 
 CREATE TABLE sections (
   id bigserial,
-  name text NOT NULL,
+  name text NOT NULL UNIQUE,
   PRIMARY KEY (id)
 );
-
+	
 CREATE TABLE sections_categories (
   category_id bigint,
   section_id bigint,
@@ -101,15 +102,15 @@ CREATE TABLE sections_categories (
   FOREIGN KEY (section_id) REFERENCES sections (id) ON DELETE CASCADE
 );
 
-CREATE TABLE review (
+CREATE TABLE reviews (
   id bigserial,
   product_id bigint NOT NULL,
   user_id bigint NOT NULL,
   raiting smallint NOT NULL,
   title text NOT NULL,
-  user_comment text NOT NULL,
+  comment text NOT NULL,
   created_at timestamp NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE,
-  FOREIGN KEY (user_id) REFERENCES users (id)
+  FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE SET NULL 	
 );
