@@ -13,7 +13,8 @@ CREATE TABLE products (
   quantity bigint NOT NULL,
   created_at timestamp NOT NULL,
   PRIMARY KEY (id),
-  FOREIGN KEY (brand_id) REFERENCES brands (id) ON DELETE CASCADE
+  FOREIGN KEY (brand_id) REFERENCES brands (id) ON DELETE CASCADE,
+  FOREIGN KEY (category_id) REFERENCES categories (id) ON DELETE CASCADE
 );
 
 CREATE TYPE user_type AS ENUM ('admin', 'customer');
@@ -56,6 +57,7 @@ CREATE TABLE orders_items (
   product_id bigint,
   order_id bigint,
   quantity bigint NOT NULL,
+  price money NOT NULL,
   PRIMARY KEY (product_id, order_id),
   FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE RESTRICT,
   FOREIGN KEY (order_id) REFERENCES orders (id) ON DELETE CASCADE
