@@ -2,7 +2,7 @@
 CREATE OR REPLACE FUNCTION get_products_by_brand_id (search_id bigint) 
 RETURNS TABLE (
   id bigint,
-  brand_id bigint,
+  brand_name text,
   category_id bigint,
   name text,
   price money,
@@ -12,7 +12,9 @@ RETURNS TABLE (
 AS $$
 BEGIN
   RETURN QUERY 
-    SELECT * FROM products WHERE products.brand_id = search_id;
+    SELECT products.id, brands.name AS brand_name, products.category_id, products.name, products.price, products.quantity, products.created_at
+    FROM products INNER JOIN brands ON brands.id = products.brand_id
+    WHERE products.brand_id = search_id;
 END;$$;
 
 -- Select all brands with the number of their products
@@ -20,13 +22,13 @@ END;$$;
 CREATE OR REPLACE FUNCTION get_brands_with_products_amount()
 RETURNS TABLE (
   brand_id bigint,
-  amount numeric)
+  amount bigint)
   language plpgsql
 AS $$
 BEGIN
   RETURN QUERY 
-    SELECT brands.id AS brand_id, SUM(quantity) AS amount
-    FROM brands JOIN products 
+    SELECT brands.id AS brand_id, COUNT(products.brand_id) AS amount
+    FROM brands LEFT JOIN products 
     ON brands.id = products.brand_id
     GROUP BY brands.id
     ORDER BY amount DESC;
@@ -36,8 +38,9 @@ END;$$;
 CREATE OR REPLACE FUNCTION get_products_by_section_and_category(search_section_id bigint, search_category_id bigint)
 RETURNS TABLE (
   id bigint,
-  brand_id bigint,
-  category_id bigint,
+  brand_name text,
+  category_name text,
+  section_name text,
   name text,
   price money,
   quantity bigint,
@@ -46,16 +49,18 @@ RETURNS TABLE (
 AS $$
 BEGIN
   RETURN QUERY 
-    SELECT products.id, products.brand_id, products.category_id, products.name, products.price, products.quantity, products.created_at
+    SELECT products.id, brands.name, categories.name, sections.name, products.name, products.price, products.quantity, products.created_at
     FROM products
-    INNER JOIN sections_categories ON products.category_id = sections_categories.category_id
-    GROUP BY products.id, sections_categories.section_id, sections_categories.category_id
-    HAVING sections_categories.section_id = search_section_id AND sections_categories.category_id = search_category_id;
+    INNER JOIN sections_categories ON products.category_id = sections_categories.category_id AND sections_categories.section_id = search_section_id 
+    INNER JOIN categories ON products.category_id = categories.id
+    INNER JOIN brands ON products.brand_id = brands.id
+    INNER JOIN sections ON sections_categories.section_id = sections.id
+    WHERE sections_categories.category_id = search_category_id;
 END;$$;
 
 -- Get all completed orders with a given product. Order from
 -- newest to latest.
-CREATE OR REPLACE FUNCTION get_completed_orders()
+CREATE OR REPLACE FUNCTION get_completed_orders_by_product_id(search_id bigint)
 RETURNS TABLE (
   id bigint,
   user_id bigint,
@@ -67,28 +72,16 @@ RETURNS TABLE (
 AS $$
 BEGIN
   RETURN QUERY 
-    SELECT * FROM orders
-    WHERE orders.order_status = 'completed'
+    SELECT orders.id, orders.user_id, orders.price, orders.address_id, orders.created_at, orders.order_status FROM orders
+    INNER JOIN orders_items ON orders.id = orders_items.order_id
+    WHERE orders.order_status = 'completed' AND orders_items.product_id = search_id
     ORDER BY created_at DESC;
 END;$$;
 
 -- Get all reviews for a given product. Implement this as a view
 -- table which contains rating, comment and info of a person
 -- who left a comment.
-CREATE OR REPLACE FUNCTION get_all_reviews()
-RETURNS TABLE (
-  raiting smallint,
-  title text,
-  comment text,
-  first_name text,
-  last_name text,
-  email text)
-  language plpgsql
-AS $$
-BEGIN
-  RETURN QUERY 
+CREATE OR REPLACE VIEW get_all_reviews AS
     SELECT reviews.raiting, reviews.title, reviews.comment, users.first_name, users.last_name, users.email
-    FROM reviews INNER JOIN users ON users.id = reviews.id
+    FROM reviews INNER JOIN users ON users.id = reviews.user_id
     GROUP BY reviews.raiting, reviews.title, reviews.comment, users.id;
-END;$$;
-
