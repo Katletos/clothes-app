@@ -4,6 +4,14 @@ CREATE TABLE brands (
   PRIMARY KEY (id)
 );
 
+CREATE TABLE categories (
+  id bigserial,
+  parent_category_id bigint,
+  name text NOT NULL UNIQUE,
+  PRIMARY KEY (id),
+  FOREIGN KEY (parent_category_id) REFERENCES categories (id) ON DELETE CASCADE
+);
+
 CREATE TABLE products (
   id bigserial,
   brand_id bigint NOT NULL,
@@ -80,14 +88,6 @@ CREATE TABLE media (
   file_name text NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE
-);
-
-CREATE TABLE categories (
-  id bigserial,
-  parent_category_id bigint,
-  name text NOT NULL UNIQUE,
-  PRIMARY KEY (id),
-  FOREIGN KEY (parent_category_id) REFERENCES categories (id) ON DELETE CASCADE
 );
 
 CREATE TABLE sections (
