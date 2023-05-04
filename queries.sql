@@ -1,5 +1,5 @@
 -- Get all products of selected brand.
-CREATE OR REPLACE FUNCTION get_products_by_brand_id (search_id bigint) 
+CREATE OR REPLACE FUNCTION get_products_by_brand_id(search_id bigint)
 RETURNS TABLE (
   id bigint,
   brand_name text,
@@ -83,5 +83,4 @@ END;$$;
 -- who left a comment.
 CREATE OR REPLACE VIEW get_all_reviews AS
     SELECT reviews.raiting, reviews.title, reviews.comment, users.first_name, users.last_name, users.email
-    FROM reviews INNER JOIN users ON users.id = reviews.user_id
-    GROUP BY reviews.raiting, reviews.title, reviews.comment, users.id;
+    FROM reviews INNER JOIN users ON users.id = reviews.user_id;
