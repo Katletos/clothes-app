@@ -24,7 +24,7 @@ namespace ClothesApp.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "user_type", new[] { "admin", "customer" });
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("ClothesApp.Models.Address", b =>
+            modelBuilder.Entity("ClothesApp.Entities.Address", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -33,7 +33,7 @@ namespace ClothesApp.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<string>("Address1")
+                    b.Property<string>("AddressLine")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("address");
@@ -50,7 +50,7 @@ namespace ClothesApp.Migrations
                     b.ToTable("addresses", (string)null);
                 });
 
-            modelBuilder.Entity("ClothesApp.Models.Brand", b =>
+            modelBuilder.Entity("ClothesApp.Entities.Brand", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -73,7 +73,7 @@ namespace ClothesApp.Migrations
                     b.ToTable("brands", (string)null);
                 });
 
-            modelBuilder.Entity("ClothesApp.Models.Category", b =>
+            modelBuilder.Entity("ClothesApp.Entities.Category", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -102,7 +102,7 @@ namespace ClothesApp.Migrations
                     b.ToTable("categories", (string)null);
                 });
 
-            modelBuilder.Entity("ClothesApp.Models.Media", b =>
+            modelBuilder.Entity("ClothesApp.Entities.Media", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -138,7 +138,7 @@ namespace ClothesApp.Migrations
                     b.ToTable("media", (string)null);
                 });
 
-            modelBuilder.Entity("ClothesApp.Models.Order", b =>
+            modelBuilder.Entity("ClothesApp.Entities.Order", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -173,7 +173,7 @@ namespace ClothesApp.Migrations
                     b.ToTable("orders", (string)null);
                 });
 
-            modelBuilder.Entity("ClothesApp.Models.OrderItem", b =>
+            modelBuilder.Entity("ClothesApp.Entities.OrderItem", b =>
                 {
                     b.Property<long>("ProductId")
                         .HasColumnType("bigint")
@@ -199,7 +199,7 @@ namespace ClothesApp.Migrations
                     b.ToTable("orders_items", (string)null);
                 });
 
-            modelBuilder.Entity("ClothesApp.Models.OrdersTransaction", b =>
+            modelBuilder.Entity("ClothesApp.Entities.OrdersTransaction", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -224,7 +224,7 @@ namespace ClothesApp.Migrations
                     b.ToTable("orders_transactions", (string)null);
                 });
 
-            modelBuilder.Entity("ClothesApp.Models.Product", b =>
+            modelBuilder.Entity("ClothesApp.Entities.Product", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -271,7 +271,7 @@ namespace ClothesApp.Migrations
                     b.ToTable("products", (string)null);
                 });
 
-            modelBuilder.Entity("ClothesApp.Models.Review", b =>
+            modelBuilder.Entity("ClothesApp.Entities.Review", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -295,7 +295,7 @@ namespace ClothesApp.Migrations
 
                     b.Property<short>("Rating")
                         .HasColumnType("smallint")
-                        .HasColumnName("raiting");
+                        .HasColumnName("rating");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -316,7 +316,7 @@ namespace ClothesApp.Migrations
                     b.ToTable("reviews", (string)null);
                 });
 
-            modelBuilder.Entity("ClothesApp.Models.Section", b =>
+            modelBuilder.Entity("ClothesApp.Entities.Section", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -339,7 +339,7 @@ namespace ClothesApp.Migrations
                     b.ToTable("sections", (string)null);
                 });
 
-            modelBuilder.Entity("ClothesApp.Models.User", b =>
+            modelBuilder.Entity("ClothesApp.Entities.User", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -401,9 +401,9 @@ namespace ClothesApp.Migrations
                     b.ToTable("sections_categories", (string)null);
                 });
 
-            modelBuilder.Entity("ClothesApp.Models.Address", b =>
+            modelBuilder.Entity("ClothesApp.Entities.Address", b =>
                 {
-                    b.HasOne("ClothesApp.Models.User", "User")
+                    b.HasOne("ClothesApp.Entities.User", "User")
                         .WithMany("Addresses")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -413,10 +413,10 @@ namespace ClothesApp.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ClothesApp.Models.Category", b =>
+            modelBuilder.Entity("ClothesApp.Entities.Category", b =>
                 {
-                    b.HasOne("ClothesApp.Models.Category", "ParentCategory")
-                        .WithMany("InverseParentCategory")
+                    b.HasOne("ClothesApp.Entities.Category", "ParentCategory")
+                        .WithMany("ChildCategory")
                         .HasForeignKey("ParentCategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("categories_parent_category_id_fkey");
@@ -424,9 +424,9 @@ namespace ClothesApp.Migrations
                     b.Navigation("ParentCategory");
                 });
 
-            modelBuilder.Entity("ClothesApp.Models.Media", b =>
+            modelBuilder.Entity("ClothesApp.Entities.Media", b =>
                 {
-                    b.HasOne("ClothesApp.Models.Product", "Product")
+                    b.HasOne("ClothesApp.Entities.Product", "Product")
                         .WithMany("Media")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -436,16 +436,16 @@ namespace ClothesApp.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("ClothesApp.Models.Order", b =>
+            modelBuilder.Entity("ClothesApp.Entities.Order", b =>
                 {
-                    b.HasOne("ClothesApp.Models.Address", "Address")
+                    b.HasOne("ClothesApp.Entities.Address", "Address")
                         .WithMany("Orders")
                         .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("orders_address_id_fkey");
 
-                    b.HasOne("ClothesApp.Models.User", "User")
+                    b.HasOne("ClothesApp.Entities.User", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -457,16 +457,16 @@ namespace ClothesApp.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ClothesApp.Models.OrderItem", b =>
+            modelBuilder.Entity("ClothesApp.Entities.OrderItem", b =>
                 {
-                    b.HasOne("ClothesApp.Models.Order", "Order")
+                    b.HasOne("ClothesApp.Entities.Order", "Order")
                         .WithMany("OrdersItems")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("orders_items_order_id_fkey");
 
-                    b.HasOne("ClothesApp.Models.Product", "Product")
+                    b.HasOne("ClothesApp.Entities.Product", "Product")
                         .WithMany("OrdersItems")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -478,9 +478,9 @@ namespace ClothesApp.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("ClothesApp.Models.OrdersTransaction", b =>
+            modelBuilder.Entity("ClothesApp.Entities.OrdersTransaction", b =>
                 {
-                    b.HasOne("ClothesApp.Models.Order", "Order")
+                    b.HasOne("ClothesApp.Entities.Order", "Order")
                         .WithMany("OrdersTransactions")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -490,16 +490,16 @@ namespace ClothesApp.Migrations
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("ClothesApp.Models.Product", b =>
+            modelBuilder.Entity("ClothesApp.Entities.Product", b =>
                 {
-                    b.HasOne("ClothesApp.Models.Brand", "Brand")
+                    b.HasOne("ClothesApp.Entities.Brand", "Brand")
                         .WithMany("Products")
                         .HasForeignKey("BrandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("products_brand_id_fkey");
 
-                    b.HasOne("ClothesApp.Models.Category", "Category")
+                    b.HasOne("ClothesApp.Entities.Category", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -511,16 +511,16 @@ namespace ClothesApp.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("ClothesApp.Models.Review", b =>
+            modelBuilder.Entity("ClothesApp.Entities.Review", b =>
                 {
-                    b.HasOne("ClothesApp.Models.Product", "Product")
+                    b.HasOne("ClothesApp.Entities.Product", "Product")
                         .WithMany("Reviews")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("reviews_product_id_fkey");
 
-                    b.HasOne("ClothesApp.Models.User", "User")
+                    b.HasOne("ClothesApp.Entities.User", "User")
                         .WithMany("Reviews")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.SetNull)
@@ -534,14 +534,14 @@ namespace ClothesApp.Migrations
 
             modelBuilder.Entity("SectionsCategory", b =>
                 {
-                    b.HasOne("ClothesApp.Models.Category", null)
+                    b.HasOne("ClothesApp.Entities.Category", null)
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("sections_categories_category_id_fkey");
 
-                    b.HasOne("ClothesApp.Models.Section", null)
+                    b.HasOne("ClothesApp.Entities.Section", null)
                         .WithMany()
                         .HasForeignKey("SectionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -549,31 +549,31 @@ namespace ClothesApp.Migrations
                         .HasConstraintName("sections_categories_section_id_fkey");
                 });
 
-            modelBuilder.Entity("ClothesApp.Models.Address", b =>
+            modelBuilder.Entity("ClothesApp.Entities.Address", b =>
                 {
                     b.Navigation("Orders");
                 });
 
-            modelBuilder.Entity("ClothesApp.Models.Brand", b =>
+            modelBuilder.Entity("ClothesApp.Entities.Brand", b =>
                 {
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("ClothesApp.Models.Category", b =>
+            modelBuilder.Entity("ClothesApp.Entities.Category", b =>
                 {
-                    b.Navigation("InverseParentCategory");
+                    b.Navigation("ChildCategory");
 
                     b.Navigation("Products");
                 });
 
-            modelBuilder.Entity("ClothesApp.Models.Order", b =>
+            modelBuilder.Entity("ClothesApp.Entities.Order", b =>
                 {
                     b.Navigation("OrdersItems");
 
                     b.Navigation("OrdersTransactions");
                 });
 
-            modelBuilder.Entity("ClothesApp.Models.Product", b =>
+            modelBuilder.Entity("ClothesApp.Entities.Product", b =>
                 {
                     b.Navigation("Media");
 
@@ -582,7 +582,7 @@ namespace ClothesApp.Migrations
                     b.Navigation("Reviews");
                 });
 
-            modelBuilder.Entity("ClothesApp.Models.User", b =>
+            modelBuilder.Entity("ClothesApp.Entities.User", b =>
                 {
                     b.Navigation("Addresses");
 

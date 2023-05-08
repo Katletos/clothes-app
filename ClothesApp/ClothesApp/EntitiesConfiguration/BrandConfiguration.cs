@@ -1,8 +1,8 @@
-using ClothesApp.Models;
+using ClothesApp.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ClothesApp.ModelsConfigurations;
+namespace ClothesApp.EntitiesConfiguration;
 
 public class BrandConfiguration : IEntityTypeConfiguration<Brand>
 {
@@ -15,6 +15,6 @@ public class BrandConfiguration : IEntityTypeConfiguration<Brand>
         builder.HasIndex(e => e.Name, "brands_name_key").IsUnique();
 
         builder.Property(e => e.Id).HasColumnName("id");
-        builder.Property(e => e.Name).HasColumnName("name");
+        builder.Property(e => e.Name).HasColumnName("name").IsRequired();
     }
 }

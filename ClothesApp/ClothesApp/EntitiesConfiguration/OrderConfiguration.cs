@@ -1,8 +1,8 @@
-using ClothesApp.Models;
+using ClothesApp.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ClothesApp.ModelsConfigurations;
+namespace ClothesApp.EntitiesConfiguration;
 
 public class OrderConfiguration : IEntityTypeConfiguration<Order>
 {
@@ -13,14 +13,15 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         builder.ToTable("orders");
 
         builder.Property(e => e.Id).HasColumnName("id");
-        builder.Property(e => e.AddressId).HasColumnName("address_id");
-        builder.Property(e => e.CreatedAt)
+        builder.Property(e => e.AddressId).HasColumnName("address_id").IsRequired();
+        builder.Property(e => e.CreatedAt).IsRequired()
             .HasColumnType("timestamp without time zone")
             .HasColumnName("created_at");
-        builder.Property(e => e.Price)
+        builder.Property(e => e.Price).IsRequired()
             .HasColumnType("money")
             .HasColumnName("price");
-        builder.Property(e => e.UserId).HasColumnName("user_id");
+        builder.Property(e => e.UserId).HasColumnName("user_id").IsRequired();
+        builder.Property(e => e.OrderStatus).HasColumnName("order_status").IsRequired();
 
         builder.HasOne(d => d.Address).WithMany(p => p.Orders)
             .HasForeignKey(d => d.AddressId)

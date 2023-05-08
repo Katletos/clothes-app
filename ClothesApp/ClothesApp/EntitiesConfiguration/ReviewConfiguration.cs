@@ -1,8 +1,8 @@
-using ClothesApp.Models;
+using ClothesApp.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ClothesApp.ModelsConfigurations;
+namespace ClothesApp.EntitiesConfiguration;
 
 public class ReviewConfiguration : IEntityTypeConfiguration<Review>
 {
@@ -13,14 +13,14 @@ public class ReviewConfiguration : IEntityTypeConfiguration<Review>
         builder.ToTable("reviews");
 
         builder.Property(e => e.Id).HasColumnName("id");
-        builder.Property(e => e.Comment).HasColumnName("comment");
-        builder.Property(e => e.CreatedAt)
+        builder.Property(e => e.Comment).HasColumnName("comment").IsRequired();
+        builder.Property(e => e.CreatedAt).IsRequired()
             .HasColumnType("timestamp without time zone")
             .HasColumnName("created_at");
-        builder.Property(e => e.ProductId).HasColumnName("product_id");
-        builder.Property(e => e.Rating).HasColumnName("rating");
-        builder.Property(e => e.Title).HasColumnName("title");
-        builder.Property(e => e.UserId).HasColumnName("user_id");
+        builder.Property(e => e.ProductId).HasColumnName("product_id").IsRequired();
+        builder.Property(e => e.Rating).HasColumnName("rating").IsRequired();
+        builder.Property(e => e.Title).HasColumnName("title").IsRequired();
+        builder.Property(e => e.UserId).HasColumnName("user_id").IsRequired();
 
         builder.HasOne(d => d.Product).WithMany(p => p.Reviews)
             .HasForeignKey(d => d.ProductId)

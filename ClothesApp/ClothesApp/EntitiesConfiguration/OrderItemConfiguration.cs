@@ -1,8 +1,8 @@
-using ClothesApp.Models;
+using ClothesApp.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ClothesApp.ModelsConfigurations;
+namespace ClothesApp.EntitiesConfiguration;
 
 public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
 {
