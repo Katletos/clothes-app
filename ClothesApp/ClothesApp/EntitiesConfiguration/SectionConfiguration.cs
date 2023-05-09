@@ -8,13 +8,13 @@ public class SectionConfiguration : IEntityTypeConfiguration<Section>
 {
     public void Configure(EntityTypeBuilder<Section> builder)
     {
-        builder.HasKey(e => e.Id).HasName("sections_pkey");
+        builder.HasKey(e => e.Id);
 
         builder.ToTable("sections");
 
-        builder.HasIndex(e => e.Name, "sections_name_key").IsUnique();
+        builder.HasIndex(e => e.Name).IsUnique();
 
-        builder.Property(e => e.Id).HasColumnName("id");
-        builder.Property(e => e.Name).HasColumnName("name").IsRequired();
+        builder.Property(e => e.Id);
+        builder.Property(e => e.Name).IsRequired();
     }
 }

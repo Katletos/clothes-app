@@ -8,21 +8,20 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
 {
     public void Configure(EntityTypeBuilder<Category> builder)
     {
-        builder.HasKey(e => e.Id).HasName("categories_pkey");
+        builder.HasKey(e => e.Id);
 
         builder.ToTable("categories");
 
-        builder.HasIndex(e => e.Name, "categories_name_key").IsUnique();
+        builder.HasIndex(e => e.Name).IsUnique();
 
-        builder.Property(e => e.Id).HasColumnName("id");
-        builder.Property(e => e.Name).HasColumnName("name").IsRequired();
-        builder.Property(e => e.ParentCategoryId).HasColumnName("parent_category_id");
+        builder.Property(e => e.Id);
+        builder.Property(e => e.Name).IsRequired();
+        builder.Property(e => e.ParentCategoryId);
 
         builder.HasOne(d => d.ParentCategory)
             .WithMany(p => p.ChildCategory)
             .HasForeignKey(d => d.ParentCategoryId)
-            .OnDelete(DeleteBehavior.Cascade)
-            .HasConstraintName("categories_parent_category_id_fkey");
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(d => d.Sections)
             .WithMany(p => p.Categories)

@@ -8,16 +8,16 @@ public class AddressConfiguration : IEntityTypeConfiguration<Address>
 {
     public void Configure(EntityTypeBuilder<Address> builder)
     {
-        builder.HasKey(e => e.Id).HasName("addresses_pkey");
+        builder.HasKey(e => e.Id);
 
         builder.ToTable("addresses");
 
-        builder.Property(e => e.Id).HasColumnName("id");
-        builder.Property(e => e.AddressLine).HasColumnName("address").IsRequired();
-        builder.Property(e => e.UserId).HasColumnName("user_id").IsRequired();
+        builder.Property(e => e.Id);
+        builder.Property(e => e.AddressLine).IsRequired();
+        builder.Property(e => e.UserId).IsRequired();
 
-        builder.HasOne(d => d.User).WithMany(p => p.Addresses)
-            .HasForeignKey(d => d.UserId)
-            .HasConstraintName("addresses_user_id_fkey");
+        builder.HasOne(d => d.User)
+            .WithMany(p => p.Addresses)
+            .HasForeignKey(d => d.UserId);
     }
 }
