@@ -20,9 +20,9 @@ public class Product
 
     public virtual Category Category { get; set; }
 
-    public virtual ICollection<Media> Media { get; set; } = new List<Media>();
+    public virtual ICollection<Media> Media { get; set; }
 
-    public virtual ICollection<OrderItem> OrdersItems { get; set; } = new List<OrderItem>();
+    public virtual ICollection<OrderItem> OrdersItems { get; set; }
 
-    public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
+    public virtual ICollection<Review> Reviews { get; set; }
 }

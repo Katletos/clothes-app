@@ -16,9 +16,9 @@ public class Order
 
     public virtual Address Address { get; set; }
 
-    public virtual ICollection<OrderItem> OrdersItems { get; set; } = new List<OrderItem>();
+    public virtual ICollection<OrderItem> OrdersItems { get; set; }
 
-    public virtual ICollection<OrdersTransaction> OrdersTransactions { get; set; } = new List<OrdersTransaction>();
+    public virtual ICollection<OrdersTransaction> OrdersTransactions { get; set; }
 
     public virtual User User { get; set; }
 }

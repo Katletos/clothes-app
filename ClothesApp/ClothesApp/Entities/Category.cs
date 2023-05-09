@@ -8,13 +8,13 @@ public class Category
 
     public string Name { get; set; }
 
-    public virtual ICollection<Category> ChildCategory { get; set; } = new List<Category>();
+    public virtual ICollection<Category> ChildCategory { get; set; }
 
     public virtual Category ParentCategory { get; set; }
 
-    public virtual ICollection<Product> Products { get; set; } = new List<Product>();
+    public virtual ICollection<Product> Products { get; set; }
 
-    public virtual ICollection<Section> Sections { get; set; } = new List<Section>();
+    public virtual ICollection<Section> Sections { get; set; }
 
-    public virtual ICollection<SectionCategory> SectionCategories { get; } = new List<SectionCategory>();
+    public virtual ICollection<SectionCategory> SectionCategories { get; }
 }
