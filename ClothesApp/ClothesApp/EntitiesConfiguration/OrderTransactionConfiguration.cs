@@ -21,6 +21,7 @@ public class OrderTransactionConfiguration : IEntityTypeConfiguration<OrdersTran
 
         builder.HasOne(d => d.Order)
             .WithMany(p => p.OrdersTransactions)
-            .HasForeignKey(d => d.OrderId);
+            .HasForeignKey(d => d.OrderId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

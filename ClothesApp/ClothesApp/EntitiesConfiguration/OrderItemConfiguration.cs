@@ -20,7 +20,8 @@ public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
 
         builder.HasOne(d => d.Order)
             .WithMany(p => p.OrdersItems)
-            .HasForeignKey(d => d.OrderId);
+            .HasForeignKey(d => d.OrderId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(d => d.Product)
             .WithMany(p => p.OrdersItems)

@@ -20,6 +20,7 @@ public class MediaConfiguration : IEntityTypeConfiguration<Media>
 
         builder.HasOne(d => d.Product)
             .WithMany(p => p.Media)
-            .HasForeignKey(d => d.ProductId);
+            .HasForeignKey(d => d.ProductId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

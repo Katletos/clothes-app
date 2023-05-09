@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ClothesApp.Migrations
 {
     [DbContext(typeof(ClothesAppContext))]
-    [Migration("20230509080130_AddStatusType")]
-    partial class AddStatusType
+    [Migration("20230509083301_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -23,7 +23,8 @@ public class ReviewConfiguration : IEntityTypeConfiguration<Review>
 
         builder.HasOne(d => d.Product)
             .WithMany(p => p.Reviews)
-            .HasForeignKey(d => d.ProductId);
+            .HasForeignKey(d => d.ProductId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(d => d.User)
             .WithMany(p => p.Reviews)

@@ -53,8 +53,8 @@ public class ClothesAppContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
-            .HasPostgresEnum<OrderStatusType>("order_status")
-            .HasPostgresEnum<UserType>("user_type");
+            .HasPostgresEnum<OrderStatusType>()
+            .HasPostgresEnum<UserType>();
 
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
