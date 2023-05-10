@@ -20,8 +20,8 @@ namespace ClothesApp.Migrations
                 .HasAnnotation("ProductVersion", "7.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "order_status", "order_status_type", new[] { "in_review", "in_delivery", "completed" });
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "user_type", "user_type", new[] { "admin", "customer" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "order_status_type", new[] { "in_review", "in_delivery", "completed" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "user_type", new[] { "admin", "customer" });
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("ClothesApp.Entities.Address", b =>

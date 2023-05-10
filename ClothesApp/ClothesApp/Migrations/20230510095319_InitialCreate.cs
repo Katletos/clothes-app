@@ -13,8 +13,8 @@ namespace ClothesApp.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterDatabase()
-                .Annotation("Npgsql:Enum:order_status.order_status_type", "in_review,in_delivery,completed")
-                .Annotation("Npgsql:Enum:user_type.user_type", "admin,customer");
+                .Annotation("Npgsql:Enum:order_status_type", "in_review,in_delivery,completed")
+                .Annotation("Npgsql:Enum:user_type", "admin,customer");
 
             migrationBuilder.CreateTable(
                 name: "brands",
