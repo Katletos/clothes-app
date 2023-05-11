@@ -108,7 +108,7 @@ CREATE TABLE reviews (
   id bigserial,
   product_id bigint NOT NULL,
   user_id bigint NOT NULL,
-  raiting smallint NOT NULL,
+  rating smallint NOT NULL,
   title text NOT NULL,
   comment text NOT NULL,
   created_at timestamp NOT NULL,
