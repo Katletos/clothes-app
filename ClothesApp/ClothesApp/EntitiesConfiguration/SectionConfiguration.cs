@@ -10,8 +10,6 @@ public class SectionConfiguration : IEntityTypeConfiguration<Section>
     {
         builder.HasKey(e => e.Id);
 
-        builder.ToTable("sections");
-
         builder.HasIndex(e => e.Name).IsUnique();
 
         builder.Property(e => e.Id);

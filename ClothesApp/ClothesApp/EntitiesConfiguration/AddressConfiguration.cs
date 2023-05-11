@@ -10,8 +10,6 @@ public class AddressConfiguration : IEntityTypeConfiguration<Address>
     {
         builder.HasKey(e => e.Id);
 
-        builder.ToTable("addresses");
-
         builder.Property(e => e.Id);
         builder.Property(e => e.AddressLine).IsRequired();
         builder.Property(e => e.UserId).IsRequired();

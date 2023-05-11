@@ -10,8 +10,6 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
     {
         builder.HasKey(e => e.Id);
 
-        builder.ToTable("orders");
-
         builder.Property(e => e.Id);
         builder.Property(e => e.AddressId).IsRequired();
         builder.Property(e => e.CreatedAt).IsRequired()

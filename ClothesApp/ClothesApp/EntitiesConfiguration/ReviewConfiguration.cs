@@ -10,8 +10,6 @@ public class ReviewConfiguration : IEntityTypeConfiguration<Review>
     {
         builder.HasKey(e => e.Id);
 
-        builder.ToTable("reviews");
-
         builder.Property(e => e.Id);
         builder.Property(e => e.Comment).IsRequired();
         builder.Property(e => e.CreatedAt).IsRequired()

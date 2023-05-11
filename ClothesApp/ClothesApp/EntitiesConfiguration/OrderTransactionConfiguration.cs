@@ -10,8 +10,6 @@ public class OrderTransactionConfiguration : IEntityTypeConfiguration<OrdersTran
     {
         builder.HasKey(e => e.Id);
 
-        builder.ToTable("orders_transactions");
-
         builder.Property(e => e.Id);
         builder.Property(e => e.OrderId).IsRequired();
         builder.Property(e => e.UpdatedAt).IsRequired()

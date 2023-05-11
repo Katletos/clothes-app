@@ -10,8 +10,6 @@ public class BrandConfiguration : IEntityTypeConfiguration<Brand>
     {
         builder.HasKey(e => e.Id);
 
-        builder.ToTable("brands");
-
         builder.HasIndex(e => e.Name).IsUnique();
 
         builder.Property(e => e.Id);

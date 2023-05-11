@@ -10,8 +10,6 @@ public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
     {
         builder.HasKey(e => new {e.ProductId, e.OrderId });
 
-        builder.ToTable("orders_items");
-
         builder.Property(e => e.ProductId);
         builder.Property(e => e.OrderId);
         builder.Property(e => e.Price)

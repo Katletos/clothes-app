@@ -10,8 +10,6 @@ public class MediaConfiguration : IEntityTypeConfiguration<Media>
     {
         builder.HasKey(e => e.Id);
 
-        builder.ToTable("media");
-
         builder.Property(e => e.Id);
         builder.Property(e => e.FileName).IsRequired();
         builder.Property(e => e.FileType).IsRequired();

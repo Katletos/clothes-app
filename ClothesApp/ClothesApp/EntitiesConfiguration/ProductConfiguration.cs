@@ -10,8 +10,6 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
     {
         builder.HasKey(e => e.Id);
 
-        builder.ToTable("products");
-
         builder.HasIndex(e => e.Name).IsUnique();
 
         builder.Property(e => e.Id);
