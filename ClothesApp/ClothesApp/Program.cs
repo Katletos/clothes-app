@@ -38,6 +38,23 @@ using (var db = new ClothesAppContext())
     //
     
     Console.WriteLine("get_all_reviews");
-  
+    var reviews = db.Reviews.Where(r => r.ProductId == 1).Join(db.Users, r => r.UserId, u => u.Id, (r, u) =>
+        new
+        {
+            r.Rating,
+            r.Title,
+            r.Comment,
+            u.FirstName,
+            u.LastName,
+        }).ToList();
+
+    foreach (var r in reviews)
+    {
+        Console.WriteLine($"rating: {r.Rating}," +
+                          $"title: {r.Title}," +
+                          $"comment: {r.Comment}," +
+                          $"name: {r.FirstName + " " + r.LastName}");
+    }
+    
     //
 }
