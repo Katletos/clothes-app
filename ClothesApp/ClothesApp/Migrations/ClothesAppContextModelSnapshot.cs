@@ -43,7 +43,7 @@ namespace ClothesApp.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("addresses", (string)null);
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("ClothesApp.Entities.Brand", b =>
@@ -63,7 +63,7 @@ namespace ClothesApp.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("brands", (string)null);
+                    b.ToTable("Brands");
                 });
 
             modelBuilder.Entity("ClothesApp.Entities.Category", b =>
@@ -88,7 +88,7 @@ namespace ClothesApp.Migrations
 
                     b.HasIndex("ParentCategoryId");
 
-                    b.ToTable("categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("ClothesApp.Entities.Media", b =>
@@ -118,7 +118,7 @@ namespace ClothesApp.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("media", (string)null);
+                    b.ToTable("Media");
                 });
 
             modelBuilder.Entity("ClothesApp.Entities.Order", b =>
@@ -150,7 +150,7 @@ namespace ClothesApp.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("ClothesApp.Entities.OrderItem", b =>
@@ -171,7 +171,7 @@ namespace ClothesApp.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("orders_items", (string)null);
+                    b.ToTable("OrdersItems");
                 });
 
             modelBuilder.Entity("ClothesApp.Entities.OrdersTransaction", b =>
@@ -195,7 +195,7 @@ namespace ClothesApp.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("orders_transactions", (string)null);
+                    b.ToTable("OrdersTransactions");
                 });
 
             modelBuilder.Entity("ClothesApp.Entities.Product", b =>
@@ -234,7 +234,7 @@ namespace ClothesApp.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("ClothesApp.Entities.Review", b =>
@@ -271,7 +271,7 @@ namespace ClothesApp.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("reviews", (string)null);
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("ClothesApp.Entities.Section", b =>
@@ -291,7 +291,7 @@ namespace ClothesApp.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("sections", (string)null);
+                    b.ToTable("Sections");
                 });
 
             modelBuilder.Entity("ClothesApp.Entities.SectionCategory", b =>
@@ -345,7 +345,7 @@ namespace ClothesApp.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("ClothesApp.Entities.Address", b =>
