@@ -1,28 +1,26 @@
 ﻿using ClothesApp;
 using ClothesApp.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 
 await using var db = new ClothesAppContext();
 
 var productsByBrandIdLazy = await GetProductsByBrandIdLazy(db, 1);
-GetBrandsWithProductAmountLazy(db);
+await GetBrandsWithProductAmountLazy(db);
 var productsBySectionCategoryLazy = await GetProductsBySectionCategoryLazy(db, 1, 1);
 var completedOrdersByProductIdLazy = await GetCompletedOrdersByProductIdLazy(db, 1);
 var reviewsForProductLazy = await GetAllReviewsForProductLazy(db, 1);
 
 var productsByBrandId = await GetProductsByBrandId(db, 1);
-GetBrandsWithProductsAmount(db);
+await GetBrandsWithProductsAmount(db);
 var productsBySectionCategory = await GetProductsBySectionCategory(db, 1, 1);
 var completedOrdersByProductId = await GetCompletedOrdersByProductId(db, 1);
 var reviewsForProduct = await GetAllReviewsForProduct(db, 1);
 
 var brand = await db.Brands.FindAsync((long)4);
-brand!.Name = "mark formelle";
+brand.Name = "mark formelle";
 
 await using (var context = new ClothesAppContext())
 {
-    context.Entry(brand).CurrentValues.SetValues(brand);
     context.Update(brand);
     await context.SaveChangesAsync();
 }
@@ -32,21 +30,31 @@ async Task<List<Product>> GetProductsByBrandIdLazy(ClothesAppContext context, lo
     var result = await context.Products
         .Where(p => p.BrandId == brandId)
         .ToListAsync();
+    
+    foreach (var r in result)
+    {
+        r.Brand.Name = "something";
+    }
 
     return result;
 }
 
-void GetBrandsWithProductAmountLazy(ClothesAppContext context)
+async Task GetBrandsWithProductAmountLazy(ClothesAppContext context)
 {
-    var result = context.Products
-        .GroupBy(b => b.BrandId, (b, p) =>
+    var products = await context.Products.ToListAsync();
+    
+    foreach (var r in products)
+    {
+        r.Category.Name = "something";
+    }
+    
+    var result = products.GroupBy(b => b.BrandId, (b, p) =>
             new
             {
                 BrandId = b,
                 ProductCount = p.Count()
             })
-        .OrderByDescending(p => p.ProductCount)
-        .ToListAsync();
+        .OrderByDescending(p => p.ProductCount);
 }
 
 async Task<List<Product>> GetProductsBySectionCategoryLazy(ClothesAppContext context, long sectionId, long categoryId)
@@ -55,6 +63,11 @@ async Task<List<Product>> GetProductsBySectionCategoryLazy(ClothesAppContext con
         .Where(p => p.Category.Id == categoryId 
                     && p.Category.Sections.Any(s => s.Id == sectionId))
         .ToListAsync();
+    
+    foreach (var r in result)
+    {
+        r.Brand.Name = "something";
+    }
 
     return result;
 }
@@ -67,6 +80,11 @@ async Task<List<Order>> GetCompletedOrdersByProductIdLazy(ClothesAppContext cont
         .OrderByDescending(o => o.CreatedAt)
         .ToListAsync();
     
+    foreach (var r in result)
+    {
+        r.User.FirstName = "something";
+    }
+    
     return result;
 }
 
@@ -75,6 +93,11 @@ async Task<List<Review>> GetAllReviewsForProductLazy(ClothesAppContext context, 
     var result = await context.Reviews
         .Where(r => r.ProductId == productId && r.User.Id == r.UserId)
         .ToListAsync();
+    
+    foreach (var r in result)
+    {
+        r.User.FirstName = "something";
+    }
     
     return result;
 }
@@ -89,14 +112,14 @@ async Task<List<Product>> GetProductsByBrandId(ClothesAppContext context, long b
     return result;
 }
 
-void GetBrandsWithProductsAmount(ClothesAppContext context)
+async Task GetBrandsWithProductsAmount(ClothesAppContext context)
 {
-    var result = context.Products
+    var result = await context.Products
         .GroupBy(b => b.BrandId, (b, p) =>
             new
             {
                 BrandId = b,
-                ProductCount = p.Count()
+                ProductCount = p.Count(),
             })
         .OrderByDescending(p => p.ProductCount)
         .ToListAsync();
@@ -105,12 +128,11 @@ void GetBrandsWithProductsAmount(ClothesAppContext context)
 async Task<List<Product>> GetProductsBySectionCategory(ClothesAppContext context, long sectionId, long categoryId)
 {
     var result = await context.Products
-        .Include(b => b.Brand)
         .Include(c => c.Category)
-        .Include(s => s.Category.Sections)
-        .Include(sc => sc.Category.SectionCategories)
+        .ThenInclude(c => c.Sections)
+        .ThenInclude(c => c.SectionCategories)
         .Where(p => p.Category.Id == categoryId && p.Category.Sections.Any(s => s.Id == sectionId))
-        .ToListAsync();
+        .ToListAsync(); 
     
     return result;
 }
@@ -119,13 +141,11 @@ async Task<List<Order>> GetCompletedOrdersByProductId(ClothesAppContext context,
 {
     var result = await context.Orders
         .Include(o => o.OrdersItems)
-        .Include(a => a.Address)
-        .Include(u => u.User)
         .Where(o => o.OrderStatus == OrderStatusType.Completed 
                     && o.OrdersItems.Any(p => p.ProductId == productId))
         .OrderByDescending(o => o.CreatedAt)
-        .ToListAsync();
-
+        .ToListAsync(); 
+    
     return result;
 }
 
