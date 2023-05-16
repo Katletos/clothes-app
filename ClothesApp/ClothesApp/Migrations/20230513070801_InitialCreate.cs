@@ -17,7 +17,7 @@ namespace ClothesApp.Migrations
                 .Annotation("Npgsql:Enum:user_type", "admin,customer");
 
             migrationBuilder.CreateTable(
-                name: "brands",
+                name: "Brands",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -26,11 +26,11 @@ namespace ClothesApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_brands", x => x.Id);
+                    table.PrimaryKey("PK_Brands", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "categories",
+                name: "Categories",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -40,17 +40,17 @@ namespace ClothesApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_categories", x => x.Id);
+                    table.PrimaryKey("PK_Categories", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_categories_categories_ParentCategoryId",
+                        name: "FK_Categories_Categories_ParentCategoryId",
                         column: x => x.ParentCategoryId,
-                        principalTable: "categories",
+                        principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "sections",
+                name: "Sections",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -59,11 +59,11 @@ namespace ClothesApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_sections", x => x.Id);
+                    table.PrimaryKey("PK_Sections", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "users",
+                name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -78,11 +78,11 @@ namespace ClothesApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_users", x => x.Id);
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "products",
+                name: "Products",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -96,17 +96,17 @@ namespace ClothesApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_products", x => x.Id);
+                    table.PrimaryKey("PK_Products", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_products_brands_BrandId",
+                        name: "FK_Products_Brands_BrandId",
                         column: x => x.BrandId,
-                        principalTable: "brands",
+                        principalTable: "Brands",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_products_categories_CategoryId",
+                        name: "FK_Products_Categories_CategoryId",
                         column: x => x.CategoryId,
-                        principalTable: "categories",
+                        principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -122,21 +122,21 @@ namespace ClothesApp.Migrations
                 {
                     table.PrimaryKey("PK_SectionCategory", x => new { x.CategoryId, x.SectionId });
                     table.ForeignKey(
-                        name: "FK_SectionCategory_categories_CategoryId",
+                        name: "FK_SectionCategory_Categories_CategoryId",
                         column: x => x.CategoryId,
-                        principalTable: "categories",
+                        principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_SectionCategory_sections_SectionId",
+                        name: "FK_SectionCategory_Sections_SectionId",
                         column: x => x.SectionId,
-                        principalTable: "sections",
+                        principalTable: "Sections",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "addresses",
+                name: "Addresses",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -146,17 +146,17 @@ namespace ClothesApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_addresses", x => x.Id);
+                    table.PrimaryKey("PK_Addresses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_addresses_users_UserId",
+                        name: "FK_Addresses_Users_UserId",
                         column: x => x.UserId,
-                        principalTable: "users",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "media",
+                name: "Media",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -168,17 +168,17 @@ namespace ClothesApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_media", x => x.Id);
+                    table.PrimaryKey("PK_Media", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_media_products_ProductId",
+                        name: "FK_Media_Products_ProductId",
                         column: x => x.ProductId,
-                        principalTable: "products",
+                        principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "reviews",
+                name: "Reviews",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -192,23 +192,23 @@ namespace ClothesApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_reviews", x => x.Id);
+                    table.PrimaryKey("PK_Reviews", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_reviews_products_ProductId",
+                        name: "FK_Reviews_Products_ProductId",
                         column: x => x.ProductId,
-                        principalTable: "products",
+                        principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_reviews_users_UserId",
+                        name: "FK_Reviews_Users_UserId",
                         column: x => x.UserId,
-                        principalTable: "users",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
-                name: "orders",
+                name: "Orders",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -221,23 +221,23 @@ namespace ClothesApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_orders", x => x.Id);
+                    table.PrimaryKey("PK_Orders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_orders_addresses_AddressId",
+                        name: "FK_Orders_Addresses_AddressId",
                         column: x => x.AddressId,
-                        principalTable: "addresses",
+                        principalTable: "Addresses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_orders_users_UserId",
+                        name: "FK_Orders_Users_UserId",
                         column: x => x.UserId,
-                        principalTable: "users",
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "orders_items",
+                name: "OrdersItems",
                 columns: table => new
                 {
                     ProductId = table.Column<long>(type: "bigint", nullable: false),
@@ -247,23 +247,23 @@ namespace ClothesApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_orders_items", x => new { x.ProductId, x.OrderId });
+                    table.PrimaryKey("PK_OrdersItems", x => new { x.ProductId, x.OrderId });
                     table.ForeignKey(
-                        name: "FK_orders_items_orders_OrderId",
+                        name: "FK_OrdersItems_Orders_OrderId",
                         column: x => x.OrderId,
-                        principalTable: "orders",
+                        principalTable: "Orders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_orders_items_products_ProductId",
+                        name: "FK_OrdersItems_Products_ProductId",
                         column: x => x.ProductId,
-                        principalTable: "products",
+                        principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "orders_transactions",
+                name: "OrdersTransactions",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -274,86 +274,86 @@ namespace ClothesApp.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_orders_transactions", x => x.Id);
+                    table.PrimaryKey("PK_OrdersTransactions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_orders_transactions_orders_OrderId",
+                        name: "FK_OrdersTransactions_Orders_OrderId",
                         column: x => x.OrderId,
-                        principalTable: "orders",
+                        principalTable: "Orders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_addresses_UserId",
-                table: "addresses",
+                name: "IX_Addresses_UserId",
+                table: "Addresses",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_brands_Name",
-                table: "brands",
+                name: "IX_Brands_Name",
+                table: "Brands",
                 column: "Name",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_categories_Name",
-                table: "categories",
+                name: "IX_Categories_Name",
+                table: "Categories",
                 column: "Name",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_categories_ParentCategoryId",
-                table: "categories",
+                name: "IX_Categories_ParentCategoryId",
+                table: "Categories",
                 column: "ParentCategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_media_ProductId",
-                table: "media",
+                name: "IX_Media_ProductId",
+                table: "Media",
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_orders_AddressId",
-                table: "orders",
+                name: "IX_Orders_AddressId",
+                table: "Orders",
                 column: "AddressId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_orders_UserId",
-                table: "orders",
+                name: "IX_Orders_UserId",
+                table: "Orders",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_orders_items_OrderId",
-                table: "orders_items",
+                name: "IX_OrdersItems_OrderId",
+                table: "OrdersItems",
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_orders_transactions_OrderId",
-                table: "orders_transactions",
+                name: "IX_OrdersTransactions_OrderId",
+                table: "OrdersTransactions",
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_products_BrandId",
-                table: "products",
+                name: "IX_Products_BrandId",
+                table: "Products",
                 column: "BrandId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_products_CategoryId",
-                table: "products",
+                name: "IX_Products_CategoryId",
+                table: "Products",
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_products_Name",
-                table: "products",
+                name: "IX_Products_Name",
+                table: "Products",
                 column: "Name",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_reviews_ProductId",
-                table: "reviews",
+                name: "IX_Reviews_ProductId",
+                table: "Reviews",
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_reviews_UserId",
-                table: "reviews",
+                name: "IX_Reviews_UserId",
+                table: "Reviews",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -362,14 +362,14 @@ namespace ClothesApp.Migrations
                 column: "SectionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_sections_Name",
-                table: "sections",
+                name: "IX_Sections_Name",
+                table: "Sections",
                 column: "Name",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_users_Email",
-                table: "users",
+                name: "IX_Users_Email",
+                table: "Users",
                 column: "Email",
                 unique: true);
         }
@@ -378,40 +378,40 @@ namespace ClothesApp.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "media");
+                name: "Media");
 
             migrationBuilder.DropTable(
-                name: "orders_items");
+                name: "OrdersItems");
 
             migrationBuilder.DropTable(
-                name: "orders_transactions");
+                name: "OrdersTransactions");
 
             migrationBuilder.DropTable(
-                name: "reviews");
+                name: "Reviews");
 
             migrationBuilder.DropTable(
                 name: "SectionCategory");
 
             migrationBuilder.DropTable(
-                name: "orders");
+                name: "Orders");
 
             migrationBuilder.DropTable(
-                name: "products");
+                name: "Products");
 
             migrationBuilder.DropTable(
-                name: "sections");
+                name: "Sections");
 
             migrationBuilder.DropTable(
-                name: "addresses");
+                name: "Addresses");
 
             migrationBuilder.DropTable(
-                name: "brands");
+                name: "Brands");
 
             migrationBuilder.DropTable(
-                name: "categories");
+                name: "Categories");
 
             migrationBuilder.DropTable(
-                name: "users");
+                name: "Users");
         }
     }
 }

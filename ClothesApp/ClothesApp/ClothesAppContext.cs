@@ -2,6 +2,7 @@
 using ClothesApp.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace ClothesApp;
 
@@ -47,7 +48,10 @@ public class ClothesAppContext : DbContext
             .Build();
 
         var connectionString = configuration.GetConnectionString("DefaultConnection");
-        optionsBuilder.UseNpgsql(connectionString);
+        optionsBuilder
+            .UseLazyLoadingProxies()
+            .LogTo(Console.WriteLine, LogLevel.Information)
+            .UseNpgsql(connectionString);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
