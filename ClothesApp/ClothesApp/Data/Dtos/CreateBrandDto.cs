@@ -1,4 +1,4 @@
-namespace ClothesApp.Dtos;
+namespace ClothesApp.Data.Dtos;
 
 public class CreateBrandDto
 {

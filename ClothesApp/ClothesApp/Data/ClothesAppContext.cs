@@ -7,16 +7,6 @@ namespace ClothesApp.Data;
 
 public class ClothesAppContext : DbContext
 {
-    public ClothesAppContext()
-    {
-    }
-
-    public ClothesAppContext(DbContextOptions<ClothesAppContext> options)
-        : base(options)
-    {
-
-    }
-
     public virtual DbSet<Address> Addresses { get; set; }
 
     public virtual DbSet<Brand> Brands { get; set; }

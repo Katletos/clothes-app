@@ -1,8 +1,8 @@
 using AutoMapper;
-using ClothesApp.Dtos;
+using ClothesApp.Data.Dtos;
 using ClothesApp.Entities;
 
-namespace ClothesApp;
+namespace ClothesApp.Data;
 
 public class AppMappingProfile : Profile
 {

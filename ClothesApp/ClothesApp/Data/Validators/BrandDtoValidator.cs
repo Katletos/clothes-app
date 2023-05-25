@@ -1,7 +1,7 @@
-using ClothesApp.Dtos;
+using ClothesApp.Data.Dtos;
 using FluentValidation;
 
-namespace ClothesApp.Validators;
+namespace ClothesApp.Data.Validators;
 
 public class BrandDtoValidator : AbstractValidator<BrandDto> 
 {

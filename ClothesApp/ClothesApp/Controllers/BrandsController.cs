@@ -1,6 +1,6 @@
 using AutoMapper;
 using ClothesApp.Data;
-using ClothesApp.Dtos;
+using ClothesApp.Data.Dtos;
 using ClothesApp.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
