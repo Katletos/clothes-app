@@ -1,10 +1,9 @@
 ﻿using System.Reflection;
 using ClothesApp.Entities;
+using ClothesApp.Enums;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
-namespace ClothesApp;
+namespace ClothesApp.Data;
 
 public class ClothesAppContext : DbContext
 {
@@ -49,7 +48,7 @@ public class ClothesAppContext : DbContext
 
         var connectionString = configuration.GetConnectionString("DefaultConnection");
         optionsBuilder
-            .UseLazyLoadingProxies()
+         //   .UseLazyLoadingProxies()
             .LogTo(Console.WriteLine, LogLevel.Information)
             .UseNpgsql(connectionString);
     }
