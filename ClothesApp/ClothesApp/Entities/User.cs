@@ -1,5 +1,6 @@
-﻿namespace ClothesApp.Entities;
+﻿using ClothesApp.Enums;
 
+namespace ClothesApp.Entities;
 public class User
 {
     public long Id { get; set; }

@@ -1,4 +1,6 @@
-﻿namespace ClothesApp.Entities;
+﻿using ClothesApp.Enums;
+
+namespace ClothesApp.Entities;
 
 public class Order
 {
