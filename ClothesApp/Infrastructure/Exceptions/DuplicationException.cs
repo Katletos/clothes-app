@@ -6,13 +6,11 @@ public class DuplicationException : Exception
     {
     }
 
-    public DuplicationException(string message)
-        : base(message)
+    public DuplicationException(string message) : base(message)
     {
     }
 
-    public DuplicationException(string message, Exception inner)
-        : base(message, inner)
+    public DuplicationException(string message, Exception inner) : base(message, inner)
     {
     }
 }

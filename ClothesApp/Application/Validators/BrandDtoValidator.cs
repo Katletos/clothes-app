@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Application.Validators;
 
-public class BrandDtoValidator : AbstractValidator<BrandDto> 
+public class BrandDtoValidator : AbstractValidator<BrandDto>
 {
     public BrandDtoValidator()
     {

@@ -1,6 +1,7 @@
 ﻿using Domain.Enums;
 
 namespace Domain.Entities;
+
 public class User
 {
     public long Id { get; set; }

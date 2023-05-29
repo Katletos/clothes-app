@@ -11,9 +11,9 @@ public static class DependencyInjection
     {
         services.AddFluentValidationAutoValidation();
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-        
+
         services.AddAutoMapper(typeof(AppMappingProfile));
-        
+
         return services;
     }
 }

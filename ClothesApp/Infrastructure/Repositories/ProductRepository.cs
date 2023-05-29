@@ -7,12 +7,12 @@ namespace Infrastructure.Repositories;
 public class ProductRepository : IProductRepository
 {
     private readonly ClothesAppContext _dbContext;
-    
+
     public ProductRepository(ClothesAppContext context)
     {
         _dbContext = context;
     }
-    
+
     public Task<Product> InsertAsync(Product entity)
     {
         throw new NotImplementedException();
@@ -27,7 +27,7 @@ public class ProductRepository : IProductRepository
     {
         throw new NotImplementedException();
     }
-    
+
     public Task<bool> IsExistAsync(long id)
     {
         throw new NotImplementedException();

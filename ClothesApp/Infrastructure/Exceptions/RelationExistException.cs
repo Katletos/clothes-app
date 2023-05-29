@@ -6,13 +6,11 @@ public class RelationExistException : Exception
     {
     }
 
-    public RelationExistException(string message)
-        : base(message)
+    public RelationExistException(string message) : base(message)
     {
     }
 
-    public RelationExistException(string message, Exception inner)
-        : base(message, inner)
+    public RelationExistException(string message, Exception inner) : base(message, inner)
     {
     }
 }
