@@ -10,7 +10,7 @@ public static class DependencyInjection
     {
         services.AddDbContext<ClothesAppContext>();
 
-        services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<IProductsRepository, ProductsRepository>();
         services.AddScoped<IBrandsRepository, BrandsRepository>();
       
         return services;

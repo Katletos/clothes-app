@@ -6,7 +6,7 @@ public interface IBrandService
 {
     Task<BrandDto> DeleteBrandByIdAsync(long id);
 
-    Task<IReadOnlyCollection<BrandDto>> GetAllBrandsAsync();
+    Task<IList<BrandDto>> GetAllBrandsAsync();
 
     Task<BrandDto> GetBrandByIdAsync(long id);
 

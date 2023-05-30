@@ -6,5 +6,5 @@ public interface IBaseRepository<T> where T : class
 
     Task<T> UpdateAsync(T entity);
 
-    Task<IReadOnlyCollection<T>> GetAllAsync();
+    Task<IList<T>> GetAllAsync();
 }

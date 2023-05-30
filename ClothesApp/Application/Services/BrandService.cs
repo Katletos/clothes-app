@@ -10,14 +10,14 @@ public class BrandService : IBrandService
 {
     private readonly IBrandsRepository _brandsRepository;
 
-    private readonly IProductRepository _productRepository;
+    private readonly IProductsRepository _productsRepository;
 
     private readonly IMapper _mapper;
 
-    public BrandService(IBrandsRepository brandsRepository, IProductRepository productRepository, IMapper mapper)
+    public BrandService(IBrandsRepository brandsRepository, IProductsRepository productsRepository, IMapper mapper)
     {
         _brandsRepository = brandsRepository;
-        _productRepository = productRepository;
+        _productsRepository = productsRepository;
         _mapper = mapper;
     }
 
@@ -59,10 +59,10 @@ public class BrandService : IBrandService
 
         if (!isExist)
         {
-            throw new NotFoundException();
+            throw new NotFoundException(Messages.NotFound);
         }
 
-        var areAnyProducts = await _productRepository.AnyProductOfBrandIdExists(id);
+        var areAnyProducts = await _productsRepository.AnyProductOfBrandIdExists(id);
 
         if (areAnyProducts)
         {
@@ -76,11 +76,11 @@ public class BrandService : IBrandService
         return brandDto;
     }
 
-    public async Task<IReadOnlyCollection<BrandDto>> GetAllBrandsAsync()
+    public async Task<IList<BrandDto>> GetAllBrandsAsync()
     {
         var brands = await _brandsRepository.GetAllAsync();
 
-        var brandsDto = _mapper.Map<IReadOnlyCollection<BrandDto>>(brands);
+        var brandsDto = _mapper.Map<IList<BrandDto>>(brands);
 
         return brandsDto;
     }

@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using Application.Repositories;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -29,12 +28,7 @@ public class BrandsRepository : IBrandsRepository
 
         return brand;
     }
-
-    public async Task<IReadOnlyCollection<Brand>> GetByConditionAsync(Expression<Func<Brand, bool>> expression)
-    {
-        return await _dbContext.Set<Brand>().Where(expression).ToListAsync();
-    }
-
+    
     public async Task<Brand> DeleteBrandByIdAsync(long id)
     {
         var brand = await _dbContext.Brands.FindAsync(id);
@@ -63,7 +57,7 @@ public class BrandsRepository : IBrandsRepository
         return await _dbContext.Brands.AnyAsync(b => b.Id == id);
     }
 
-    public async Task<IReadOnlyCollection<Brand>> GetAllAsync()
+    public async Task<IList<Brand>> GetAllAsync()
     {
         return await _dbContext.Brands.AsQueryable().AsNoTracking().ToListAsync();
     }
