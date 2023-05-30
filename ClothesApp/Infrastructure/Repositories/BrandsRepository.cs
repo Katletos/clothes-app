@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Application.Repositories;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -29,7 +30,12 @@ public class BrandsRepository : IBrandsRepository
         return brand;
     }
 
-    public async Task<Brand> DeleteByIdAsync(long id)
+    public async Task<IReadOnlyCollection<Brand>> GetByConditionAsync(Expression<Func<Brand, bool>> expression)
+    {
+        return await _dbContext.Set<Brand>().Where(expression).ToListAsync();
+    }
+
+    public async Task<Brand> DeleteBrandByIdAsync(long id)
     {
         var brand = await _dbContext.Brands.FindAsync(id);
 
@@ -42,23 +48,23 @@ public class BrandsRepository : IBrandsRepository
         return brand;
     }
 
-    public async Task<bool> IsExistAsync(long id)
-    {
-        return await _dbContext.Brands.AnyAsync(b => b.Id == id);
-    }
-
-    public async Task<bool> IsExistAsync(string brandName)
-    {
-        return await _dbContext.Brands.AnyAsync(b => b.Name == brandName);
-    }
-
-    public async Task<Brand> GetByIdAsync(long id)
+    public async Task<Brand> GetBrandByIdAsync(long id)
     {
         return await _dbContext.Brands.AsNoTracking().FirstOrDefaultAsync(b => b.Id == id);
     }
 
-    public IQueryable<Brand> GetAll()
+    public async Task<bool> DoesBrandExistAsync(string brandName)
     {
-        return _dbContext.Brands.AsQueryable().AsNoTracking();
+        return await _dbContext.Brands.AnyAsync(b => b.Name == brandName);
+    }
+
+    public async Task<bool> DoesBrandExistAsync(long id)
+    {
+        return await _dbContext.Brands.AnyAsync(b => b.Id == id);
+    }
+
+    public async Task<IReadOnlyCollection<Brand>> GetAllAsync()
+    {
+        return await _dbContext.Brands.AsQueryable().AsNoTracking().ToListAsync();
     }
 }

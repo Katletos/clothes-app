@@ -18,13 +18,4 @@
       <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.5.2" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Reference Include="ClothesApp">
-        <HintPath>..\ClothesApp\bin\Debug\net7.0\ClothesApp.dll</HintPath>
-      </Reference>
-      <Reference Include="FluentValidation.DependencyInjectionExtensions">
-        <HintPath>..\..\..\..\.nuget\packages\fluentvalidation.dependencyinjectionextensions\11.5.2\lib\netstandard2.1\FluentValidation.DependencyInjectionExtensions.dll</HintPath>
-      </Reference>
-    </ItemGroup>
-
 </Project>

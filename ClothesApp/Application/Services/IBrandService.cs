@@ -4,7 +4,7 @@ namespace Application.Services;
 
 public interface IBrandService
 {
-    Task<BrandDto> DeleteBrandById(long id);
+    Task<BrandDto> DeleteBrandByIdAsync(long id);
 
     Task<IReadOnlyCollection<BrandDto>> GetAllBrandsAsync();
 

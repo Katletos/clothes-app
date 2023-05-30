@@ -1,4 +1,5 @@
 using System.Reflection;
+using Application.Services;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +12,8 @@ public static class DependencyInjection
     {
         services.AddFluentValidationAutoValidation();
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
+        services.AddScoped<IBrandService, BrandService>();
 
         services.AddAutoMapper(typeof(AppMappingProfile));
 

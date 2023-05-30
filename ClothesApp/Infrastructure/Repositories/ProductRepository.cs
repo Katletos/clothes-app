@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Application.Repositories;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -28,22 +29,17 @@ public class ProductRepository : IProductRepository
         throw new NotImplementedException();
     }
 
-    public Task<bool> IsExistAsync(long id)
+    public Task<bool> DoesExistAsync(long id)
     {
         throw new NotImplementedException();
     }
 
-    public Task<bool> IsExistAsync(string name)
+    public Task<IReadOnlyCollection<Product>> GetByConditionAsync(Expression<Func<Product, bool>> expression)
     {
         throw new NotImplementedException();
     }
-
-    public Task<Product> GetByIdAsync(long id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public IQueryable<Product> GetAll()
+    
+    public Task<IReadOnlyCollection<Product>> GetAllAsync()
     {
         throw new NotImplementedException();
     }
