@@ -4,11 +4,11 @@ namespace Application.Repositories;
 
 public interface IBrandsRepository : IBaseRepository<Brand>
 {
-    Task<bool> DoesBrandExistAsync(string name);
+    Task<bool> DoesBrandExist(string name);
 
-    Task<bool> DoesBrandExistAsync(long id);
+    Task<bool> DoesBrandExist(long id);
 
-    Task<Brand> DeleteBrandByIdAsync(long id);
+    Task<Brand> DeleteBrandById(long id);
 
-    Task<Brand> GetBrandByIdAsync(long id);
+    Task<Brand> GetBrandById(long id);
 }

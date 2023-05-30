@@ -18,7 +18,7 @@ public class BrandsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IReadOnlyCollection<BrandDto>>> GetAllBrands()
     {
-        var brandsDtos = await _brandService.GetAllBrandsAsync();
+        var brandsDtos = await _brandService.GetAllBrands();
 
         return Ok(brandsDtos);
     }
@@ -26,7 +26,7 @@ public class BrandsController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<BrandDto>> GetBrandById([FromRoute] long id)
     {
-        var brandDto = await _brandService.GetBrandByIdAsync(id);
+        var brandDto = await _brandService.GetBrandById(id);
         
         return Ok(brandDto);
     }
@@ -34,7 +34,7 @@ public class BrandsController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteBrandById([FromRoute] long id)
     {
-        var brandDto = await _brandService.DeleteBrandByIdAsync(id);
+        var brandDto = await _brandService.DeleteBrandById(id);
 
         return Ok(brandDto);
     }
@@ -42,7 +42,7 @@ public class BrandsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult> AddBrand([FromBody] CreateBrandDto createBrandDto)
     {
-        var brandDto = await _brandService.AddBrandAsync(createBrandDto);
+        var brandDto = await _brandService.AddBrand(createBrandDto);
         
         return Ok(brandDto);
     }
@@ -50,7 +50,7 @@ public class BrandsController : ControllerBase
     [HttpPut]
     public async Task<ActionResult> UpdateBrand([FromBody] BrandDto brandDto)
     {
-        await _brandService.UpdateBrandAsync(brandDto);
+        await _brandService.UpdateBrand(brandDto);
         
         return Ok(brandDto);
     }

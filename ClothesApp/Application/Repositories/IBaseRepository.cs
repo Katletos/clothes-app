@@ -2,9 +2,9 @@ namespace Application.Repositories;
 
 public interface IBaseRepository<T> where T : class
 {
-    Task<T> InsertAsync(T entity);
+    Task<T> Insert(T entity);
 
-    Task<T> UpdateAsync(T entity);
+    Task<T> Update(T entity);
 
-    Task<IList<T>> GetAllAsync();
+    Task<IList<T>> GetAll();
 }

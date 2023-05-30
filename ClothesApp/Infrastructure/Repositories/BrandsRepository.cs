@@ -13,7 +13,7 @@ public class BrandsRepository : IBrandsRepository
         _dbContext = context;
     }
 
-    public async Task<Brand> InsertAsync(Brand brand)
+    public async Task<Brand> Insert(Brand brand)
     {
         await _dbContext.Brands.AddAsync(brand);
         await _dbContext.SaveChangesAsync();
@@ -21,7 +21,7 @@ public class BrandsRepository : IBrandsRepository
         return brand;
     }
 
-    public async Task<Brand> UpdateAsync(Brand brand)
+    public async Task<Brand> Update(Brand brand)
     {
         _dbContext.Update(brand);
         await _dbContext.SaveChangesAsync();
@@ -29,7 +29,7 @@ public class BrandsRepository : IBrandsRepository
         return brand;
     }
     
-    public async Task<Brand> DeleteBrandByIdAsync(long id)
+    public async Task<Brand> DeleteBrandById(long id)
     {
         var brand = await _dbContext.Brands.FindAsync(id);
 
@@ -42,22 +42,22 @@ public class BrandsRepository : IBrandsRepository
         return brand;
     }
 
-    public async Task<Brand> GetBrandByIdAsync(long id)
+    public async Task<Brand> GetBrandById(long id)
     {
         return await _dbContext.Brands.AsNoTracking().FirstOrDefaultAsync(b => b.Id == id);
     }
 
-    public async Task<bool> DoesBrandExistAsync(string brandName)
+    public async Task<bool> DoesBrandExist(string brandName)
     {
         return await _dbContext.Brands.AnyAsync(b => b.Name == brandName);
     }
 
-    public async Task<bool> DoesBrandExistAsync(long id)
+    public async Task<bool> DoesBrandExist(long id)
     {
         return await _dbContext.Brands.AnyAsync(b => b.Id == id);
     }
 
-    public async Task<IList<Brand>> GetAllAsync()
+    public async Task<IList<Brand>> GetAll()
     {
         return await _dbContext.Brands.AsQueryable().AsNoTracking().ToListAsync();
     }

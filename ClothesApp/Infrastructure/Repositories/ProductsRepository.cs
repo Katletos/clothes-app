@@ -18,17 +18,17 @@ public class ProductsRepository : IProductsRepository
         return await _dbContext.Products.AnyAsync(p => p.BrandId == brandId);
     }
 
-    public Task<Product> InsertAsync(Product entity)
+    public Task<Product> Insert(Product entity)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Product> UpdateAsync(Product entity)
+    public Task<Product> Update(Product entity)
     {
         throw new NotImplementedException();
     }
 
-    public Task<IList<Product>> GetAllAsync()
+    public Task<IList<Product>> GetAll()
     {
         throw new NotImplementedException();
     }

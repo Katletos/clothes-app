@@ -4,13 +4,13 @@ namespace Application.Services;
 
 public interface IBrandService
 {
-    Task<BrandDto> DeleteBrandByIdAsync(long id);
+    Task<BrandDto> DeleteBrandById(long id);
 
-    Task<IList<BrandDto>> GetAllBrandsAsync();
+    Task<IList<BrandDto>> GetAllBrands();
 
-    Task<BrandDto> GetBrandByIdAsync(long id);
+    Task<BrandDto> GetBrandById(long id);
 
-    Task<BrandDto> AddBrandAsync(CreateBrandDto createBrandDto);
+    Task<BrandDto> AddBrand(CreateBrandDto createBrandDto);
 
-    Task<BrandDto> UpdateBrandAsync(BrandDto brandDto);
+    Task<BrandDto> UpdateBrand(BrandDto brandDto);
 }
