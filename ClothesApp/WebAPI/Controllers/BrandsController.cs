@@ -1,24 +1,14 @@
 using Application.Dtos;
 using Application.Services;
-using Infrastructure.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
 
 [ApiController]
-[Route("api/BrandsController")] 
+[Route("api/Brands")] 
 public class BrandsController : ControllerBase
 {
     private readonly IBrandService _brandService;   
-    
-    private abstract class Messages
-    {
-        public const string NotFoundString = "Brand with Id not found"; 
-    
-        public const string HasProductsConflictString = "Brand with Id has one or more product";
-    
-        public const string AlreadyExistConflictString = "Brand already exists";
-    }
     
     public BrandsController(IBrandService brandService)
     {
@@ -37,11 +27,6 @@ public class BrandsController : ControllerBase
     public async Task<ActionResult<BrandDto>> GetBrandById([FromRoute] long id)
     {
         var brandDto = await _brandService.GetBrandByIdAsync(id);
-
-        if (brandDto is null)
-        {
-            return NotFound(Messages.NotFoundString);
-        }
         
         return Ok(brandDto);
     }
@@ -49,35 +34,15 @@ public class BrandsController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteBrandById([FromRoute] long id)
     {
-        try
-        {
-            var brandDto = await _brandService.DeleteBrandById(id);
+        var brandDto = await _brandService.DeleteBrandByIdAsync(id);
 
-            return Ok(brandDto);
-        }
-        catch (NotFoundException)
-        {
-            return NotFound(Messages.NotFoundString);
-        }
-        catch (RelationExistException)
-        {
-            return Conflict(Messages.HasProductsConflictString);
-        }
+        return Ok(brandDto);
     }
 
     [HttpPost]
-    public async Task<ActionResult> AddBrand([FromQuery] CreateBrandDto createBrandDto)
+    public async Task<ActionResult> AddBrand([FromBody] CreateBrandDto createBrandDto)
     {
-        BrandDto brandDto;
-        
-        try
-        {
-            brandDto = await _brandService.AddBrandAsync(createBrandDto);
-        }
-        catch (DuplicationException)
-        {
-            return Conflict(Messages.AlreadyExistConflictString);
-        }
+        var brandDto = await _brandService.AddBrandAsync(createBrandDto);
         
         return Ok(brandDto);
     }
@@ -85,14 +50,7 @@ public class BrandsController : ControllerBase
     [HttpPut]
     public async Task<ActionResult> UpdateBrand([FromBody] BrandDto brandDto)
     {
-        try
-        {
-            await _brandService.UpdateBrandAsync(brandDto);
-        }
-        catch (NotFoundException)
-        {
-            return NotFound(Messages.NotFoundString);
-        }
+        await _brandService.UpdateBrandAsync(brandDto);
         
         return Ok(brandDto);
     }
