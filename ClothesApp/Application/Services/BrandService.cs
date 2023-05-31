@@ -21,43 +21,46 @@ public class BrandService : IBrandService
         _mapper = mapper;
     }
 
-    public async Task<BrandDto> AddBrand(CreateBrandDto createBrandDto)
+    public async Task<BrandDto> AddBrand(BrandNameDto brandNameDto)
     {
-        var brandExists = await _brandsRepository.DoesBrandExist(createBrandDto.Name);
+        var brandExists = await _brandsRepository.DoesBrandExist(brandNameDto.Name);
 
         if (brandExists)
         {
-            throw new DatabaseConflictException(Messages.AlreadyExistsConflict);
+            throw new BusinessRuleException(Messages.BrandNameUniqueConstraint);
         }
 
-        var brand = _mapper.Map<Brand>(createBrandDto);
+        var brand = _mapper.Map<Brand>(brandNameDto);
         await _brandsRepository.Insert(brand);
         var brandDto = _mapper.Map<BrandDto>(brand);
 
         return brandDto;
     }
 
-    public async Task<BrandDto> UpdateBrand(BrandDto brandDto)
+    public async Task<BrandDto> UpdateBrand(long id, BrandNameDto brandNameDto)
     {
-        var brand = _mapper.Map<Brand>(brandDto);
+        var brand = _mapper.Map<BrandNameDto, Brand>(brandNameDto, opt => 
+            opt.AfterMap((src, dest) => dest.Id = id));
 
-        var result = await _brandsRepository.GetBrandById(brand.Id);
+        var doesExist = await _brandsRepository.DoesBrandExist(id);
 
-        if (result is null)
+        if (doesExist is false)
         {
             throw new NotFoundException(Messages.NotFound);
         }
 
         await _brandsRepository.Update(brand);
 
+        var brandDto = _mapper.Map<BrandDto>(brand);
+        
         return brandDto;
     }
 
     public async Task<BrandDto> DeleteBrandById(long id)
     {
-        var isExist = await _brandsRepository.DoesBrandExist(id);
+        var doesExist = await _brandsRepository.DoesBrandExist(id);
 
-        if (!isExist)
+        if (doesExist is false) 
         {
             throw new NotFoundException(Messages.NotFound);
         }
@@ -66,12 +69,12 @@ public class BrandService : IBrandService
 
         if (areAnyProducts)
         {
-            throw new DatabaseConflictException(Messages.HasProductsConflict);
+            throw new BusinessRuleException(Messages.BrandDeleteConstraint);
         }
 
-        var brand = await _brandsRepository.GetBrandById(id);
+        var brand = await _brandsRepository.GetById(id);
+        await _brandsRepository.DeleteBrand(brand);
         var brandDto = _mapper.Map<BrandDto>(brand);
-        await _brandsRepository.DeleteBrandById(id);
 
         return brandDto;
     }
@@ -87,7 +90,7 @@ public class BrandService : IBrandService
 
     public async Task<BrandDto> GetBrandById(long id)
     {
-        var brand = await _brandsRepository.GetBrandById(id);
+        var brand = await _brandsRepository.GetById(id);
 
         if (brand is null)
         {

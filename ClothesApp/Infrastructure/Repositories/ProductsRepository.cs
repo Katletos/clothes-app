@@ -32,4 +32,9 @@ public class ProductsRepository : IProductsRepository
     {
         throw new NotImplementedException();
     }
+
+    public Task<Product> GetById(long id)
+    {
+        throw new NotImplementedException();
+    }
 }

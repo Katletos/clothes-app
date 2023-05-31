@@ -8,7 +8,5 @@ public interface IBrandsRepository : IBaseRepository<Brand>
 
     Task<bool> DoesBrandExist(long id);
 
-    Task<Brand> DeleteBrandById(long id);
-
-    Task<Brand> GetBrandById(long id);
+    Task<Brand> DeleteBrand(Brand brand);
 }

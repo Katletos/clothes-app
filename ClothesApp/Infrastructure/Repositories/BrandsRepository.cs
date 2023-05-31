@@ -15,7 +15,7 @@ public class BrandsRepository : IBrandsRepository
 
     public async Task<Brand> Insert(Brand brand)
     {
-        await _dbContext.Brands.AddAsync(brand);
+        _dbContext.Brands.Add(brand);
         await _dbContext.SaveChangesAsync();
 
         return brand;
@@ -29,22 +29,17 @@ public class BrandsRepository : IBrandsRepository
         return brand;
     }
     
-    public async Task<Brand> DeleteBrandById(long id)
+    public async Task<Brand> DeleteBrand(Brand brand)
     {
-        var brand = await _dbContext.Brands.FindAsync(id);
-
-        if (brand is not null)
-        {
-            _dbContext.Brands.Remove(brand);
-            await _dbContext.SaveChangesAsync();
-        }
-
+        _dbContext.Brands.Remove(brand);
+        await _dbContext.SaveChangesAsync();
+      
         return brand;
     }
 
-    public async Task<Brand> GetBrandById(long id)
+    public async Task<Brand> GetById(long id)
     {
-        return await _dbContext.Brands.AsNoTracking().FirstOrDefaultAsync(b => b.Id == id);
+        return await _dbContext.Brands.FirstOrDefaultAsync(b => b.Id == id);
     }
 
     public async Task<bool> DoesBrandExist(string brandName)
@@ -59,6 +54,6 @@ public class BrandsRepository : IBrandsRepository
 
     public async Task<IList<Brand>> GetAll()
     {
-        return await _dbContext.Brands.AsQueryable().AsNoTracking().ToListAsync();
+        return await _dbContext.Brands.AsNoTracking().ToListAsync();
     }
 }

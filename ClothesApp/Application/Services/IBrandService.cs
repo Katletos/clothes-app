@@ -10,7 +10,7 @@ public interface IBrandService
 
     Task<BrandDto> GetBrandById(long id);
 
-    Task<BrandDto> AddBrand(CreateBrandDto createBrandDto);
+    Task<BrandDto> AddBrand(BrandNameDto brandNameDto);
 
-    Task<BrandDto> UpdateBrand(BrandDto brandDto);
+    Task<BrandDto> UpdateBrand(long id, BrandNameDto brandNameDto);
 }
