@@ -40,17 +40,17 @@ public class BrandsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult> AddBrand([FromBody] CreateBrandDto createBrandDto)
+    public async Task<ActionResult> AddBrand([FromBody] BrandNameDto brandNameDto)
     {
-        var brandDto = await _brandService.AddBrand(createBrandDto);
+        var brandDto = await _brandService.AddBrand(brandNameDto);
         
         return Ok(brandDto);
     }
     
-    [HttpPut]
-    public async Task<ActionResult> UpdateBrand([FromBody] BrandDto brandDto)
+    [HttpPut("{id}")]
+    public async Task<ActionResult> UpdateBrand([FromRoute] long id, [FromBody] BrandNameDto brandNameDto)
     {
-        await _brandService.UpdateBrand(brandDto);
+        var brandDto = await _brandService.UpdateBrand(id, brandNameDto);
         
         return Ok(brandDto);
     }
