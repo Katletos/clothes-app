@@ -4,7 +4,7 @@ public class Messages
 {
     public const string NotFound = "Item not found";
 
-    public const string HasProductsConflict = "Brand has one or more products";
+    public const string BrandDeleteConstraint = "You caт't delete a brand that has one or more products";
 
-    public const string AlreadyExistsConflict = "Item already exists";
+    public const string BrandNameUniqueConstraint = "Brand name must be unique";
 }

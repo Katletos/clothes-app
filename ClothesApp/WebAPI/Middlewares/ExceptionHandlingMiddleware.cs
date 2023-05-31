@@ -29,13 +29,13 @@ public class ExceptionHandlingMiddleware : IMiddleware
 
             await context.Response.WriteAsync(json);
         }
-        catch (DatabaseConflictException e)
+        catch (BusinessRuleException e)
         {
-            context.Response.StatusCode = (int)HttpStatusCode.Conflict;
+            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             
             ProblemDetails problem = new()
             {
-                Status = (int)HttpStatusCode.Conflict,
+                Status = (int)HttpStatusCode.BadRequest,
                 Detail = e.Message,
             };
             
