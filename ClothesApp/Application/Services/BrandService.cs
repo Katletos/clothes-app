@@ -42,9 +42,9 @@ public class BrandService : IBrandService
         var brand = _mapper.Map<BrandNameDto, Brand>(brandNameDto, opt => 
             opt.AfterMap((src, dest) => dest.Id = id));
 
-        var doesExist = await _brandsRepository.DoesBrandExist(id);
+        var exist = await _brandsRepository.DoesExist(id);
 
-        if (doesExist is false)
+        if (!exist)
         {
             throw new NotFoundException(Messages.NotFound);
         }
@@ -58,9 +58,9 @@ public class BrandService : IBrandService
 
     public async Task<BrandDto> DeleteBrandById(long id)
     {
-        var doesExist = await _brandsRepository.DoesBrandExist(id);
+        var exist = await _brandsRepository.DoesExist(id);
 
-        if (doesExist is false) 
+        if (!exist) 
         {
             throw new NotFoundException(Messages.NotFound);
         }

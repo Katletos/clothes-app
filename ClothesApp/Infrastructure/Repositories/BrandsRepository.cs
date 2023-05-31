@@ -47,7 +47,7 @@ public class BrandsRepository : IBrandsRepository
         return await _dbContext.Brands.AnyAsync(b => b.Name == brandName);
     }
 
-    public async Task<bool> DoesBrandExist(long id)
+    public async Task<bool> DoesExist(long id)
     {
         return await _dbContext.Brands.AnyAsync(b => b.Id == id);
     }

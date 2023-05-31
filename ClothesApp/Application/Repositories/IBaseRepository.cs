@@ -9,4 +9,6 @@ public interface IBaseRepository<T> where T : class
     Task<IList<T>> GetAll();
     
     Task<T> GetById(long id);
+    
+    Task<bool> DoesExist(long id);
 }

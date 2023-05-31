@@ -37,4 +37,9 @@ public class ProductsRepository : IProductsRepository
     {
         throw new NotImplementedException();
     }
+
+    public Task<bool> DoesExist(long id)
+    {
+        throw new NotImplementedException();
+    }
 }
