@@ -9,6 +9,6 @@ public class AppMappingProfile : Profile
     public AppMappingProfile()
     {
         CreateMap<Brand, BrandDto>().ReverseMap();
-        CreateMap<CreateBrandDto, Brand>();
+        CreateMap<BrandNameDto, Brand>().ForMember(dest => dest.Id, opt => opt.Ignore());
     }
 }
