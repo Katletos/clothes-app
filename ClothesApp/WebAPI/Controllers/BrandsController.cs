@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Application.Dtos;
 using Application.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -16,14 +17,17 @@ public class BrandsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyCollection<BrandDto>>> GetAllBrands()
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<BrandDto>))]
+    public async Task<ActionResult<IList<BrandDto>>> GetAllBrands()
     {
         var brandsDtos = await _brandService.GetAllBrands();
 
         return Ok(brandsDtos);
     }
     
-    [HttpGet("{id}")]
+    [HttpGet("{id:long}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BrandDto))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
     public async Task<ActionResult<BrandDto>> GetBrandById([FromRoute] long id)
     {
         var brandDto = await _brandService.GetBrandById(id);
@@ -31,7 +35,10 @@ public class BrandsController : ControllerBase
         return Ok(brandDto);
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:long}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BrandDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
     public async Task<IActionResult> DeleteBrandById([FromRoute] long id)
     {
         var brandDto = await _brandService.DeleteBrandById(id);
@@ -40,6 +47,8 @@ public class BrandsController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BrandDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     public async Task<ActionResult> AddBrand([FromBody] BrandNameDto brandNameDto)
     {
         var brandDto = await _brandService.AddBrand(brandNameDto);
@@ -47,7 +56,9 @@ public class BrandsController : ControllerBase
         return Ok(brandDto);
     }
     
-    [HttpPut("{id}")]
+    [HttpPut("{id:long}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BrandDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     public async Task<ActionResult> UpdateBrand([FromRoute] long id, [FromBody] BrandNameDto brandNameDto)
     {
         var brandDto = await _brandService.UpdateBrand(id, brandNameDto);
