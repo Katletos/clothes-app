@@ -1,4 +1,5 @@
 using System.Reflection;
+using Application.Interfaces.Services;
 using Application.Services;
 using FluentValidation;
 using FluentValidation.AspNetCore;

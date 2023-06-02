@@ -1,6 +1,6 @@
 using Application.Dtos;
 
-namespace Application.Services;
+namespace Application.Interfaces.Services;
 
 public interface IBrandService
 {

@@ -1,6 +1,5 @@
-using System.Runtime.CompilerServices;
 using Application.Dtos;
-using Application.Services;
+using Application.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;

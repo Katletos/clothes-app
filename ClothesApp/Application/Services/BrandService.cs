@@ -1,6 +1,7 @@
 using Application.Dtos;
 using Application.Exceptions;
-using Application.Repositories;
+using Application.Interfaces.Repositories;
+using Application.Interfaces.Services;
 using AutoMapper;
 using Domain.Entities;
 

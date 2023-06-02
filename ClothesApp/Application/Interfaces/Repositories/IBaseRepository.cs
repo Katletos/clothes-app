@@ -1,4 +1,4 @@
-namespace Application.Repositories;
+namespace Application.Interfaces.Repositories;
 
 public interface IBaseRepository<T> where T : class
 {
