@@ -44,8 +44,8 @@ public class ProductsRepository : IProductsRepository
         throw new NotImplementedException();
     }
 
-    public Task<bool> DoesExist(long id)
+    public async Task<bool> DoesExist(long id)
     {
-        throw new NotImplementedException();
+        return await _dbContext.Products.AnyAsync(p => p.Id == id);
     }
 }

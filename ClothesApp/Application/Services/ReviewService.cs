@@ -10,13 +10,16 @@ namespace Application.Services;
 public class ReviewService : IReviewService
 {
     private readonly IReviewsRepository _reviewsRepository;
+
+    private readonly IProductsRepository _productsRepository;
     
     private readonly IMapper _mapper;
 
-    public ReviewService(IReviewsRepository reviewsRepository, IMapper mapper)
+    public ReviewService(IReviewsRepository reviewsRepository, IMapper mapper, IProductsRepository productsRepository)
     {
         _reviewsRepository = reviewsRepository;
         _mapper = mapper;
+        _productsRepository = productsRepository;
     }
 
     public async Task<ReviewDto> Add(ReviewInputDto reviewInputDto)
@@ -28,6 +31,13 @@ public class ReviewService : IReviewService
             throw new BusinessRuleException(Messages.ReviewUniqueConstraint);
         }
 
+        exist = await _productsRepository.DoesExist(reviewInputDto.ProductId);
+
+        if (!exist)
+        {
+            throw new NotFoundException(Messages.NotFound);
+        }
+        
         var review = _mapper.Map<Review>(reviewInputDto);
         await _reviewsRepository.Insert(review);
         var reviewDto = _mapper.Map<ReviewDto>(review);
