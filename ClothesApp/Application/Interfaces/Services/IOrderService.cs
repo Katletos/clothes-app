@@ -1,4 +1,6 @@
+using Application.Dtos.OrderItems;
 using Application.Dtos.Orders;
+using Application.Dtos.OrderTransactions;
 using Domain.Enums;
 
 namespace Application.Interfaces.Services;

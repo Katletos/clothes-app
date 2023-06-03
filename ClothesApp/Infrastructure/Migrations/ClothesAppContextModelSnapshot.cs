@@ -171,7 +171,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("OrdersItems");
                 });
 
-            modelBuilder.Entity("Domain.Entities.OrdersTransaction", b =>
+            modelBuilder.Entity("Domain.Entities.OrderTransaction", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -415,7 +415,7 @@ namespace Infrastructure.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("Domain.Entities.OrdersTransaction", b =>
+            modelBuilder.Entity("Domain.Entities.OrderTransaction", b =>
                 {
                     b.HasOne("Domain.Entities.Order", "Order")
                         .WithMany("OrdersTransactions")

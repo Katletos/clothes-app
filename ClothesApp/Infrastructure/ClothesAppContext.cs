@@ -21,7 +21,7 @@ public class ClothesAppContext : DbContext
 
     public virtual DbSet<OrderItem> OrdersItems { get; set; }
 
-    public virtual DbSet<OrdersTransaction> OrdersTransactions { get; set; }
+    public virtual DbSet<OrderTransaction> OrdersTransactions { get; set; }
 
     public virtual DbSet<Product> Products { get; set; }
 
