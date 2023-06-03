@@ -1,7 +1,7 @@
-using Application.Dtos;
+using Application.Dtos.Brands;
 using FluentValidation;
 
-namespace Application.Validators;
+namespace Application.Validators.Brands;
 
 public class BrandDtoValidator : AbstractValidator<BrandDto>
 {

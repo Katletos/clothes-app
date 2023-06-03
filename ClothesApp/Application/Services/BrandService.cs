@@ -1,4 +1,4 @@
-using Application.Dtos;
+using Application.Dtos.Brands;
 using Application.Exceptions;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
@@ -22,26 +22,26 @@ public class BrandService : IBrandService
         _mapper = mapper;
     }
 
-    public async Task<BrandDto> AddBrand(BrandNameDto brandNameDto)
+    public async Task<BrandDto> Add(BrandInputDto brandInputDto)
     {
-        var brandExists = await _brandsRepository.DoesBrandExist(brandNameDto.Name);
+        var brandExists = await _brandsRepository.DoesExist(brandInputDto.Name);
 
         if (brandExists)
         {
             throw new BusinessRuleException(Messages.BrandNameUniqueConstraint);
         }
 
-        var brand = _mapper.Map<Brand>(brandNameDto);
+        var brand = _mapper.Map<Brand>(brandInputDto);
         await _brandsRepository.Insert(brand);
         var brandDto = _mapper.Map<BrandDto>(brand);
 
         return brandDto;
     }
 
-    public async Task<BrandDto> UpdateBrand(long id, BrandNameDto brandNameDto)
+    public async Task<BrandDto> Update(long id, BrandInputDto brandInputDto)
     {
-        var brand = _mapper.Map<BrandNameDto, Brand>(brandNameDto, opt => 
-            opt.AfterMap((src, dest) => dest.Id = id));
+        var brand = _mapper.Map<BrandInputDto, Brand>(brandInputDto, opt => 
+            opt.AfterMap((_, dest) => dest.Id = id));
 
         var exist = await _brandsRepository.DoesExist(id);
 
@@ -57,7 +57,7 @@ public class BrandService : IBrandService
         return brandDto;
     }
 
-    public async Task<BrandDto> DeleteBrandById(long id)
+    public async Task<BrandDto> DeleteById(long id)
     {
         var exist = await _brandsRepository.DoesExist(id);
 
@@ -74,13 +74,13 @@ public class BrandService : IBrandService
         }
 
         var brand = await _brandsRepository.GetById(id);
-        await _brandsRepository.DeleteBrand(brand);
+        await _brandsRepository.Delete(brand);
         var brandDto = _mapper.Map<BrandDto>(brand);
 
         return brandDto;
     }
 
-    public async Task<IList<BrandDto>> GetAllBrands()
+    public async Task<IList<BrandDto>> GetAll()
     {
         var brands = await _brandsRepository.GetAll();
 
@@ -89,7 +89,7 @@ public class BrandService : IBrandService
         return brandsDto;
     }
 
-    public async Task<BrandDto> GetBrandById(long id)
+    public async Task<BrandDto> GetById(long id)
     {
         var brand = await _brandsRepository.GetById(id);
 

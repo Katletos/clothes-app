@@ -1,16 +1,16 @@
-using Application.Dtos;
+using Application.Dtos.Brands;
 
 namespace Application.Interfaces.Services;
 
 public interface IBrandService
 {
-    Task<BrandDto> DeleteBrandById(long id);
+    Task<BrandDto> DeleteById(long id);
 
-    Task<IList<BrandDto>> GetAllBrands();
+    Task<IList<BrandDto>> GetAll();
 
-    Task<BrandDto> GetBrandById(long id);
+    Task<BrandDto> GetById(long id);
 
-    Task<BrandDto> AddBrand(BrandNameDto brandNameDto);
+    Task<BrandDto> Add(BrandInputDto brandInputDto);
 
-    Task<BrandDto> UpdateBrand(long id, BrandNameDto brandNameDto);
+    Task<BrandDto> Update(long id, BrandInputDto brandInputDto);
 }

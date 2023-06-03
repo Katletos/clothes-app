@@ -15,6 +15,7 @@ public static class DependencyInjection
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
         services.AddScoped<IBrandService, BrandService>();
+        services.AddScoped<IReviewService, ReviewService>();
 
         services.AddAutoMapper(typeof(AppMappingProfile));
 

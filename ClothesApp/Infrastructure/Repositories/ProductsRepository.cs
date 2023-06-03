@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Application.Interfaces.Repositories;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +17,11 @@ public class ProductsRepository : IProductsRepository
     public async Task<bool> AnyProductOfBrandIdExists(long brandId)
     {
         return await _dbContext.Products.AnyAsync(p => p.BrandId == brandId);
+    }
+
+    public Task<IList<Product>> FindByCondition(Expression<Func<Product, bool>> expression)
+    {
+        throw new NotImplementedException();
     }
 
     public Task<Product> Insert(Product entity)

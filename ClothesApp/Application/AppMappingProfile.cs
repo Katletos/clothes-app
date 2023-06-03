@@ -1,4 +1,5 @@
-using Application.Dtos;
+using Application.Dtos.Brands;
+using Application.Dtos.Reviews;
 using AutoMapper;
 using Domain.Entities;
 
@@ -9,6 +10,8 @@ public class AppMappingProfile : Profile
     public AppMappingProfile()
     {
         CreateMap<Brand, BrandDto>().ReverseMap();
-        CreateMap<BrandNameDto, Brand>();
+        CreateMap<BrandInputDto, Brand>();
+        CreateMap<Review, ReviewDto>().ReverseMap();
+        CreateMap<ReviewInputDto, Review>();
     }
 }

@@ -4,7 +4,7 @@ namespace Application.Interfaces.Repositories;
 
 public interface IBrandsRepository : IBaseRepository<Brand>
 {
-    Task<bool> DoesBrandExist(string name);
+    Task<bool> DoesExist(string name);
     
-    Task<Brand> DeleteBrand(Brand brand);
+    Task<Brand> Delete(Brand brand);
 }
