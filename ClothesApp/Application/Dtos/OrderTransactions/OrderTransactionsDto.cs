@@ -1,8 +1,8 @@
-﻿using Domain.Enums;
+using Domain.Enums;
 
-namespace Domain.Entities;
+namespace Application.Dtos.OrderTransactions;
 
-public class OrderTransaction
+public class OrderTransactionsDto
 {
     public long Id { get; set; }
 
@@ -11,6 +11,4 @@ public class OrderTransaction
     public OrderStatusType OrderStatus { get; set; }
 
     public DateTime UpdatedAt { get; set; }
-
-    public virtual Order Order { get; set; }
 }

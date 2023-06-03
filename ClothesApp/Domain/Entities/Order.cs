@@ -20,7 +20,7 @@ public class Order
 
     public virtual ICollection<OrderItem> OrdersItems { get; set; }
 
-    public virtual ICollection<OrdersTransaction> OrdersTransactions { get; set; }
+    public virtual ICollection<OrderTransaction> OrdersTransactions { get; set; }
 
     public virtual User User { get; set; }
 }
