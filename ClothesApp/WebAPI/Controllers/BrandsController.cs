@@ -24,7 +24,7 @@ public class BrandsController : ControllerBase
         return Ok(brandsDtos);
     }
     
-    [HttpGet("{id:long}")]
+    [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BrandDto))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
     public async Task<ActionResult<BrandDto>> GetBrandById([FromRoute] long id)
@@ -34,7 +34,7 @@ public class BrandsController : ControllerBase
         return Ok(brandDto);
     }
 
-    [HttpDelete("{id:long}")]
+    [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BrandDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
@@ -55,7 +55,7 @@ public class BrandsController : ControllerBase
         return Ok(brandDto);
     }
     
-    [HttpPut("{id:long}")]
+    [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BrandDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     public async Task<ActionResult> UpdateBrand([FromRoute] long id, [FromBody] BrandInputDto brandInputDto)

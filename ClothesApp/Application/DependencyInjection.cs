@@ -16,6 +16,8 @@ public static class DependencyInjection
 
         services.AddScoped<IBrandService, BrandService>();
         services.AddScoped<IReviewService, ReviewService>();
+        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IProductService, ProductService>();
 
         services.AddAutoMapper(typeof(AppMappingProfile));
 

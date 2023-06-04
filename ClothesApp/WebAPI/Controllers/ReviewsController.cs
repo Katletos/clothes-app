@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace WebAPI.Controllers;
 
 [ApiController]
-[Route("api/Reviews")] 
+[Route("api/reviews")] 
 public class ReviewsController : ControllerBase
 {
     private readonly IReviewService _reviewService;   
@@ -24,7 +24,7 @@ public class ReviewsController : ControllerBase
         return Ok(reviewsDto);
     }
     
-    [HttpGet("{id:long}")]
+    [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ReviewDto))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
     public async Task<ActionResult<ReviewDto>> GetReviewById([FromRoute] long id)
@@ -34,7 +34,7 @@ public class ReviewsController : ControllerBase
         return Ok(reviewDto);
     }
 
-    [HttpDelete("{id:long}")]
+    [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ReviewDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
@@ -44,18 +44,8 @@ public class ReviewsController : ControllerBase
 
         return Ok(reviewDto);
     }
-
-    [HttpPost]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ReviewDto))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
-    public async Task<ActionResult> AddReview([FromBody] ReviewInputDto reviewInputDto)
-    {
-        var reviewDto = await _reviewService.Add(reviewInputDto);
-        
-        return Ok(reviewDto);
-    }
     
-    [HttpPut("{id:long}")]
+    [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ReviewDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     public async Task<ActionResult> UpdateReview([FromRoute] long id, [FromBody] ReviewInputDto reviewInputDto)

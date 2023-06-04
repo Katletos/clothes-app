@@ -43,4 +43,22 @@ public class CategoryRepository : ICategoryRepository
     {
         return await _dbContext.Categories.AnyAsync(c => c.Id == id);
     }
+
+    public async Task<bool> DoesExist(string categoryName)
+    {
+        return await _dbContext.Categories.AnyAsync(c => c.Name == categoryName);
+    }
+
+    public async Task<bool> AreParentCategory(long id)
+    {
+        return await _dbContext.Categories.AnyAsync(c => c.ParentCategoryId == id);
+    }
+
+    public async Task<Category> Delete(Category category)
+    {
+        _dbContext.Categories.Remove(category);
+        await _dbContext.SaveChangesAsync();
+      
+        return category;
+    }
 }

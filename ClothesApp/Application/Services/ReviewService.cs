@@ -12,30 +12,40 @@ public class ReviewService : IReviewService
     private readonly IReviewsRepository _reviewsRepository;
 
     private readonly IProductsRepository _productsRepository;
+
+    private readonly IUserRepository _userRepository;
     
     private readonly IMapper _mapper;
 
-    public ReviewService(IReviewsRepository reviewsRepository, IMapper mapper, IProductsRepository productsRepository)
+    public ReviewService(IReviewsRepository reviewsRepository, IMapper mapper, IProductsRepository productsRepository, IUserRepository userRepository)
     {
         _reviewsRepository = reviewsRepository;
         _mapper = mapper;
         _productsRepository = productsRepository;
+        _userRepository = userRepository;
     }
 
-    public async Task<ReviewDto> Add(ReviewInputDto reviewInputDto)
+    public async Task<ReviewDto> Add(long productId, ReviewInputDto reviewInputDto)
     {
-        var exist = await _reviewsRepository.DoesExist(reviewInputDto);
-
-        if (exist)
-        {
-            throw new BusinessRuleException(Messages.ReviewUniqueConstraint);
-        }
-
-        exist = await _productsRepository.DoesExist(reviewInputDto.ProductId);
+        var exist = await _productsRepository.DoesExist(productId);
 
         if (!exist)
         {
             throw new NotFoundException(Messages.NotFound);
+        }
+
+        exist = await _userRepository.DoesExist(reviewInputDto.UserId);
+
+        if (!exist)
+        {
+            throw new NotFoundException(Messages.NotFound);
+        }
+        
+        var canAdd = await _reviewsRepository.CanAdd(productId, reviewInputDto);
+
+        if (!canAdd)
+        {
+            throw new BusinessRuleException(Messages.ReviewUniqueConstraint);
         }
         
         var review = _mapper.Map<Review>(reviewInputDto);

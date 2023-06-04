@@ -54,10 +54,10 @@ public class ReviewsRepository : IReviewsRepository
         return review;
     }
 
-    public async Task<bool> DoesExist(ReviewInputDto reviewInputDto)
+    public async Task<bool> CanAdd(long productId, ReviewInputDto reviewInputDto)
     {
-        return await _dbContext.Reviews.AnyAsync(r => r.UserId == reviewInputDto.UserId 
-                                                      && r.ProductId == reviewInputDto.ProductId);
+        return await _dbContext.Reviews.AnyAsync(r => r.ProductId == productId
+                                                      && r.UserId == reviewInputDto.UserId);
     }
 
     public async Task<IList<Review>> FindByCondition(Expression<Func<Review, bool>> expression)

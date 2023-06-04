@@ -43,4 +43,17 @@ public class UserRepository : IUserRepository
     {
         return await _dbContext.Users.AnyAsync(u => u.Id == id);
     }
+
+    public async Task<User> Delete(User user)
+    {
+        _dbContext.Users.Remove(user);
+        await _dbContext.SaveChangesAsync();
+      
+        return user;
+    }
+
+    public async Task<bool> DoesExist(string email)
+    {
+        return await _dbContext.Users.AnyAsync(u => u.Email == email);
+    }
 }

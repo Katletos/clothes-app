@@ -2,7 +2,6 @@ namespace Application.Dtos.Reviews;
 
 public class ReviewInputDto
 {
-    public long ProductId { get; set; }
 
     public long UserId { get; set; }
 

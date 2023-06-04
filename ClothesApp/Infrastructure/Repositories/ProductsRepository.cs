@@ -19,9 +19,14 @@ public class ProductsRepository : IProductsRepository
         return await _dbContext.Products.AnyAsync(p => p.BrandId == brandId);
     }
 
-    public Task<IList<Product>> FindByCondition(Expression<Func<Product, bool>> expression)
+    public async Task<bool> DoesExist(string name)
     {
-        throw new NotImplementedException();
+        return await _dbContext.Products.AnyAsync(p => p.Name == name);
+    }
+
+    public async Task<IList<Product>> FindByCondition(Expression<Func<Product, bool>> expression)
+    {
+        return await _dbContext.Set<Product>().Where(expression).ToListAsync();
     }
 
     public Task<Product> Insert(Product entity)
@@ -34,9 +39,9 @@ public class ProductsRepository : IProductsRepository
         throw new NotImplementedException();
     }
 
-    public Task<IList<Product>> GetAll()
+    public async Task<IList<Product>> GetAll()
     {
-        throw new NotImplementedException();
+        return await _dbContext.Products.AsNoTracking().ToListAsync();
     }
 
     public Task<Product> GetById(long id)

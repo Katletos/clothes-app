@@ -10,8 +10,8 @@ public class UserInputDtoValidator : AbstractValidator<UserInputDto>
     {
         RuleFor(o => o.CreatedAt).NotEmpty();
         RuleFor(o => o.UserType).NotEmpty();
-        RuleFor(o => o.Email).NotEmpty();
-        RuleFor(o => o.Password).NotEmpty();
+        RuleFor(o => o.Email).EmailAddress().NotEmpty();
+        RuleFor(o => o.Password).MaximumLength(1000).NotEmpty();
         RuleFor(o => o.Phone).NotEmpty().When(o => o.UserType == UserType.Customer);
         RuleFor(o => o.FirstName).NotEmpty().When(o => o.UserType == UserType.Customer);
         RuleFor(o => o.LastName).NotEmpty().When(o => o.UserType == UserType.Customer);

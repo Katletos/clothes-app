@@ -8,7 +8,7 @@ public interface IUserService
 {
     Task<IList<UserDto>> GetAll();
 
-    Task<UserDto> GetById();
+    Task<UserDto> GetById(long id);
 
     Task<UserDto> UpdateUserType(long id, UserType userType);
 
