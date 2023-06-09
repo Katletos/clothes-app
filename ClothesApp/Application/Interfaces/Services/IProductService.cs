@@ -4,6 +4,8 @@ namespace Application.Interfaces.Services;
 
 public interface IProductService
 {
+    Task<string> CheckProductsAvailability(long id);
+    
     Task<IList<ProductDto>> GetAll();
 
     Task<ProductDto> GetById(long id);
@@ -18,7 +20,7 @@ public interface IProductService
     
     Task<IList<ProductDto>> GetProductsByBrandId(long brandId);
 
-    Task AssignToBrand(long productId, long brandId);
+    Task<ProductDto> AssignToBrand(long productId, long brandId);
 
-    Task UnAssignFromBrand(long productId);
+    Task<ProductDto> UnassignFromBrand(long productId);
 }

@@ -10,13 +10,13 @@ public interface IUserService
 
     Task<UserDto> GetById(long id);
 
-    Task<UserDto> UpdateUserType(long id, UserType userType);
-
-    Task<UserDto> UpdateAddress(long id, AddressInputDto addressInputDto);
+    Task<AddressDto> UpdateAddress(long userId, AddressInputDto addressInputDto);
 
     Task<UserDto> DeleteById(long id);
 
-    Task<UserDto> Add(UserInputDto userInputDto);
+    Task<UserDto> Add(UserInputInfoDto userInputInfoDto);
 
-    Task<UserDto> Update(long id, UserInputDto userInputDto);
+    Task<UserDto> Update(long id, UserInputInfoDto userInputInfoDto);
+
+    Task<bool> Login(UserLoginDto userLoginDto);
 }

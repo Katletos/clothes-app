@@ -1,4 +1,5 @@
 using Application.Dtos.Category;
+using Application.Dtos.SectionCategories;
 
 namespace Application.Interfaces.Services;
 
@@ -12,5 +13,5 @@ public interface ICategoryService
 
     Task<CategoryDto> DeleteById(long id);
 
-    Task LinkCategoryToSection(long categoryId, long sectionId);
+    Task<SectionCategoryDto> LinkCategoryToSection(long categoryId, long sectionId);
 }

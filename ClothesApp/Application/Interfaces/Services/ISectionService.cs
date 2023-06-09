@@ -8,9 +8,9 @@ public interface ISectionService
 
     Task<SectionDto> GetById(long id);
 
-    Task<SectionDto> Add(SectionDto sectionDto);
+    Task<SectionDto> Add(SectionInputDto sectionDto);
 
     Task<SectionDto> Update(long id, SectionInputDto sectionInputDto);
 
-    Task<SectionDto> DeleteBuId(long id);
+    Task<SectionDto> DeleteById(long id);
 }
