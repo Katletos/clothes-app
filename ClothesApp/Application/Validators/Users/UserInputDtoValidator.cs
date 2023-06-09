@@ -4,16 +4,13 @@ using FluentValidation;
 
 namespace Application.Validators.Users;
 
-public class UserInputDtoValidator : AbstractValidator<UserInputDto>
+public class UserInputDtoValidator : AbstractValidator<UserInputInfoDto>
 {
     public UserInputDtoValidator()
     {
-        RuleFor(o => o.CreatedAt).NotEmpty();
-        RuleFor(o => o.UserType).NotEmpty();
-        RuleFor(o => o.Email).EmailAddress().NotEmpty();
-        RuleFor(o => o.Password).MaximumLength(1000).NotEmpty();
-        RuleFor(o => o.Phone).NotEmpty().When(o => o.UserType == UserType.Customer);
-        RuleFor(o => o.FirstName).NotEmpty().When(o => o.UserType == UserType.Customer);
-        RuleFor(o => o.LastName).NotEmpty().When(o => o.UserType == UserType.Customer);
+        RuleFor(u => u.Email).EmailAddress().NotEmpty();
+        RuleFor(u => u.FirstName).MaximumLength(100).NotEmpty();
+        RuleFor(u => u.LastName).MaximumLength(100).NotEmpty();
+        RuleFor(u => u.Phone).MaximumLength(12).NotEmpty();
     }
 }

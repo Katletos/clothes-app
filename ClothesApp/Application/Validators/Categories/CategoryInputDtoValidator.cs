@@ -7,7 +7,7 @@ public class CategoryInputDtoValidator : AbstractValidator<CategoryInputDto>
 {
     public CategoryInputDtoValidator()
     {
-        RuleFor(a => a.ParentCategoryId).NotEmpty();
+        RuleFor(a => a.ParentCategoryId);
         RuleFor(a => a.Name).MaximumLength(100).NotEmpty();
     }
 }
