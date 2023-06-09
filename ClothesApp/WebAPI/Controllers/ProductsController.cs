@@ -1,6 +1,7 @@
 using Application.Dtos.Products;
 using Application.Dtos.Reviews;
 using Application.Interfaces.Services;
+using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
@@ -28,8 +29,19 @@ public class ProductsController : ControllerBase
         return Ok(products);
     }
     
-    [HttpGet]
+    [HttpGet("{id}/is-available")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+    public async Task<ActionResult> CheckProductsAvailability([FromRoute] long id)
+    {
+        var message = await _productService.CheckProductsAvailability(id);
+
+        return Ok(message);
+    }
+    
+    [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     public async Task<ActionResult> AddProduct([FromBody] ProductInputDto productInputDto)
     {
         var products = await _productService.Add(productInputDto);
@@ -37,8 +49,19 @@ public class ProductsController : ControllerBase
         return Ok(products);
     }
     
+    [HttpPut("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+    public async Task<ActionResult> UpdateProduct([FromRoute] long id, [FromBody] ProductInputDto productInputDto)
+    {
+        var products = await _productService.Update(id, productInputDto);
+
+        return Ok(products);
+    }
+    
     [HttpGet("brands/{id}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<ProductDto>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     public async Task<ActionResult> GetProductsByBrandId([FromRoute] long id)
     {
         var products = await _productService.GetProductsByBrandId(id);
@@ -63,6 +86,16 @@ public class ProductsController : ControllerBase
     {
         var reviewDto = await _reviewService.Add(id, reviewInputDto);
         
+        return Ok(reviewDto);
+    }
+
+    [HttpGet("section-category")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<ReviewDto>))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+    public async Task<ActionResult> GetProductsBySectionAndCategory([FromQuery]long sectionId,[FromQuery] long categoryId)
+    {
+        var reviewDto = await _productService.GetProductsBySectionAndCategory(sectionId, categoryId);
+
         return Ok(reviewDto);
     }
 }
