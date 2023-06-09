@@ -30,6 +30,8 @@ public class ClothesAppContext : DbContext
     public virtual DbSet<Section> Sections { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
+    
+    public virtual DbSet<SectionCategory> SectionCategories { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
