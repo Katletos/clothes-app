@@ -11,6 +11,4 @@ public class ProductInputDto
     public decimal Price { get; set; }
 
     public long Quantity { get; set; }
-
-    public DateTime CreatedAt { get; set; }
 }
