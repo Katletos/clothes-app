@@ -61,6 +61,13 @@ public class SectionService : ISectionService
     
     public async Task<SectionDto> Update(long id, SectionInputDto sectionInputDto)
     {
+        var exist = await _sectionRepository.DoesExist(id);
+
+        if (!exist)
+        {
+            throw new NotFoundException(Messages.NotFound);
+        }
+        
         var section = await _sectionRepository.GetById(id);
         var sectionDto = _mapper.Map<Section, SectionDto>(section, opt =>
             opt.BeforeMap((src, _) => src.Id = id));
@@ -72,6 +79,13 @@ public class SectionService : ISectionService
 
     public async Task<SectionDto> DeleteById(long id)
     {
+        var exist = await _sectionRepository.DoesExist(id);
+
+        if (!exist)
+        {
+            throw new NotFoundException(Messages.NotFound);
+        }
+        
         var relates = await _sectionCategoryRepository.DoesSectionRelateCategory(id);
 
         if (relates)

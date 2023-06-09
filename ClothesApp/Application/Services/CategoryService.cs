@@ -68,7 +68,6 @@ public class CategoryService : ICategoryService
 
     public async Task<CategoryDto> Update(long id, CategoryInputDto categoryInputDto)
     {
-        
         var category = _mapper.Map<CategoryInputDto, Category>(categoryInputDto, opt => 
             opt.AfterMap((_, dest) => dest.Id = id));
 
@@ -81,21 +80,23 @@ public class CategoryService : ICategoryService
 
         exist = await _categoryRepository.DoesExist(categoryInputDto.Name);
 
-        if (!exist)
+        if (exist)
         {
             throw new BusinessRuleException(Messages.CategoryUniqueConstraint);
-        }
-        
-        exist = await _categoryRepository.DoesExist(categoryInputDto.ParentCategoryId); 
-        
-        if (!exist)
-        {
-            throw new BusinessRuleException(Messages.ParentCategoryConstraint);
         }
         
         if (category.ParentCategoryId == 0)
         {
             category.ParentCategoryId = null;
+        }
+        else
+        {
+            exist = await _categoryRepository.DoesExist(categoryInputDto.ParentCategoryId); 
+        
+            if (!exist)
+            {
+                throw new BusinessRuleException(Messages.ParentCategoryConstraint);
+            }
         }
         
         await _categoryRepository.Update(category);

@@ -93,7 +93,7 @@ public class OrderService : IOrderService
             throw new NotFoundException(Messages.NotFound);
         }
 
-        var belongs = await _addressService.DoesAddressBelongUser(orderInputDto.AddressId, orderInputDto.UserId);
+        var belongs = await _addressService.DoesAddressBelongToUser(orderInputDto.AddressId, orderInputDto.UserId);
 
         if (!belongs)
         {
@@ -190,7 +190,7 @@ public class OrderService : IOrderService
         
         var product = await _productsRepository.GetById(orderItemInputDto.ProductId);
         
-        var enough = product.Quantity - orderItemInputDto.Quantity > 0;
+        var enough = product.Quantity - orderItemInputDto.Quantity >= 0;
 
         if (!enough)
         {

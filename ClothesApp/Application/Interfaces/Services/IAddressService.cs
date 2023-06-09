@@ -2,5 +2,5 @@ namespace Application.Interfaces.Services;
 
 public interface IAddressService
 {
-    Task<bool> DoesAddressBelongUser(long addressId, long userId);
+    Task<bool> DoesAddressBelongToUser(long addressId, long userId);
 }

@@ -38,9 +38,9 @@ public class UsersController : ControllerBase
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
-    public async Task<ActionResult> RegisterUser([FromBody] UserInputInfoDto userInputInfoDto)
+    public async Task<ActionResult> RegisterUser([FromBody] RegisterUserDto registerUserDto)
     {
-        var userDto = await _userService.Add(userInputInfoDto);
+        var userDto = await _userService.Add(registerUserDto);
         
         return Ok(userDto);
     }

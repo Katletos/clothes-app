@@ -24,6 +24,7 @@ public class AppMappingProfile : Profile
         CreateMap<ReviewInputDto, Review>();
         CreateMap<User, UserDto>().ReverseMap();
         CreateMap<UserInputInfoDto, User>();
+        CreateMap<RegisterUserDto, User>();
         CreateMap<Order, OrderTransaction>();
         CreateMap<Product, ProductDto>().ReverseMap();
         CreateMap<ProductInputDto, Product>();
@@ -37,6 +38,7 @@ public class AppMappingProfile : Profile
         CreateMap<CategoryInputDto, Category>();
         CreateMap<Section, SectionDto>().ReverseMap();
         CreateMap<SectionInputDto, Section>();
+        CreateMap<Address, AddressDto>().ReverseMap();
         CreateMap<Address, AddressDto>().ReverseMap();
         
         CreateMap<SectionCategory, SectionCategoryDto>().ReverseMap();

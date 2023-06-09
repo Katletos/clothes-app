@@ -13,7 +13,6 @@ public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
     
-
     private readonly IAddressRepository _addressRepository;
 
     private readonly IMapper _mapper;
@@ -78,16 +77,16 @@ public class UserService : IUserService
     }
 
 
-    public async Task<UserDto> Add(UserInputInfoDto userInputInfoDto)
+    public async Task<UserDto> Add(RegisterUserDto registerUserDto)
     {
-        var exist = await _userRepository.DoesExist(userInputInfoDto.Email);
+        var exist = await _userRepository.DoesExist(registerUserDto.Email);
 
         if (exist)
         {
             throw new BusinessRuleException(Messages.EmailUniqueConstraint);
         }
 
-        var user = _mapper.Map<User>(userInputInfoDto);
+        var user = _mapper.Map<User>(registerUserDto);
         await _userRepository.Insert(user);
         var userDto = _mapper.Map<UserDto>(user);
 

@@ -1,4 +1,3 @@
-using Application.Exceptions;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 
@@ -13,9 +12,9 @@ public class AddressService : IAddressService
         _addressRepository = addressRepository;
     }
 
-    public async Task<bool> DoesAddressBelongUser(long addressId, long userId)
+    public async Task<bool> DoesAddressBelongToUser(long addressId, long userId)
     {
-        var address = await _addressRepository.FindByCondition(a => a.Id == addressId && a.UserId ==userId);
+        var address = await _addressRepository.FindByCondition(a => a.Id == addressId && a.UserId == userId);
         
         return address.Count > 0;
     }

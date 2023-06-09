@@ -27,5 +27,4 @@ public class Messages
     public const string ParentCategoryConstraint = "No parental category exists";
     
     public const string SectionDeleteConstraint = "You can't delete a section that have related categories";
-
 }

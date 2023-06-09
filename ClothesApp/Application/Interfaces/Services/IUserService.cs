@@ -14,7 +14,7 @@ public interface IUserService
 
     Task<UserDto> DeleteById(long id);
 
-    Task<UserDto> Add(UserInputInfoDto userInputInfoDto);
+    Task<UserDto> Add(RegisterUserDto registerUserDto);
 
     Task<UserDto> Update(long id, UserInputInfoDto userInputInfoDto);
 

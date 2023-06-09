@@ -1,5 +1,3 @@
-using Application.Dtos.OrderItems;
-using Application.Dtos.Orders;
 using Application.Dtos.Products;
 using Application.Exceptions;
 using Application.Interfaces.Repositories;
