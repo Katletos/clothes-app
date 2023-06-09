@@ -24,7 +24,7 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Category>
         builder.HasMany(d => d.Sections)
             .WithMany(p => p.Categories)
             .UsingEntity<SectionCategory>(
-                l => l.HasOne<Section>().WithMany(e => e.SectionCategories),
+                l => l.HasOne<Section>().WithMany(e => e.SectionsCategories),
                 r => r.HasOne<Category>().WithMany(e => e.SectionCategories)
             );
     }
