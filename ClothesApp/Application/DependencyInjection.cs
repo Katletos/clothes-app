@@ -1,6 +1,7 @@
 using System.Reflection;
 using Application.Interfaces.Services;
 using Application.Services;
+using Domain.Entities;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,7 +19,11 @@ public static class DependencyInjection
         services.AddScoped<IReviewService, ReviewService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IProductService, ProductService>();
-
+        services.AddScoped<IOrderService, OrderService>();
+        services.AddScoped<IAddressService, AddressService>();
+        services.AddScoped<ICategoryService, CategoryService>();
+        services.AddScoped<ISectionService, SectionService>();
+        
         services.AddAutoMapper(typeof(AppMappingProfile));
 
         return services;
