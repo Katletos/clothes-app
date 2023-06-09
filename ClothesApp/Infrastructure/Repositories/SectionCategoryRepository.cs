@@ -1,5 +1,6 @@
 using Application.Interfaces.Repositories;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
@@ -12,28 +13,22 @@ public class SectionCategoryRepository : ISectionCategoryRepository
         _dbContext = dbContext;
     }
 
-    public Task<SectionCategory> Insert(SectionCategory entity)
+    public async Task<bool> DoesExist(long sectionId, long categoryId)
     {
-        throw new NotImplementedException();
+        return await _dbContext.SectionCategories.AnyAsync(sc => sc.CategoryId == categoryId 
+                                                                 && sc.SectionId == sectionId);
     }
 
-    public Task<SectionCategory> Update(SectionCategory entity)
+    public async Task<bool> DoesSectionRelateCategory(long id)
     {
-        throw new NotImplementedException();
+        return await _dbContext.SectionCategories.AnyAsync(sc => sc.SectionId == id);
     }
 
-    public Task<IList<SectionCategory>> GetAll()
+    public async Task<SectionCategory> Add(SectionCategory sectionCategory)
     {
-        throw new NotImplementedException();
-    }
-
-    public Task<SectionCategory> GetById(long id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<bool> DoesExist(long id)
-    {
-        throw new NotImplementedException();
+        _dbContext.SectionCategories.Add(sectionCategory);
+        await _dbContext.SaveChangesAsync();
+        
+        return sectionCategory;
     }
 }

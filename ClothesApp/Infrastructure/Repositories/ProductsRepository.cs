@@ -28,15 +28,18 @@ public class ProductsRepository : IProductsRepository
     {
         return await _dbContext.Set<Product>().Where(expression).ToListAsync();
     }
-
+    
     public Task<Product> Insert(Product entity)
     {
         throw new NotImplementedException();
     }
 
-    public Task<Product> Update(Product entity)
+    public async Task<Product> Update(Product product)
     {
-        throw new NotImplementedException();
+        _dbContext.Update(product);
+        await _dbContext.SaveChangesAsync();
+
+        return product;
     }
 
     public async Task<IList<Product>> GetAll()
@@ -44,9 +47,9 @@ public class ProductsRepository : IProductsRepository
         return await _dbContext.Products.AsNoTracking().ToListAsync();
     }
 
-    public Task<Product> GetById(long id)
+    public async Task<Product> GetById(long id)
     {
-        throw new NotImplementedException();
+        return await _dbContext.Products.FirstOrDefaultAsync(p => p.Id ==id);
     }
 
     public async Task<bool> DoesExist(long id)

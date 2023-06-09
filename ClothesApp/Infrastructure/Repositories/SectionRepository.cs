@@ -42,4 +42,17 @@ public class SectionRepository : ISectionRepository
     {
         return await _dbContext.Sections.AnyAsync(s => s.Id == id);
     }
+
+    public async Task<bool> DoesExist(string name)
+    {
+        return await _dbContext.Sections.AnyAsync(s => s.Name == name);
+    }
+
+    public async Task<Section> Delete(Section section)
+    {
+        _dbContext.Sections.Remove(section);
+        await _dbContext.SaveChangesAsync();
+
+        return section;
+    }
 }

@@ -1,3 +1,4 @@
+using Application.Dtos.Users;
 using Application.Interfaces.Repositories;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +45,11 @@ public class UserRepository : IUserRepository
         return await _dbContext.Users.AnyAsync(u => u.Id == id);
     }
 
+    public async Task<bool> DoesUniqueEmail(long userId, string email)
+    {
+        return await _dbContext.Users.AnyAsync(u => u.Email == email && u.Id != userId);
+    }
+
     public async Task<User> Delete(User user)
     {
         _dbContext.Users.Remove(user);
@@ -55,5 +61,10 @@ public class UserRepository : IUserRepository
     public async Task<bool> DoesExist(string email)
     {
         return await _dbContext.Users.AnyAsync(u => u.Email == email);
+    }
+
+    public Task<bool> Login(UserLoginDto userLoginDto)
+    {
+        return _dbContext.Users.AnyAsync(u => u.Email == userLoginDto.Email && u.Password == userLoginDto.Password);
     }
 }

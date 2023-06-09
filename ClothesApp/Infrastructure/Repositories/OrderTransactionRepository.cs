@@ -1,5 +1,6 @@
 using Application.Interfaces.Repositories;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
@@ -18,5 +19,10 @@ public class OrderTransactionRepository : IOrderTransactionsRepository
         await _dbContext.SaveChangesAsync();
         
         return orderTransaction;
+    }
+    
+    public async Task<IList<OrderTransaction>> GetByOrderId(long id)
+    {
+        return await _dbContext.OrdersTransactions.Where(ot => ot.OrderId == id).ToListAsync();
     }
 }

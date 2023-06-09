@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Application.Interfaces.Repositories;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -41,5 +42,10 @@ public class OrderRepository : IOrderRepository
     public async Task<bool> DoesExist(long id)
     {
         return await _dbContext.Orders.AnyAsync(o => o.Id == id);
+    }
+
+    public async Task<Order> GetLastUserOrder(Expression<Func<Order, bool>> expression)
+    {
+        return await _dbContext.Set<Order>().OrderBy(o => o.Id).LastAsync(expression);
     }
 }
