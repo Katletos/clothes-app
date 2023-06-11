@@ -5,7 +5,6 @@ using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using AutoMapper;
 using Domain.Entities;
-using Domain.Enums;
 
 namespace Application.Services;
 
@@ -71,12 +70,42 @@ public class UserService : IUserService
         return addressDto;
     }
 
+    public async Task<AddressDto> DeleteAddress(long addressId)
+    {
+        var exist = await _addressRepository.DoesExist(addressId);
+
+        if (!exist)
+        {
+            throw new NotFoundException(Messages.NotFound);
+        }
+
+        var address = await _addressRepository.GetById(addressId);
+        await _addressRepository.Delete(address);
+        var addressDto = _mapper.Map<AddressDto>(address);
+
+        return addressDto;
+    }
+
+    public async Task<IList<AddressDto>> GetAddresses(long userId)
+    {
+        var exist = await _userRepository.DoesExist(userId);
+
+        if (!exist)
+        {
+            throw new NotFoundException(Messages.NotFound);
+        }
+        
+        var addresses = await _addressRepository.FindByCondition(a => a.UserId == userId);
+        var addressesDto = _mapper.Map<IList<AddressDto>>(addresses);
+        
+        return addressesDto;
+    }
+    
     public Task<UserDto> DeleteById(long id)
     {
         throw new NotImplementedException();
     }
-
-
+    
     public async Task<UserDto> Add(RegisterUserDto registerUserDto)
     {
         var exist = await _userRepository.DoesExist(registerUserDto.Email);

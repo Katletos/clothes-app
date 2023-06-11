@@ -55,7 +55,7 @@ public class UsersController : ControllerBase
         return Ok(userDto);
     }
     
-    [HttpPut("{id}/address")]
+    [HttpPut("{id}/addresses")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     public async Task<ActionResult> UpdateUserAddress([FromRoute] long id, [FromBody] AddressInputDto addressInputDto)
@@ -64,7 +64,27 @@ public class UsersController : ControllerBase
         
         return Ok(userDto);
     }
-    
+
+    [HttpGet("{id}/addresses")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AddressDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+    public async Task<ActionResult> GetAddress([FromRoute] long id)
+    {
+        var addressDto = await _userService.GetAddresses(id);
+
+        return Ok(addressDto);
+    }
+
+    [HttpDelete("addresses/{addressId}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AddressDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+    public async Task<ActionResult> DeleteAddressById([FromRoute] long addressId)
+    {
+        var addressDto = await _userService.DeleteAddress(addressId);
+
+        return Ok(addressDto);
+    }
+
     [HttpPost("/login")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(bool))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]

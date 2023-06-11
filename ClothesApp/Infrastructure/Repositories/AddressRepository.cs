@@ -46,4 +46,12 @@ public class AddressRepository : IAddressRepository
     {
         return await _dbContext.Set<Address>().Where(expression).ToListAsync();
     }
+
+    public async Task<Address> Delete(Address address)
+    {
+        _dbContext.Addresses.Remove(address);
+        await _dbContext.SaveChangesAsync();
+
+        return address;
+    }
 }

@@ -6,4 +6,6 @@ namespace Application.Interfaces.Repositories;
 public interface IAddressRepository : IBaseRepository<Address>
 {
     Task<IList<Address>> FindByCondition(Expression<Func<Address, bool>> expression);
+
+    Task<Address> Delete(Address address);
 }
