@@ -35,7 +35,7 @@ public class MediaService : IMediaService
 
         if (!exist)
         {
-            throw new BusinessRuleException();
+            throw new BusinessRuleException(Messages.ProductNotFound);
         }
 
         var guid = Guid.NewGuid().ToString();

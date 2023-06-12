@@ -1,4 +1,3 @@
-using Application.Dtos.Products;
 using Application.Dtos.Sections;
 using Application.Exceptions;
 using Application.Interfaces.Repositories;
@@ -36,7 +35,7 @@ public class SectionService : ISectionService
 
         if (product is null)
         {
-            throw new NotFoundException(Messages.NotFound);
+            throw new NotFoundException(Messages.SectionNotFound);
         }
         
         var productDto = _mapper.Map<SectionDto>(product);
@@ -68,7 +67,7 @@ public class SectionService : ISectionService
 
         if (!exist)
         {
-            throw new NotFoundException(Messages.NotFound);
+            throw new NotFoundException(Messages.SectionNotFound);
         }
 
         var sameName = await _sectionRepository.AreSameName(id, sectionInputDto.Name);
@@ -90,7 +89,7 @@ public class SectionService : ISectionService
 
         if (!exist)
         {
-            throw new NotFoundException(Messages.NotFound);
+            throw new NotFoundException(Messages.SectionNotFound);
         }
         
         var relates = await _sectionCategoryRepository.DoesSectionRelateCategory(id);

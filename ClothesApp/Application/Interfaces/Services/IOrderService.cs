@@ -12,9 +12,7 @@ public interface IOrderService
     Task<OrderDto> Add(OrderInputDto orderInputDto);
     
     Task<OrderDto> UpdateStatus(long id, OrderStatusType newOrderStatus);
-
-    Task<OrderDto> DeleteById(long id);
-
+    
     Task<IList<OrderTransactionsDto>> GetOrderHistoryByOrderId(long id);
 
     Task<IList<OrderItemDto>> GetOrderItemsByOrderId(long orderId);

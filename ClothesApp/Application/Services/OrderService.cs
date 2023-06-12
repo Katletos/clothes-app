@@ -53,7 +53,7 @@ public class OrderService : IOrderService
 
         if (!exist)
         {
-            throw new NotFoundException(Messages.NotFound);
+            throw new NotFoundException(Messages.OrderNotFound);
         }
 
         var order = await _orderRepository.GetById(id);
@@ -68,14 +68,14 @@ public class OrderService : IOrderService
 
         if (!exist)
         {
-            throw new NotFoundException(Messages.NotFound);
+            throw new NotFoundException(Messages.UserNotFound);
         }
 
         var belongs = await _addressService.DoesAddressBelongToUser(orderInputDto.AddressId, orderInputDto.UserId);
 
         if (!belongs)
         {
-            throw new NotFoundException(Messages.NotFound);
+            throw new BusinessRuleException(Messages.AddressUserConstraint);
         }
         
         var order = _mapper.Map<OrderInputDto, Order>(orderInputDto, opt =>
@@ -97,7 +97,7 @@ public class OrderService : IOrderService
 
             if (!productExist)
             {
-                throw new NotFoundException(Messages.NotFound);
+                throw new NotFoundException(Messages.ProductNotFound);
             }
             
             var product = await _productsRepository.GetById(item.ProductId);
@@ -127,7 +127,7 @@ public class OrderService : IOrderService
 
         if (!exist)
         {
-            throw new NotFoundException();
+            throw new NotFoundException(Messages.OrderNotFound);
         }
 
         var orderItems = await _orderItemsRepository.GetByOrderId(id);
@@ -154,7 +154,7 @@ public class OrderService : IOrderService
         var exist = await _productsRepository.DoesExistRange(productIds);
         if (!exist)
         {
-            throw new NotFoundException(Messages.NotFound);
+            throw new NotFoundException(Messages.ProductNotFound);
         }
 
         var products = await _productsRepository.GetRange(productIds);
@@ -181,19 +181,17 @@ public class OrderService : IOrderService
 
         if (!exist)
         {
-            throw new NotFoundException(Messages.NotFound);
+            throw new NotFoundException(Messages.OrderNotFound);
         }
 
         var order = await _orderRepository.GetById(orderId);
 
-        if (order.OrderStatus == OrderStatusType.Completed)
+        if (order.OrderStatus == OrderStatusType.Completed || order.OrderStatus == OrderStatusType.Cancelled)
         {
-            throw new BusinessRuleException();
+            throw new BusinessRuleException(Messages.OrderUpdateConstraint);
         }
         
-        var stateMachine = new OrderStateMachine(order.OrderStatus);
-        stateMachine.DoTransition(newOrderStatus);
-        order.OrderStatus = stateMachine.CurrentState;
+        order.OrderStatus = OrderStateMachine(order.OrderStatus, newOrderStatus);
         await _orderRepository.Update(order);
 
         var orderTransaction = new OrderTransaction()
@@ -208,18 +206,27 @@ public class OrderService : IOrderService
         return orderDto;
     }
 
-    public Task<OrderDto> DeleteById(long id)
+    private OrderStatusType OrderStateMachine(OrderStatusType currentState, OrderStatusType newState)
     {
-        throw new NotImplementedException();
-    }
+        var result = (currentState, newState) switch
+        {
+            (OrderStatusType.InReview, OrderStatusType.InDelivery) => OrderStatusType.InDelivery,
+            (OrderStatusType.InReview, OrderStatusType.Cancelled) => OrderStatusType.Cancelled,
+            (OrderStatusType.InDelivery, OrderStatusType.Completed) => OrderStatusType.Completed,
+            (OrderStatusType.InDelivery, OrderStatusType.Cancelled) => OrderStatusType.Cancelled,
+            _ => throw new BusinessRuleException(Messages.OrderTransitionConstraint),
+        };
 
+        return result;
+    }
+    
     public async Task<IList<OrderTransactionsDto>> GetOrderHistoryByOrderId(long id)
     {
         var exist = await _orderRepository.DoesExist(id);
         
         if (!exist)
         {
-            throw new NotFoundException(Messages.NotFound);
+            throw new NotFoundException(Messages.OrderNotFound);
         }
         
         var orderTransactions = await _transactionsRepository.GetByOrderId(id);
@@ -235,7 +242,7 @@ public class OrderService : IOrderService
         
         if (!exist)
         {
-            throw new NotFoundException(Messages.NotFound);
+            throw new NotFoundException(Messages.OrderNotFound);
         }
 
         var orderItems = await _orderItemsRepository.GetByOrderId(orderId);

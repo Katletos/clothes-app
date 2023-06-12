@@ -2,8 +2,6 @@ namespace Application;
 
 public class Messages
 {
-    public const string NotFound = "Item not found";
-
     public const string BrandDeleteConstraint = "You can't delete a brand that has one or more products";
 
     public const string BrandNameUniqueConstraint = "Brand name must be unique";
@@ -29,4 +27,28 @@ public class Messages
     public const string SectionDeleteConstraint = "You can't delete a section that have related categories";
     
     public const string BrandNotFound = "Brand not found";
+    
+    public const string AddressNotFound = "Address not found";
+    
+    public const string CategoryNotFound = "Category not foun";
+    
+    public const string SelfReferencingCategory = "Self referencing category";
+    
+    public const string SectionNotFound = "Section not found";
+    
+    public const string OrderNotFound = "Order not found";
+    
+    public const string UserNotFound = "User not found";
+    
+    public const string ReviewNotFound = "Review not found";
+    
+    public const string ProductNotFound = "Product not found";
+    
+    public const string SectionCategoryRelation = "Section and category relation already exist";
+    
+    public const string AddressUserConstraint = "Address don't belongs user";
+    
+    public const string OrderUpdateConstraint = "Order in the final state";
+    
+    public const string OrderTransitionConstraint = "Incorrect transition";
 }

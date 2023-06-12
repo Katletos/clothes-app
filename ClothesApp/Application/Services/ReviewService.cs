@@ -31,14 +31,14 @@ public class ReviewService : IReviewService
 
         if (!exist)
         {
-            throw new NotFoundException(Messages.NotFound);
+            throw new NotFoundException(Messages.ProductNotFound);
         }
 
         exist = await _userRepository.DoesExist(reviewInputDto.UserId);
 
         if (!exist)
         {
-            throw new NotFoundException(Messages.NotFound);
+            throw new NotFoundException(Messages.UserNotFound);
         }
         
         exist = await _reviewsRepository.DoesReviewExist(reviewInputDto);
@@ -63,7 +63,7 @@ public class ReviewService : IReviewService
 
         if (!exist)
         {
-            throw new NotFoundException(Messages.NotFound);
+            throw new NotFoundException(Messages.ReviewNotFound);
         }
 
         await _reviewsRepository.Update(review);
@@ -79,7 +79,7 @@ public class ReviewService : IReviewService
 
         if (!exist) 
         {
-            throw new NotFoundException(Messages.NotFound);
+            throw new NotFoundException(Messages.ReviewNotFound);
         }
         
         var review = await _reviewsRepository.GetById(id);
@@ -113,7 +113,7 @@ public class ReviewService : IReviewService
 
         if (review is null)
         {
-            throw new NotFoundException(Messages.NotFound);
+            throw new NotFoundException(Messages.ReviewNotFound);
         }
 
         var reviewDto = _mapper.Map<ReviewDto>(review);

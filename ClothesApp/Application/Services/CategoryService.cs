@@ -34,7 +34,7 @@ public class CategoryService : ICategoryService
 
         if (category is null)
         {
-            throw new NotFoundException(Messages.NotFound);
+            throw new NotFoundException(Messages.CategoryNotFound);
         }
 
         var categoryDto = _mapper.Map<CategoryDto>(category);
@@ -104,7 +104,7 @@ public class CategoryService : ICategoryService
 
         if (!exist)
         {
-            throw new NotFoundException(Messages.NotFound);
+            throw new NotFoundException(Messages.CategoryNotFound);
         }
         
         var sameName = await _categoryRepository.AreSameName(id, categoryInputDto.Name);
@@ -116,7 +116,7 @@ public class CategoryService : ICategoryService
         
         if (categoryInputDto.ParentCategoryId == id)
         {
-            throw new BusinessRuleException();
+            throw new BusinessRuleException(Messages.SelfReferencingCategory);
         }
         
         if (category.ParentCategoryId is not null)
@@ -141,7 +141,7 @@ public class CategoryService : ICategoryService
 
         if (!exist)
         {
-            throw new NotFoundException(Messages.NotFound);
+            throw new NotFoundException(Messages.CategoryNotFound);
         }
 
         var parentCategory = await _categoryRepository.AreParentCategory(id);
@@ -164,21 +164,21 @@ public class CategoryService : ICategoryService
 
         if (!exist)
         {
-            throw new NotFoundException(Messages.NotFound);
+            throw new NotFoundException(Messages.CategoryNotFound);
         }
 
         exist = await _sectionRepository.DoesExist(sectionId);
 
         if (!exist)
         {
-            throw new NotFoundException(Messages.NotFound);
+            throw new NotFoundException(Messages.SectionNotFound);
         }
 
         exist = await _sectionCategoryRepository.DoesExist(sectionId, categoryId );
 
         if (exist)
         {
-            throw new BusinessRuleException();
+            throw new BusinessRuleException(Messages.SectionCategoryRelation);
         }
         
         var sectionCategory = new SectionCategory{ SectionId = sectionId, CategoryId = categoryId };

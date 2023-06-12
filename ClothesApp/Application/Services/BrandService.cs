@@ -47,7 +47,7 @@ public class BrandService : IBrandService
 
         if (!exist)
         {
-            throw new NotFoundException(Messages.NotFound);
+            throw new NotFoundException(Messages.BrandNotFound);
         }
 
         await _brandsRepository.Update(brand);
@@ -63,7 +63,7 @@ public class BrandService : IBrandService
 
         if (!exist) 
         {
-            throw new NotFoundException(Messages.NotFound);
+            throw new NotFoundException(Messages.BrandNotFound);
         }
 
         var areAnyProducts = await _productsRepository.AnyProductOfBrandIdExists(id);
@@ -95,7 +95,7 @@ public class BrandService : IBrandService
 
         if (brand is null)
         {
-            throw new NotFoundException(Messages.NotFound);
+            throw new NotFoundException(Messages.BrandNotFound);
         }
 
         var brandDto = _mapper.Map<BrandDto>(brand);

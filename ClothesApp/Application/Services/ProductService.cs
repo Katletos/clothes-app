@@ -39,7 +39,7 @@ public class ProductService : IProductService
 
             if (!exist)
             {
-                throw new NotFoundException(Messages.NotFound);
+                throw new NotFoundException(Messages.BrandNotFound);
             }
         }
 
@@ -47,7 +47,7 @@ public class ProductService : IProductService
 
         if (!exist)
         {
-            throw new NotFoundException(Messages.NotFound);
+            throw new NotFoundException(Messages.CategoryNotFound);
         }
 
         exist = await _productsRepository.DoesExist(productInputDto.Name);
@@ -74,7 +74,7 @@ public class ProductService : IProductService
 
         if (!exist)
         {
-            throw new NotFoundException(Messages.NotFound);
+            throw new NotFoundException(Messages.ProductNotFound);
         }
 
         if (productInputDto.BrandId is not null)
@@ -91,7 +91,7 @@ public class ProductService : IProductService
         
         if (!exist)
         {
-            throw new NotFoundException(Messages.NotFound);
+            throw new NotFoundException(Messages.CategoryNotFound);
         }
 
         await _productsRepository.Update(product);
@@ -120,7 +120,7 @@ public class ProductService : IProductService
 
         if (!exist)
         {
-            throw new NotFoundException(Messages.NotFound);
+            throw new NotFoundException(Messages.BrandNotFound);
         }
         
         var products = await _productsRepository.FindByCondition(p => p.BrandId == brandId);

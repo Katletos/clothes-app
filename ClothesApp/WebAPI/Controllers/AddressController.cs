@@ -9,11 +9,11 @@ namespace WebAPI.Controllers;
 [Route("api/addresses")]
 public class AddressController : ControllerBase
 {
-    private readonly IUserService _userService;
+    private readonly IAddressService _addressService;
 
-    public AddressController(IUserService userService)
+    public AddressController(IAddressService addressService)
     {
-        _userService = userService;
+        _addressService = addressService;
     }
 
     [HttpPut("users/{userId}")]
@@ -21,7 +21,7 @@ public class AddressController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     public async Task<ActionResult> UpdateUserAddress([FromRoute] long userId, [FromBody] AddressInputDto addressInputDto)
     {
-        var userDto = await _userService.UpdateAddress(userId, addressInputDto);
+        var userDto = await _addressService.UpdateAddress(userId, addressInputDto);
         
         return Ok(userDto);
     }
@@ -31,7 +31,7 @@ public class AddressController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     public async Task<ActionResult> GetAddress([FromRoute] long userId)
     {
-        var addressDto = await _userService.GetAddresses(userId);
+        var addressDto = await _addressService.GetAddresses(userId);
 
         return Ok(addressDto);
     }
@@ -41,7 +41,7 @@ public class AddressController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     public async Task<ActionResult> DeleteAddressById([FromRoute] long addressId)
     {
-        var addressDto = await _userService.DeleteAddress(addressId);
+        var addressDto = await _addressService.DeleteAddress(addressId);
 
         return Ok(addressDto);
     }
