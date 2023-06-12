@@ -48,6 +48,11 @@ public class SectionRepository : ISectionRepository
         return await _dbContext.Sections.AnyAsync(s => s.Name == name);
     }
 
+    public async Task<bool> AreSameName(long id, string name)
+    {
+        return await _dbContext.Sections.AnyAsync(s => s.Id != id && s.Name == name);
+    }
+
     public async Task<Section> Delete(Section section)
     {
         _dbContext.Sections.Remove(section);

@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Application.Dtos.OrderItems;
 using Application.Interfaces.Repositories;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -28,7 +29,25 @@ public class ProductsRepository : IProductsRepository
     {
         return await _dbContext.Set<Product>().Where(expression).ToListAsync();
     }
-    
+
+    public async Task UpdateRange(IList<Product> products)
+    {
+        _dbContext.Products.UpdateRange(products);
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task<bool> DoesExistRange(IList<long> ids)
+    {
+        var products = await _dbContext.Products.Where(p => ids.Contains(p.Id)).ToListAsync();
+
+        return products.Count() == ids.Count();
+    }
+
+    public async Task<IList<Product>> GetRange(IList<long> ids)
+    {
+        return await _dbContext.Products.Where(p => ids.Contains(p.Id)).ToListAsync();
+    }
+
     public Task<Product> Insert(Product entity)
     {
         throw new NotImplementedException();
@@ -49,7 +68,7 @@ public class ProductsRepository : IProductsRepository
 
     public async Task<Product> GetById(long id)
     {
-        return await _dbContext.Products.FirstOrDefaultAsync(p => p.Id ==id);
+        return await _dbContext.Products.FindAsync(id);
     }
 
     public async Task<bool> DoesExist(long id)

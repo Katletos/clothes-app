@@ -48,4 +48,9 @@ public class OrderRepository : IOrderRepository
     {
         return await _dbContext.Set<Order>().OrderBy(o => o.Id).LastAsync(expression);
     }
+
+    public async Task<IList<Order>> FindByCondition(Expression<Func<Order, bool>> expression)
+    {
+        return await _dbContext.Set<Order>().Where(expression).ToListAsync();
+    }
 }

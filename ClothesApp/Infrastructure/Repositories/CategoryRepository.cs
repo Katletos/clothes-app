@@ -44,6 +44,11 @@ public class CategoryRepository : ICategoryRepository
         return await _dbContext.Categories.AnyAsync(c => c.Id == id);
     }
 
+    public async Task<bool> AreSameName(long id, string categoryName)
+    {
+        return await _dbContext.Categories.AnyAsync(c => c.Name == categoryName && c.Id != id);
+    }
+
     public async Task<bool> DoesExist(string categoryName)
     {
         return await _dbContext.Categories.AnyAsync(c => c.Name == categoryName);
