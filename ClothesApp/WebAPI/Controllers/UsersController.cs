@@ -1,4 +1,3 @@
-using Application.Dtos.Addresses;
 using Application.Dtos.Users;
 using Application.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;

@@ -1,3 +1,4 @@
+using Application;
 using Application.Dtos.Category;
 using Application.Dtos.SectionCategories;
 using Application.Interfaces.Services;
@@ -17,7 +18,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CategoryDto))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CategoryTree))]
     public async Task<ActionResult> GetCategoryTree()
     {
         var tree = await _categoryService.BuildCategoryTree();

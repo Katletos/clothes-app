@@ -1,7 +1,7 @@
 using Application.Dtos.OrderItems;
 using FluentValidation;
 
-namespace Application.Validators.Orderitems;
+namespace Application.Validators.OrderItems;
 
 public class OrderItemDtoValidator : AbstractValidator<OrderItemDto>
 {
