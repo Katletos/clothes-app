@@ -2,7 +2,6 @@ using Application.Dtos.OrderItems;
 using Application.Dtos.Orders;
 using Application.Dtos.OrderTransactions;
 using Application.Interfaces.Services;
-using Domain.Entities;
 using Domain.Enums;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,22 +38,12 @@ public class OrderController : ControllerBase
         return Ok(orderDto);
     }
     
-    [HttpPost("{id}/submit")]
+    [HttpPost("{id}/update-status")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderDto))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
-    public async Task<ActionResult<IList<OrderDto>>> SubmitOrder([FromRoute] long id)
+    public async Task<ActionResult<IList<OrderDto>>> ChangeOrderStatus([FromRoute] long id, [FromQuery] OrderStatusType newOrderStatus)
     {
-        var orderDto = await _orderService.SubmitOrder(id);
-        
-        return Ok(orderDto);
-    }
-    
-    [HttpPost("{id}/next-status")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderDto))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
-    public async Task<ActionResult<IList<OrderDto>>> ChangeOrderStatus([FromRoute] long id)
-    {
-        var orderDto = await _orderService.UpdateStatus(id);
+        var orderDto = await _orderService.UpdateStatus(id, newOrderStatus);
         
         return Ok(orderDto);
     }
@@ -68,14 +57,14 @@ public class OrderController : ControllerBase
 
         return Ok(orderItems);
     }
-    
-    [HttpPost("{id}/items")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderItemDto))]
-    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
-    public async Task<ActionResult<IList<OrderDto>>> AddProductToOrder([FromRoute] long id, [FromBody] OrderItemInputDto orderItemInputDto)
-    {
-        var orderItemDto = await _orderService.AddItem(id, orderItemInputDto);
 
-        return Ok(orderItemDto);
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<OrderItemDto>))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
+    public async Task<ActionResult<IList<OrderDto>>> GetOrdersByStatuses([FromQuery] OrderStatusType status)
+    {
+        var ordersDtos = await _orderService.GetOrdersByStatus(status);
+
+        return Ok(ordersDtos);
     }
 }
