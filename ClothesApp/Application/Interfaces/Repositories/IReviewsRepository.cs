@@ -8,7 +8,7 @@ public interface IReviewsRepository : IBaseRepository<Review>
 {
     Task<Review> Delete(Review review);
 
-    Task<bool> CanAdd(long productId, ReviewInputDto reviewInputDto);
+    Task<bool> DoesReviewExist(ReviewInputDto reviewInputDto);
     
     Task<IList<Review>> FindByCondition(Expression<Func<Review, bool>> expression);
 }
