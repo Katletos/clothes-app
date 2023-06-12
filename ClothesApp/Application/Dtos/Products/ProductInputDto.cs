@@ -2,7 +2,7 @@ namespace Application.Dtos.Products;
 
 public class ProductInputDto
 {
-    public long BrandId { get; set; }
+    public long? BrandId { get; set; }
 
     public long CategoryId { get; set; }
 
