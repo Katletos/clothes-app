@@ -20,7 +20,7 @@ namespace Infrastructure.Migrations
                 .HasAnnotation("ProductVersion", "7.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "order_status_type", new[] { "on_hold", "in_review", "in_delivery", "completed" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "order_status_type", new[] { "in_review", "in_delivery", "completed", "cancelled" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "user_type", new[] { "admin", "customer" });
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
