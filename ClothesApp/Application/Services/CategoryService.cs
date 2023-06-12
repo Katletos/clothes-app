@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Application.Dtos.Category;
 using Application.Dtos.SectionCategories;
 using Application.Exceptions;
@@ -40,6 +42,23 @@ public class CategoryService : ICategoryService
         return categoryDto;
     }
 
+    public async Task<string> BuildCategoryTree()
+    {       
+        JsonSerializerOptions options = new()
+        {
+            ReferenceHandler = ReferenceHandler.Preserve,
+            WriteIndented = true
+        };
+        
+        var categories = await _categoryRepository.GetAll();
+        var categoryDtos = _mapper.Map<IList<CategoryDto>>(categories);
+        var virtualRootNode = categoryDtos.ToTree((parent, child) => child.ParentCategoryId == parent.Id);
+        var rootLevelFoldersWithSubTree = virtualRootNode.Children.ToList();
+
+        string categoriesTreeJson = JsonSerializer.Serialize(rootLevelFoldersWithSubTree, options);
+        return categoriesTreeJson;
+    }
+
     public async Task<CategoryDto> Add(CategoryInputDto categoryInputDto)
     {
         var exist = await _categoryRepository.DoesExist(categoryInputDto.Name);
@@ -49,49 +68,60 @@ public class CategoryService : ICategoryService
             throw new BusinessRuleException(Messages.CategoryUniqueConstraint);
         }
 
-        exist = await _categoryRepository.DoesExist(categoryInputDto.ParentCategoryId); 
-        
-        if (categoryInputDto.ParentCategoryId == 0 || exist)
+        Category category;
+        if (categoryInputDto.ParentCategoryId is not null)
         {
-            var category = _mapper.Map<CategoryInputDto, Category>(categoryInputDto, opt => 
-                opt.AfterMap((_, dest) => dest.ParentCategoryId = null));
-            await _categoryRepository.Insert(category);
-            var categoryDto = _mapper.Map<CategoryDto>(category);
-            
-            return categoryDto;
+            exist = await _categoryRepository.DoesExist((long)categoryInputDto.ParentCategoryId);
+
+            if (exist)
+            {
+                category = _mapper.Map<CategoryInputDto, Category>(categoryInputDto, opt =>
+                    opt.AfterMap((_, dest) => dest.ParentCategoryId = categoryInputDto.ParentCategoryId));
+            }
+            else
+            {
+                throw new BusinessRuleException(Messages.ParentCategoryConstraint);
+            }
         }
         else
         {
-            throw new BusinessRuleException(Messages.ParentCategoryConstraint);   
+            category = _mapper.Map<CategoryInputDto, Category>(categoryInputDto, opt =>
+                opt.AfterMap((_, dest) => dest.ParentCategoryId = null));
         }
+        
+        await _categoryRepository.Insert(category);
+        var categoryDto = _mapper.Map<CategoryDto>(category);
+
+        return categoryDto;
     }
 
     public async Task<CategoryDto> Update(long id, CategoryInputDto categoryInputDto)
     {
         var category = _mapper.Map<CategoryInputDto, Category>(categoryInputDto, opt => 
             opt.AfterMap((_, dest) => dest.Id = id));
-
+        
         var exist = await _categoryRepository.DoesExist(id);
 
         if (!exist)
         {
             throw new NotFoundException(Messages.NotFound);
         }
+        
+        var sameName = await _categoryRepository.AreSameName(id, categoryInputDto.Name);
 
-        exist = await _categoryRepository.DoesExist(categoryInputDto.Name);
-
-        if (exist)
+        if (sameName)
         {
             throw new BusinessRuleException(Messages.CategoryUniqueConstraint);
+        }    
+        
+        if (categoryInputDto.ParentCategoryId == id)
+        {
+            throw new BusinessRuleException();
         }
         
-        if (category.ParentCategoryId == 0)
+        if (category.ParentCategoryId is not null)
         {
-            category.ParentCategoryId = null;
-        }
-        else
-        {
-            exist = await _categoryRepository.DoesExist(categoryInputDto.ParentCategoryId); 
+            exist = await _categoryRepository.DoesExist((long)categoryInputDto.ParentCategoryId); 
         
             if (!exist)
             {

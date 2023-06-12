@@ -25,31 +25,6 @@ public class ProductService : IProductService
         _categoryRepository = categoryRepository;
     }
     
-    public async Task<string> CheckProductsAvailability(long id)
-    {
-        var product = await _productsRepository.GetById(id);
-
-        if (product is null)
-        {
-            throw new NotFoundException(Messages.NotFound);
-        }
-        
-        if (product.Quantity > 0)
-        {
-            return Messages.ProductAvailable;
-        }
-
-        return Messages.ProductOutOfStock;
-    }
-
-    public async Task<IList<ProductDto>> GetAll()
-    {
-        var products = await _productsRepository.GetAll();
-        var productsDto = _mapper.Map<IList<ProductDto>>(products);
-
-        return productsDto;
-    }
-
     public Task<ProductDto> GetById(long id)
     {
         throw new NotImplementedException();
@@ -57,23 +32,27 @@ public class ProductService : IProductService
 
     public async Task<ProductDto> Add(ProductInputDto productInputDto)
     {
-        var exists = await _brandsRepository.DoesExist(productInputDto.BrandId);
+        bool exist;
+        if (productInputDto.BrandId is not null)
+        {
+            exist = await _brandsRepository.DoesExist((long)productInputDto.BrandId);
 
-        if (!exists)
+            if (!exist)
+            {
+                throw new NotFoundException(Messages.NotFound);
+            }
+        }
+
+        exist = await _categoryRepository.DoesExist(productInputDto.CategoryId);
+
+        if (!exist)
         {
             throw new NotFoundException(Messages.NotFound);
         }
 
-        exists = await _categoryRepository.DoesExist(productInputDto.CategoryId);
+        exist = await _productsRepository.DoesExist(productInputDto.Name);
         
-        if (!exists)
-        {
-            throw new NotFoundException(Messages.NotFound);
-        }
-
-        exists = await _productsRepository.DoesExist(productInputDto.Name);
-        
-        if (!exists)
+        if (!exist)
         {
             throw new BusinessRuleException(Messages.ProductNameUniqueConstraint);
         }
@@ -91,23 +70,26 @@ public class ProductService : IProductService
         var product = _mapper.Map<ProductInputDto, Product>(productInputDto, opt => 
             opt.AfterMap((_, dest) => dest.Id = id));
 
-        var exists = await _productsRepository.DoesExist(id);
+        var exist = await _productsRepository.DoesExist(id);
 
-        if (!exists)
-        {
-            throw new NotFoundException(Messages.NotFound);
-        }
-        
-        exists = await _brandsRepository.DoesExist(productInputDto.BrandId);
-
-        if (!exists)
+        if (!exist)
         {
             throw new NotFoundException(Messages.NotFound);
         }
 
-        exists = await _categoryRepository.DoesExist(productInputDto.CategoryId);
+        if (productInputDto.BrandId is not null)
+        {
+            exist = await _brandsRepository.DoesExist((long)productInputDto.BrandId);
+
+            if (!exist)
+            {
+                throw new NotFoundException(Messages.BrandNotFound);
+            }    
+        }
+
+        exist = await _categoryRepository.DoesExist(productInputDto.CategoryId);
         
-        if (!exists)
+        if (!exist)
         {
             throw new NotFoundException(Messages.NotFound);
         }
@@ -145,41 +127,5 @@ public class ProductService : IProductService
         var productsDto = _mapper.Map<IList<ProductDto>>(products);
 
         return productsDto;
-    }
-
-    public async Task<ProductDto> AssignToBrand(long productId, long brandId)
-    {
-        var exist = await _brandsRepository.DoesExist(brandId);
-
-        if (!exist)
-        {
-            throw new NotFoundException(Messages.NotFound);
-        }
-
-        exist = await _productsRepository.DoesExist(productId);
-
-        if (!exist)
-        {
-            throw new NotFoundException(Messages.NotFound);
-        }
-     
-        var product = await _productsRepository.GetById(productId);
-        var productDto = _mapper.Map<Product, ProductDto>(product, opt =>
-            opt.BeforeMap((src, _) => src.BrandId = brandId));
-        
-        await _productsRepository.Update(product);
-
-        return productDto;
-    }
-
-    public async Task<ProductDto> UnassignFromBrand(long productId)
-    {
-        var product = await _productsRepository.GetById(productId);
-        var productDto = _mapper.Map<Product, ProductDto>(product, opt =>
-            opt.BeforeMap((src, _) => src.BrandId = null));
-        
-        await _productsRepository.Update(product);
-
-        return productDto;
     }
 }

@@ -61,19 +61,26 @@ public class SectionService : ISectionService
     
     public async Task<SectionDto> Update(long id, SectionInputDto sectionInputDto)
     {
+        var section = _mapper.Map<SectionInputDto, Section>(sectionInputDto, opt => 
+            opt.AfterMap((_, dest) => dest.Id = id));
+        
         var exist = await _sectionRepository.DoesExist(id);
 
         if (!exist)
         {
             throw new NotFoundException(Messages.NotFound);
         }
+
+        var sameName = await _sectionRepository.AreSameName(id, sectionInputDto.Name);
         
-        var section = await _sectionRepository.GetById(id);
-        var sectionDto = _mapper.Map<Section, SectionDto>(section, opt =>
-            opt.BeforeMap((src, _) => src.Id = id));
+        if (sameName)
+        {
+            throw new BusinessRuleException("asd");
+        }
         
         await _sectionRepository.Update(section);
-
+        var sectionDto = _mapper.Map<SectionDto>(section);
+        
         return sectionDto;
     }
 

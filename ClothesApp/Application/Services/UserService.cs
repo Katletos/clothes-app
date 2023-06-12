@@ -139,15 +139,16 @@ public class UserService : IUserService
         }
         
         var user = await _userRepository.GetById(id);
-        user.FirstName = userInputInfoDto.FirstName;
-        user.LastName = userInputInfoDto.LastName;
-        user.Email = userInputInfoDto.Email;
-        user.FirstName = userInputInfoDto.FirstName;
-
+        var userDto = _mapper.Map<User, UserDto>(user, opt =>
+            opt.BeforeMap((src, _) =>
+            {
+                user.FirstName = userInputInfoDto.FirstName;
+                user.LastName = userInputInfoDto.LastName;
+                user.Email = userInputInfoDto.Email;
+                user.FirstName = userInputInfoDto.FirstName;
+            }));
         await _userRepository.Update(user);
-
-        var userDto = _mapper.Map<UserDto>(user);
-
+        
         return userDto;
     }
 

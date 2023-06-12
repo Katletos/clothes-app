@@ -25,9 +25,9 @@ public class ReviewService : IReviewService
         _userRepository = userRepository;
     }
 
-    public async Task<ReviewDto> Add(long productId, ReviewInputDto reviewInputDto)
+    public async Task<ReviewDto> Add(ReviewInputDto reviewInputDto)
     {
-        var exist = await _productsRepository.DoesExist(productId);
+        var exist = await _productsRepository.DoesExist(reviewInputDto.ProductId);
 
         if (!exist)
         {
@@ -41,9 +41,9 @@ public class ReviewService : IReviewService
             throw new NotFoundException(Messages.NotFound);
         }
         
-        var canAdd = await _reviewsRepository.CanAdd(productId, reviewInputDto);
+        exist = await _reviewsRepository.DoesReviewExist(reviewInputDto);
 
-        if (!canAdd)
+        if (exist)
         {
             throw new BusinessRuleException(Messages.ReviewUniqueConstraint);
         }
@@ -92,6 +92,15 @@ public class ReviewService : IReviewService
     public async Task<IList<ReviewDto>> GetByProductId(long id)
     {
         var reviews = await _reviewsRepository.FindByCondition(r => r.ProductId == id);
+
+        var reviewsDto = _mapper.Map<IList<ReviewDto>>(reviews);
+
+        return reviewsDto;
+    }
+
+    public async Task<IList<ReviewDto>> GetByUserId(long userId)
+    {
+        var reviews = await _reviewsRepository.FindByCondition(r => r.UserId == userId);
 
         var reviewsDto = _mapper.Map<IList<ReviewDto>>(reviews);
 
