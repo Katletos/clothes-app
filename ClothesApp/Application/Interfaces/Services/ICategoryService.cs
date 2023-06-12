@@ -7,6 +7,8 @@ public interface ICategoryService
 {
     Task<CategoryDto> GetById(long id);
 
+    Task<string> BuildCategoryTree();
+
     Task<CategoryDto> Add(CategoryInputDto categoryInputDto);
 
     Task<CategoryDto> Update(long id, CategoryInputDto categoryInputDto);

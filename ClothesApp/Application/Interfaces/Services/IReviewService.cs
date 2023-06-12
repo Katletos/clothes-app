@@ -4,15 +4,15 @@ namespace Application.Interfaces.Services;
 
 public interface IReviewService
 {
-    Task<ReviewDto> Add(long id, ReviewInputDto reviewInputDto);
+    Task<ReviewDto> Add(ReviewInputDto reviewInputDto);
 
-    Task<ReviewDto> Update(long id, ReviewInputDto reviewInputDto);
+    Task<ReviewDto> Update(long reviewId, ReviewInputDto reviewInputDto);
 
     Task<ReviewDto> DeleteById(long reviewId);
 
-    Task<IList<ReviewDto>> GetByProductId(long id);
+    Task<IList<ReviewDto>> GetByProductId(long productId);
 
-    Task<ReviewDto> GetById(long id);
+    Task<IList<ReviewDto>> GetByUserId(long userId);
 
-    Task<IList<ReviewDto>> GetAll();
+    Task<ReviewDto> GetById(long reviewId);
 }
