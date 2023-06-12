@@ -27,10 +27,10 @@ public class SectionsController : ControllerBase
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<SectionDto>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
-    public async Task<ActionResult<IList<SectionDto>>> GetSectionProducts([FromRoute] long id)
+    public async Task<ActionResult<SectionDto>> GetSectionById([FromRoute] long id)
     {
         var sectionDto = await _sectionService.GetById(id);
-    
+
         return Ok(sectionDto);
     }
     
@@ -48,7 +48,7 @@ public class SectionsController : ControllerBase
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SectionDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
-    public async Task<ActionResult> AddCategory([FromBody] SectionInputDto sectionInputDto)
+    public async Task<ActionResult> AddSection([FromBody] SectionInputDto sectionInputDto)
     {
         var sectionDto = await _sectionService.Add(sectionInputDto);
         

@@ -1,7 +1,6 @@
 using Application.Dtos.Products;
 using Application.Dtos.Reviews;
 using Application.Interfaces.Services;
-using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
@@ -12,31 +11,19 @@ public class ProductsController : ControllerBase
 {
     private readonly IProductService _productService;
 
-    private readonly IReviewService _reviewService;
-
-    public ProductsController(IProductService productService, IReviewService reviewService)
+    public ProductsController(IProductService productService)
     {
         _productService = productService;
-        _reviewService = reviewService;
     }
     
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<ProductDto>))]
-    public async Task<ActionResult> GetProducts()
-    {
-        var products = await _productService.GetAll();
-
-        return Ok(products);
-    }
-    
-    [HttpGet("{id}/is-available")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<ReviewDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
-    public async Task<ActionResult> CheckProductsAvailability([FromRoute] long id)
+    public async Task<ActionResult> GetProductsBySectionAndCategory([FromQuery]long sectionId,[FromQuery] long categoryId)
     {
-        var message = await _productService.CheckProductsAvailability(id);
+        var reviewDto = await _productService.GetProductsBySectionAndCategory(sectionId, categoryId);
 
-        return Ok(message);
+        return Ok(reviewDto);
     }
     
     [HttpPost]
@@ -54,48 +41,28 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     public async Task<ActionResult> UpdateProduct([FromRoute] long id, [FromBody] ProductInputDto productInputDto)
     {
-        var products = await _productService.Update(id, productInputDto);
+        var productDtos = await _productService.Update(id, productInputDto);
 
-        return Ok(products);
+        return Ok(productDtos);
     }
-    
-    [HttpGet("brands/{id}")]
+
+    [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+    public async Task<ActionResult> DeleteProductById([FromRoute] long id)
+    {
+        var productDto = await _productService.DeleteById(id);
+
+        return Ok(productDto);
+    }
+
+    [HttpGet("brands/{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<ProductDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     public async Task<ActionResult> GetProductsByBrandId([FromRoute] long id)
     {
         var products = await _productService.GetProductsByBrandId(id);
 
         return Ok(products);
-    }
-    
-    [HttpGet("{id}/reviews")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<ReviewDto>))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
-    public async Task<ActionResult> GetProductReviews([FromRoute] long id)
-    {
-        var productReviews = await _reviewService.GetByProductId(id);
-
-        return Ok(productReviews);
-    }
-    
-    [HttpPost("{id}/reviews")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ReviewDto))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
-    public async Task<ActionResult> AddProductReview([FromRoute] long id, [FromBody] ReviewInputDto reviewInputDto)
-    {
-        var reviewDto = await _reviewService.Add(id, reviewInputDto);
-        
-        return Ok(reviewDto);
-    }
-
-    [HttpGet("section-category")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<ReviewDto>))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
-    public async Task<ActionResult> GetProductsBySectionAndCategory([FromQuery]long sectionId,[FromQuery] long categoryId)
-    {
-        var reviewDto = await _productService.GetProductsBySectionAndCategory(sectionId, categoryId);
-
-        return Ok(reviewDto);
     }
 }

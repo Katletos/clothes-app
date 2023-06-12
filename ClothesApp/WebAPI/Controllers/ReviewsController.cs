@@ -15,13 +15,14 @@ public class ReviewsController : ControllerBase
         _reviewService = reviewService;
     }
 
-    [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<ReviewDto>))]
-    public async Task<ActionResult<IList<ReviewDto>>> GetAllReviews()
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ReviewDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+    public async Task<ActionResult> AddProductReview([FromBody] ReviewInputDto reviewInputDto)
     {
-        var reviewsDto = await _reviewService.GetAll();
+        var reviewDto = await _reviewService.Add(reviewInputDto);
 
-        return Ok(reviewsDto);
+        return Ok(reviewDto);
     }
     
     [HttpGet("{id}")]
@@ -34,6 +35,26 @@ public class ReviewsController : ControllerBase
         return Ok(reviewDto);
     }
 
+    [HttpGet("users/{userId}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<ReviewDto>))]
+    [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
+    public async Task<ActionResult> GetReviewByUserId([FromRoute] long userId)
+    {
+        var reviewsDto = await _reviewService.GetByUserId(userId);
+
+        return Ok(reviewsDto);
+    }
+    
+    [HttpGet("products/{productId}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<ReviewDto>))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+    public async Task<ActionResult> GetProductReviews([FromRoute] long productId)
+    {
+        var productReviews = await _reviewService.GetByProductId(productId);
+
+        return Ok(productReviews);
+    }
+    
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ReviewDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
