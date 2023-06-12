@@ -7,17 +7,11 @@ namespace Application.Interfaces.Services;
 
 public interface IOrderService
 {
-    Task<OrderDto> SubmitOrder(long id);
-    
-    Task<IList<OrderDto>> GetAll();
-
     Task<OrderDto> GetById(long id);
 
     Task<OrderDto> Add(OrderInputDto orderInputDto);
     
-    Task<OrderItemDto> AddItem(long id, OrderItemInputDto orderItemInputDto);
-
-    Task<OrderDto> UpdateStatus(long id);
+    Task<OrderDto> UpdateStatus(long id, OrderStatusType newOrderStatus);
 
     Task<OrderDto> DeleteById(long id);
 
@@ -25,9 +19,5 @@ public interface IOrderService
 
     Task<IList<OrderItemDto>> GetOrderItemsByOrderId(long orderId);
 
-    Task<decimal> CalcOrderPrice(long id);
-
-    Task<decimal> CalcProductPrice(OrderItemInputDto orderItemInputDto);
-
-    Task ReserveProduct(OrderItemInputDto orderItemInputDto);
+    Task<IList<OrderDto>> GetOrdersByStatus(OrderStatusType status);
 }
