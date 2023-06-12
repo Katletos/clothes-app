@@ -18,7 +18,6 @@ public class CategoryController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CategoryDto))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     public async Task<ActionResult> GetCategoryTree()
     {
         var tree = await _categoryService.BuildCategoryTree();

@@ -1,5 +1,4 @@
 using Application.Dtos.OrderItems;
-using Domain.Enums;
 
 namespace Application.Dtos.Orders;
 

@@ -61,7 +61,7 @@ public class OrderController : ControllerBase
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<OrderItemDto>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
-    public async Task<ActionResult<IList<OrderDto>>> GetOrdersByStatuses([FromQuery] OrderStatusType status)
+    public async Task<ActionResult<IList<OrderDto>>> GetOrdersByStatus([FromQuery] OrderStatusType status)
     {
         var ordersDtos = await _orderService.GetOrdersByStatus(status);
 
