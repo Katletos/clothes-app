@@ -69,9 +69,9 @@ public class ReviewsController : ControllerBase
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ReviewDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
-    public async Task<ActionResult> UpdateReview([FromRoute] long id, [FromBody] ReviewInputDto reviewInputDto)
+    public async Task<ActionResult> UpdateReview([FromRoute] long id, [FromBody] UpdateReviewDto updateReviewDto)
     {
-        var reviewDto = await _reviewService.Update(id, reviewInputDto);
+        var reviewDto = await _reviewService.Update(id, updateReviewDto);
         
         return Ok(reviewDto);
     }

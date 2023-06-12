@@ -55,10 +55,8 @@ public class ReviewService : IReviewService
         return reviewDto;
     }
 
-    public async Task<ReviewDto> Update(long id, ReviewInputDto reviewInputDto)
+    public async Task<ReviewDto> Update(long id, UpdateReviewDto updateReviewDto)
     {
-        var review = _mapper.Map<Review>(reviewInputDto);
-        
         var exist = await _reviewsRepository.DoesExist(id);
 
         if (!exist)
@@ -66,9 +64,15 @@ public class ReviewService : IReviewService
             throw new NotFoundException(Messages.ReviewNotFound);
         }
 
+        var review = await _reviewsRepository.GetById(id);
+        var reviewDto = _mapper.Map<Review, ReviewDto>(review, opt =>
+            opt.BeforeMap((src, _) =>
+            {
+                src.Comment = updateReviewDto.Comment;
+                src.Rating = updateReviewDto.Rating;
+                src.Title = updateReviewDto.Title;
+            }));
         await _reviewsRepository.Update(review);
-
-        var reviewDto = _mapper.Map<ReviewDto>(review);
 
         return reviewDto;
     }

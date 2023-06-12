@@ -6,7 +6,7 @@ public interface IReviewService
 {
     Task<ReviewDto> Add(ReviewInputDto reviewInputDto);
 
-    Task<ReviewDto> Update(long reviewId, ReviewInputDto reviewInputDto);
+    Task<ReviewDto> Update(long reviewId, UpdateReviewDto updateReviewDto);
 
     Task<ReviewDto> DeleteById(long reviewId);
 
