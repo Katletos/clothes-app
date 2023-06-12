@@ -11,6 +11,6 @@ public class ProductInputDtoValidator : AbstractValidator<ProductInputDto>
         RuleFor(o => o.Price).NotEmpty();
         RuleFor(o => o.Quantity).NotEmpty();
         RuleFor(o => o.CategoryId).NotEmpty();
-        RuleFor(o => o.BrandId).NotEmpty();
+        RuleFor(o => o.BrandId);
     }
 }

@@ -12,7 +12,7 @@ public class ProductDtoValidator : AbstractValidator<ProductDto>
         RuleFor(o => o.Price).NotEmpty();
         RuleFor(o => o.Quantity).NotEmpty();
         RuleFor(o => o.CategoryId).NotEmpty();
-        RuleFor(o => o.BrandId).NotEmpty();
+        RuleFor(o => o.BrandId);
         RuleFor(o => o.CreatedAt).NotEmpty();
     }
 }
