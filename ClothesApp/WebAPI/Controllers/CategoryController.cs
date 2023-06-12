@@ -1,8 +1,6 @@
 using Application.Dtos.Category;
 using Application.Dtos.SectionCategories;
 using Application.Interfaces.Services;
-using Domain.Entities;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
@@ -17,7 +15,17 @@ public class CategoryController : ControllerBase
     {
         _categoryService = categoryService;
     }
-    
+
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CategoryDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+    public async Task<ActionResult> GetCategoryTree()
+    {
+        var tree = await _categoryService.BuildCategoryTree();
+
+        return Ok(tree);
+    }
+
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CategoryDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
