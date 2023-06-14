@@ -41,7 +41,10 @@ public class AddressService : IAddressService
     {
         var exist = await _userRepository.DoesExist(addAddressDto.UserId);
 
-        if (!exist) throw new NotFoundException(Messages.UserNotFound);
+        if (!exist)
+        {
+            throw new NotFoundException(Messages.UserNotFound);
+        }
 
         var address = _mapper.Map<Address>(addAddressDto);
         await _addressRepository.Insert(address);

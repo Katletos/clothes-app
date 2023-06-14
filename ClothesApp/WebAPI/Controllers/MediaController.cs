@@ -20,7 +20,7 @@ public class MediaController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     public async Task<ActionResult> GetListOfImageIds(long id)
     {
-        var mediaDtos = await _mediaService.ImageIdsGetByProductId(id);
+        var mediaDtos = await _mediaService.GetImageIdsByProductId(id);
 
         return Ok(mediaDtos);
     }

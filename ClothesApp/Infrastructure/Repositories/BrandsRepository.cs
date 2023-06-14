@@ -28,12 +28,12 @@ public class BrandsRepository : IBrandsRepository
 
         return brand;
     }
-    
+
     public async Task<Brand> Delete(Brand brand)
     {
         _dbContext.Brands.Remove(brand);
         await _dbContext.SaveChangesAsync();
-      
+
         return brand;
     }
 

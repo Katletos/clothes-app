@@ -22,7 +22,7 @@ public class MediaService : IMediaService
         _productsRepository = productsRepository;
     }
 
-    public async Task<long[]> ImageIdsGetByProductId(long id)
+    public async Task<long[]> GetImageIdsByProductId(long id)
     {
         var exist = await _productsRepository.DoesExist(id);
 

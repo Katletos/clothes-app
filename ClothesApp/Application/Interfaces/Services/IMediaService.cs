@@ -5,7 +5,7 @@ namespace Application.Interfaces.Services;
 
 public interface IMediaService
 {
-    Task<long[]> ImageIdsGetByProductId(long id);
+    Task<long[]> GetImageIdsByProductId(long id);
 
     Task<MediaDto> UploadFile(MediaInputDto mediaInputDto);
 
