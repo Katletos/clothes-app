@@ -49,9 +49,9 @@ public class OrderItemsRepository : IOrderItemsRepository
         return await _dbContext.OrdersItems.Where(o => o.OrderId == id).ToListAsync();
     }
 
-    public async Task<bool> DoesExistByGetByProductId(long orderId,long id)
+    public async Task<bool> DoesExistByProductId(long orderId,long id)
     {
-        return await _dbContext.OrdersItems.AnyAsync(oi => oi.OrderId ==orderId && oi.ProductId == id);
+        return await _dbContext.OrdersItems.AnyAsync(oi => oi.OrderId == orderId && oi.ProductId == id);
     }
 
     public async Task<IList<OrderItem>> InsertRange(IList<OrderItem> orderItems)

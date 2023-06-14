@@ -26,9 +26,18 @@ public class ProductService : IProductService
         _categoryRepository = categoryRepository;
     }
 
-    public Task<ProductDto> GetById(long id)
+    public async Task<ProductDto> GetById(long id)
     {
-        throw new NotImplementedException();
+        var exist = await _productsRepository.DoesExist(id);
+
+        if (!exist)
+        {
+            throw new NotFoundException(Messages.ProductNotFound);
+        }
+
+        var product = await _productsRepository.GetById(id);
+        var productDto = _mapper.Map<ProductDto>(product);
+        return productDto;
     }
 
     public async Task<ProductDto> Add(ProductInputDto productInputDto)
@@ -99,9 +108,19 @@ public class ProductService : IProductService
         return productDto;
     }
 
-    public Task<ProductDto> DeleteById(long id)
+    public async Task<ProductDto> DeleteById(long id)
     {
-        throw new NotImplementedException();
+        var exist = await _productsRepository.DoesExist(id);
+
+        if (!exist)
+        {
+            throw new NotFoundException(Messages.ProductNotFound);
+        }
+
+        var product = await _productsRepository.GetById(id);
+        await _productsRepository.Delete(product);
+        var productDto = _mapper.Map<ProductDto>(product);
+        return productDto;
     }
 
     public async Task<IList<ProductDto>> GetProductsBySectionAndCategory(long sectionId, long categoryId)

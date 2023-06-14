@@ -41,12 +41,7 @@ public class UserService : IUserService
 
         return userDto;
     }
-
-    public Task<UserDto> DeleteById(long id)
-    {
-        throw new NotImplementedException();
-    }
-
+    
     public async Task<UserDto> Add(RegisterUserDto registerUserDto)
     {
         var exist = await _userRepository.DoesExist(registerUserDto.Email);

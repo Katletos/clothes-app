@@ -14,6 +14,14 @@ public class ProductsRepository : IProductsRepository
         _dbContext = dbContext;
     }
 
+    public async Task<Product> Delete(Product product)
+    {
+        _dbContext.Remove(product);
+        await _dbContext.SaveChangesAsync();
+
+        return product;
+    }
+
     public async Task<bool> AnyProductOfBrandIdExists(long brandId)
     {
         return await _dbContext.Products.AnyAsync(p => p.BrandId == brandId);
@@ -47,9 +55,12 @@ public class ProductsRepository : IProductsRepository
         return await _dbContext.Products.Where(p => ids.Contains(p.Id)).ToListAsync();
     }
 
-    public Task<Product> Insert(Product entity)
+    public async Task<Product> Insert(Product product)
     {
-        throw new NotImplementedException();
+        _dbContext.Products.Add(product);
+        await _dbContext.SaveChangesAsync();
+
+        return product;
     }
 
     public async Task<Product> Update(Product product)
