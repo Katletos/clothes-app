@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Application.Interfaces.Repositories;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,7 @@ public class CategoryRepository : ICategoryRepository
     {
         _dbContext = context;
     }
-    
+
     public async Task<Category> Insert(Category category)
     {
         _dbContext.Categories.Add(category);
@@ -44,6 +45,11 @@ public class CategoryRepository : ICategoryRepository
         return await _dbContext.Categories.AnyAsync(c => c.Id == id);
     }
 
+    public async Task<IList<Category>> FindByCondition(Expression<Func<Category, bool>> expression)
+    {
+        return await _dbContext.Categories.Where(expression).ToListAsync();
+    }
+
     public async Task<bool> AreSameName(long id, string categoryName)
     {
         return await _dbContext.Categories.AnyAsync(c => c.Name == categoryName && c.Id != id);
@@ -63,7 +69,7 @@ public class CategoryRepository : ICategoryRepository
     {
         _dbContext.Categories.Remove(category);
         await _dbContext.SaveChangesAsync();
-      
+
         return category;
     }
 }
