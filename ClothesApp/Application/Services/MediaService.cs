@@ -10,7 +10,7 @@ namespace Application.Services;
 public class MediaService : IMediaService
 {
     private readonly IMediaRepository _mediaRepository;
-    
+
     private readonly IProductsRepository _productsRepository;
 
     private readonly IMapper _mapper;
@@ -22,11 +22,13 @@ public class MediaService : IMediaService
         _productsRepository = productsRepository;
     }
 
-    public async Task<IList<MediaDto>> GetByProductId(long id)
+    public async Task<long[]> ImageIdsGetByProductId(long id)
     {
-        var media = await _mediaRepository.FindByCondition(m => m.ProductId == id);
-        var mediaDto = _mapper.Map<IList<MediaDto>>(media);
-        return mediaDto;
+        var exist = await _productsRepository.DoesExist(id);
+
+        if (!exist) throw new NotFoundException(Messages.ProductNotFound);
+
+        return await _mediaRepository.GetImageIdsByProductId(id);
     }
 
     public async Task<MediaDto> UploadFile(MediaInputDto mediaInputDto)
@@ -38,24 +40,53 @@ public class MediaService : IMediaService
             throw new BusinessRuleException(Messages.ProductNotFound);
         }
 
-        var guid = Guid.NewGuid().ToString();
-        var fileName = guid + "-" + mediaInputDto.File.FileName;
-        var filePath = Path.Combine(@"Images", fileName);
-        await using (var stream = new FileStream(filePath, FileMode.Create))
+        var file = mediaInputDto.File;
+        var media = new Media();
+        if (file.Length > 0)
         {
-            await mediaInputDto.File.CopyToAsync(stream);
+            using var memoryStream = new MemoryStream();
+            await file.CopyToAsync(memoryStream);
+            if (memoryStream.Length < 50_000_000)
+            {
+                media.Bytes = memoryStream.ToArray();
+                media.FileName = file.FileName;
+                media.FileType = GetMimeType(Path.GetExtension(file.FileName));
+                media.ProductId = mediaInputDto.ProductId;
+            }
+            else
+            {
+                throw new BusinessRuleException(Messages.FileUploadConstraint);
+            }
         }
-
-        Media media = new Media()
+        else
         {
-            FileName = fileName,
-            ProductId = mediaInputDto.ProductId,
-            Url = filePath,
-            FileType = mediaInputDto.File.ContentType,
-        };
+            throw new BusinessRuleException(Messages.EmptyFile);
+        }
 
         await _mediaRepository.Insert(media);
         var mediaDto = _mapper.Map<MediaDto>(media);
         return mediaDto;
+    }
+
+    private string GetMimeType(string extension)
+    {
+        var mappings = new Dictionary<string, string>()
+        {
+            { ".jpe", "image/jpeg" },
+            { ".jpeg", "image/jpeg" },
+            { ".jpg", "image/jpeg" },
+            { ".png", "image/png" }
+        };
+
+        return mappings.TryGetValue(extension, out var mime) ? mime : "application/octet-stream";
+    }
+
+    public async Task<Media> GetMedia(long id)
+    {
+        var exist = await _productsRepository.DoesExist(id);
+
+        if (!exist) throw new BusinessRuleException(Messages.ProductNotFound);
+
+        return await _mediaRepository.GetById(id);
     }
 }

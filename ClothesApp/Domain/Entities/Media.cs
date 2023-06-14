@@ -6,7 +6,7 @@ public class Media
 
     public long ProductId { get; set; }
 
-    public string Url { get; set; }
+    public byte[] Bytes { get; set; }
 
     public string FileType { get; set; }
 

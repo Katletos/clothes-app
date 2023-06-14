@@ -1,5 +1,3 @@
-using System.Linq.Expressions;
-using Application.Dtos.Media;
 using Application.Interfaces.Repositories;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -15,14 +13,19 @@ public class MediaRepository : IMediaRepository
         _dbContext = dbContext;
     }
 
-    public async Task<IList<Media>> FindByCondition(Expression<Func<Media, bool>> expression)
-    {
-        return await _dbContext.Set<Media>().Where(expression).ToListAsync();
-    }
-
     public async Task Insert(Media media)
     {
         _dbContext.Media.Add(media);
         await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task<long[]> GetImageIdsByProductId(long id)
+    {
+        return await _dbContext.Media.Where(m => m.ProductId == id).Select(m => m.Id).ToArrayAsync();
+    }
+
+    public async Task<Media> GetById(long id)
+    {
+        return await _dbContext.Media.FindAsync(id);
     }
 }

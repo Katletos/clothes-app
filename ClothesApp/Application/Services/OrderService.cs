@@ -13,11 +13,11 @@ namespace Application.Services;
 public class OrderService : IOrderService
 {
     private readonly IProductsRepository _productsRepository;
-    
+
     private readonly IOrderRepository _orderRepository;
 
     private readonly IAddressService _addressService;
-    
+
     private readonly IUserRepository _userRepository;
 
     private readonly IOrderItemsRepository _orderItemsRepository;
@@ -39,7 +39,7 @@ public class OrderService : IOrderService
         _orderItemsRepository = orderItemsRepository;
         _productsRepository = productsRepository;
     }
-    
+
     public async Task<IList<OrderDto>> GetAll()
     {
         var orders = await _orderRepository.GetAll();
@@ -77,7 +77,7 @@ public class OrderService : IOrderService
         {
             throw new BusinessRuleException(Messages.AddressUserConstraint);
         }
-        
+
         var order = _mapper.Map<OrderInputDto, Order>(orderInputDto, opt =>
             opt.AfterMap((_, dest) =>
             {
@@ -85,10 +85,10 @@ public class OrderService : IOrderService
                 dest.CreatedAt = DateTime.Now;
             }));
         await _orderRepository.Insert(order);
-        
-        var orderWithId = await _orderRepository.GetLastUserOrder(o => o.CreatedAt == order.CreatedAt 
+
+        var orderWithId = await _orderRepository.GetLastUserOrder(o => o.CreatedAt == order.CreatedAt
                                                                        && o.UserId == order.UserId);
-        
+
         var orderItemDtos = _mapper.Map<IList<OrderItemDto>>(orderInputDto.OrderItems);
         IList<OrderItem> orderItems = new List<OrderItem>();
         foreach (var item in orderItemDtos)
@@ -99,7 +99,7 @@ public class OrderService : IOrderService
             {
                 throw new NotFoundException(Messages.ProductNotFound);
             }
-            
+
             var product = await _productsRepository.GetById(item.ProductId);
             var orderItem = _mapper.Map<OrderItemDto, OrderItem>(item, opt =>
                 opt.AfterMap((_, dest) =>
@@ -107,11 +107,12 @@ public class OrderService : IOrderService
                     dest.OrderId = orderWithId.Id;
                     dest.Price = product.Price;
                 }));
-            
+
             orderItems.Add(orderItem);
         }
+
         await _orderItemsRepository.InsertRange(orderItems);
-        
+
         await ReserveOrderProducts(orderInputDto);
         orderWithId.Price = await CalcOrderPrice(orderWithId.Id);
         await _orderRepository.Update(orderWithId);
@@ -120,7 +121,7 @@ public class OrderService : IOrderService
 
         return orderDto;
     }
-    
+
     private async Task<decimal> CalcOrderPrice(long id)
     {
         var exist = await _orderRepository.DoesExist(id);
@@ -149,8 +150,8 @@ public class OrderService : IOrderService
         foreach (var item in orderItems)
         {
             productIds.Add(item.ProductId);
-        }    
-        
+        }
+
         var exist = await _productsRepository.DoesExistRange(productIds);
         if (!exist)
         {
@@ -161,20 +162,19 @@ public class OrderService : IOrderService
         for (int i = 0; i < products.Count; i++)
         {
             var enough = products[i].Quantity - orderItems[i].Quantity >= 0;
+
             if (!enough)
             {
-                throw new BusinessRuleException($"Product with id {products[i].Id} don't have enough quantity on stock");
+                throw new BusinessRuleException(
+                    $"Product with id {products[i].Id} don't have enough quantity on stock");
             }
-        }
-        
-        for (int i = 0; i < products.Count; i++)
-        {
+
             products[i].Quantity -= orderItems[i].Quantity;
         }
-        
+
         await _productsRepository.UpdateRange(products);
     }
-    
+
     public async Task<OrderDto> UpdateStatus(long orderId, OrderStatusType newOrderStatus)
     {
         var exist = await _orderRepository.DoesExist(orderId);
@@ -190,7 +190,7 @@ public class OrderService : IOrderService
         {
             throw new BusinessRuleException(Messages.OrderUpdateConstraint);
         }
-        
+
         order.OrderStatus = OrderStateMachine(order.OrderStatus, newOrderStatus);
         await _orderRepository.Update(order);
 
@@ -219,27 +219,27 @@ public class OrderService : IOrderService
 
         return result;
     }
-    
+
     public async Task<IList<OrderTransactionsDto>> GetOrderHistoryByOrderId(long id)
     {
         var exist = await _orderRepository.DoesExist(id);
-        
+
         if (!exist)
         {
             throw new NotFoundException(Messages.OrderNotFound);
         }
-        
+
         var orderTransactions = await _transactionsRepository.GetByOrderId(id);
-        
+
         var orderTransactionsDto = _mapper.Map<IList<OrderTransactionsDto>>(orderTransactions);
-        
+
         return orderTransactionsDto;
     }
 
     public async Task<IList<OrderItemDto>> GetOrderItemsByOrderId(long orderId)
-    { 
+    {
         var exist = await _orderRepository.DoesExist(orderId);
-        
+
         if (!exist)
         {
             throw new NotFoundException(Messages.OrderNotFound);

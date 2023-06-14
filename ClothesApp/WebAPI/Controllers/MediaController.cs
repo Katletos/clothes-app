@@ -18,11 +18,21 @@ public class MediaController : ControllerBase
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<MediaDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
-    public async Task<ActionResult> GetMediaUrlsByProductId(long id)
+    public async Task<ActionResult> GetListOfImageIds(long id)
     {
-        var mediaDtos = await _mediaService.GetByProductId(id);
+        var mediaDtos = await _mediaService.ImageIdsGetByProductId(id);
 
         return Ok(mediaDtos);
+    }
+
+    [HttpGet("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(HttpResponseMessage))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+    public async Task<ActionResult> DownloadImage(long id)
+    {
+        var media = await _mediaService.GetMedia(id);
+
+        return File(media.Bytes, media.FileType, media.FileName);
     }
 
     [HttpPost]
