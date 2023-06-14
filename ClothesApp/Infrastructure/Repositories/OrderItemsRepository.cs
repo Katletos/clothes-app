@@ -28,22 +28,7 @@ public class OrderItemsRepository : IOrderItemsRepository
 
         return orderItem;
     }
-
-    public Task<IList<OrderItem>> GetAll()
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<OrderItem> GetById(long id)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<bool> DoesExist(long id)
-    {
-        throw new NotImplementedException();
-    }
-
+    
     public async Task<IList<OrderItem>> GetByOrderId(long id)
     {
         return await _dbContext.OrdersItems.Where(o => o.OrderId == id).ToListAsync();

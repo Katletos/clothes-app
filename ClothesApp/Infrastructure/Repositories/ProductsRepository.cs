@@ -45,9 +45,7 @@ public class ProductsRepository : IProductsRepository
 
     public async Task<bool> DoesExistRange(IList<long> ids)
     {
-        var products = await _dbContext.Products.Where(p => ids.Contains(p.Id)).ToListAsync();
-
-        return products.Count() == ids.Count();
+        return ids.Count() == await _dbContext.Products.CountAsync(p => ids.Contains(p.Id));
     }
 
     public async Task<IList<Product>> GetRange(IList<long> ids)
