@@ -16,13 +16,24 @@ public class AddressController : ControllerBase
         _addressService = addressService;
     }
 
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AddressDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+    public async Task<ActionResult> AddUserAddress([FromBody] AddAddressDto addAddressDto)
+    {
+        var addressDto = await _addressService.AddAddress(addAddressDto);
+
+        return Ok(addressDto);
+    }
+
     [HttpPut("users/{userId}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
-    public async Task<ActionResult> UpdateUserAddress([FromRoute] long userId, [FromBody] AddressInputDto addressInputDto)
+    public async Task<ActionResult> UpdateUserAddress([FromRoute] long userId,
+        [FromBody] AddressInputDto addressInputDto)
     {
         var userDto = await _addressService.UpdateAddress(userId, addressInputDto);
-        
+
         return Ok(userDto);
     }
 

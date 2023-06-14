@@ -14,9 +14,12 @@ public class AddressRepository : IAddressRepository
         _dbContext = dbContext;
     }
 
-    public Task<Address> Insert(Address entity)
+    public async Task<Address> Insert(Address address)
     {
-        throw new NotImplementedException();
+        _dbContext.Addresses.Add(address);
+        await _dbContext.SaveChangesAsync();
+
+        return address;
     }
 
     public async Task<Address> Update(Address address)
@@ -27,9 +30,9 @@ public class AddressRepository : IAddressRepository
         return address;
     }
 
-    public Task<IList<Address>> GetAll()
+    public async Task<IList<Address>> GetAll()
     {
-        throw new NotImplementedException();
+        return await _dbContext.Addresses.ToListAsync();
     }
 
     public async Task<Address> GetById(long id)
@@ -44,7 +47,7 @@ public class AddressRepository : IAddressRepository
 
     public async Task<IList<Address>> FindByCondition(Expression<Func<Address, bool>> expression)
     {
-        return await _dbContext.Set<Address>().Where(expression).ToListAsync();
+        return await _dbContext.Addresses.Where(expression).ToListAsync();
     }
 
     public async Task<Address> Delete(Address address)
