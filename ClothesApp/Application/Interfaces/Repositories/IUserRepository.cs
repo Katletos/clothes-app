@@ -5,8 +5,8 @@ namespace Application.Interfaces.Repositories;
 
 public interface IUserRepository : IBaseRepository<User>
 {
-    Task<bool> DoesUniqueEmail(long userId, string email);
-    
+    Task<bool> AreSameEmail(long userId, string email);
+
     Task<User> Delete(User user);
 
     Task<bool> DoesExist(string email);

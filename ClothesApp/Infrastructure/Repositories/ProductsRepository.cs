@@ -1,5 +1,4 @@
 using System.Linq.Expressions;
-using Application.Dtos.OrderItems;
 using Application.Interfaces.Repositories;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +26,7 @@ public class ProductsRepository : IProductsRepository
 
     public async Task<IList<Product>> FindByCondition(Expression<Func<Product, bool>> expression)
     {
-        return await _dbContext.Set<Product>().Where(expression).ToListAsync();
+        return await _dbContext.Products.Where(expression).ToListAsync();
     }
 
     public async Task UpdateRange(IList<Product> products)

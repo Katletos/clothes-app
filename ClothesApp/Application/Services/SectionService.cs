@@ -15,7 +15,8 @@ public class SectionService : ISectionService
 
     private readonly IMapper _mapper;
 
-    public SectionService(ISectionRepository sectionRepository, IMapper mapper, ISectionCategoryRepository sectionCategoryRepository)
+    public SectionService(ISectionRepository sectionRepository, IMapper mapper,
+        ISectionCategoryRepository sectionCategoryRepository)
     {
         _sectionRepository = sectionRepository;
         _mapper = mapper;
@@ -37,7 +38,7 @@ public class SectionService : ISectionService
         {
             throw new NotFoundException(Messages.SectionNotFound);
         }
-        
+
         var productDto = _mapper.Map<SectionDto>(product);
         return productDto;
     }
@@ -57,12 +58,12 @@ public class SectionService : ISectionService
 
         return sectionDto;
     }
-    
+
     public async Task<SectionDto> Update(long id, SectionInputDto sectionInputDto)
     {
-        var section = _mapper.Map<SectionInputDto, Section>(sectionInputDto, opt => 
+        var section = _mapper.Map<SectionInputDto, Section>(sectionInputDto, opt =>
             opt.AfterMap((_, dest) => dest.Id = id));
-        
+
         var exist = await _sectionRepository.DoesExist(id);
 
         if (!exist)
@@ -71,15 +72,15 @@ public class SectionService : ISectionService
         }
 
         var sameName = await _sectionRepository.AreSameName(id, sectionInputDto.Name);
-        
+
         if (sameName)
         {
-            throw new BusinessRuleException("asd");
+            throw new BusinessRuleException(Messages.SectionUniqueConstraint);
         }
-        
+
         await _sectionRepository.Update(section);
         var sectionDto = _mapper.Map<SectionDto>(section);
-        
+
         return sectionDto;
     }
 
@@ -91,7 +92,7 @@ public class SectionService : ISectionService
         {
             throw new NotFoundException(Messages.SectionNotFound);
         }
-        
+
         var relates = await _sectionCategoryRepository.DoesSectionRelateCategory(id);
 
         if (relates)

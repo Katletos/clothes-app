@@ -13,14 +13,14 @@ public class OrderTransactionRepository : IOrderTransactionsRepository
         _dbContext = dbContext;
     }
 
-    public async Task<OrderTransaction> Add(OrderTransaction orderTransaction)
+    public async Task<OrderTransaction> Insert(OrderTransaction orderTransaction)
     {
         _dbContext.OrdersTransactions.Add(orderTransaction);
         await _dbContext.SaveChangesAsync();
-        
+
         return orderTransaction;
     }
-    
+
     public async Task<IList<OrderTransaction>> GetByOrderId(long id)
     {
         return await _dbContext.OrdersTransactions.Where(ot => ot.OrderId == id).ToListAsync();

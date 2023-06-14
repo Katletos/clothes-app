@@ -5,7 +5,7 @@ namespace Domain.Entities;
 public class Order
 {
     public long Id { get; set; }
-    
+
     public OrderStatusType OrderStatus { get; set; }
 
     public long UserId { get; set; }

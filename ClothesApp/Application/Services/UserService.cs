@@ -1,4 +1,3 @@
-using Application.Dtos.Addresses;
 using Application.Dtos.Users;
 using Application.Exceptions;
 using Application.Interfaces.Repositories;
@@ -11,18 +10,15 @@ namespace Application.Services;
 public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
-    
-    private readonly IAddressRepository _addressRepository;
 
     private readonly IMapper _mapper;
-    
-    public UserService(IUserRepository userRepository, IMapper mapper, IAddressRepository addressRepository)
+
+    public UserService(IUserRepository userRepository, IMapper mapper)
     {
         _userRepository = userRepository;
         _mapper = mapper;
-        _addressRepository = addressRepository;
     }
-    
+
     public async Task<IList<UserDto>> GetAll()
     {
         var users = await _userRepository.GetAll();
@@ -40,17 +36,17 @@ public class UserService : IUserService
         {
             throw new NotFoundException(Messages.UserNotFound);
         }
-        
+
         var userDto = _mapper.Map<UserDto>(user);
 
         return userDto;
     }
-    
+
     public Task<UserDto> DeleteById(long id)
     {
         throw new NotImplementedException();
     }
-    
+
     public async Task<UserDto> Add(RegisterUserDto registerUserDto)
     {
         var exist = await _userRepository.DoesExist(registerUserDto.Email);
@@ -76,13 +72,13 @@ public class UserService : IUserService
             throw new NotFoundException(Messages.UserNotFound);
         }
 
-        exist = await _userRepository.DoesUniqueEmail(id, userInputInfoDto.Email);
+        var sameEmail = await _userRepository.AreSameEmail(id, userInputInfoDto.Email);
 
-        if (exist)
+        if (sameEmail)
         {
             throw new BusinessRuleException(Messages.EmailUniqueConstraint);
         }
-        
+
         var user = await _userRepository.GetById(id);
         var userDto = _mapper.Map<User, UserDto>(user, opt =>
             opt.BeforeMap((src, _) =>
@@ -93,7 +89,7 @@ public class UserService : IUserService
                 src.FirstName = userInputInfoDto.FirstName;
             }));
         await _userRepository.Update(user);
-        
+
         return userDto;
     }
 
@@ -105,7 +101,7 @@ public class UserService : IUserService
         {
             throw new NotFoundException(Messages.UserNotFound);
         }
-        
+
         return await _userRepository.Login(userLoginDto);
     }
 }

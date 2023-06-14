@@ -50,7 +50,7 @@ public class ReviewsRepository : IReviewsRepository
     {
         _dbContext.Reviews.Remove(review);
         await _dbContext.SaveChangesAsync();
-      
+
         return review;
     }
 
@@ -61,7 +61,7 @@ public class ReviewsRepository : IReviewsRepository
     }
 
     public async Task<IList<Review>> FindByCondition(Expression<Func<Review, bool>> expression)
-    {        
-        return await _dbContext.Set<Review>().Where(expression).AsNoTracking().ToListAsync();
+    {
+        return await _dbContext.Reviews.Where(expression).AsNoTracking().ToListAsync();
     }
 }

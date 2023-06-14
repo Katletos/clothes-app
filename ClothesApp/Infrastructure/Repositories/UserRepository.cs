@@ -45,7 +45,7 @@ public class UserRepository : IUserRepository
         return await _dbContext.Users.AnyAsync(u => u.Id == id);
     }
 
-    public async Task<bool> DoesUniqueEmail(long userId, string email)
+    public async Task<bool> AreSameEmail(long userId, string email)
     {
         return await _dbContext.Users.AnyAsync(u => u.Email == email && u.Id != userId);
     }
@@ -54,7 +54,7 @@ public class UserRepository : IUserRepository
     {
         _dbContext.Users.Remove(user);
         await _dbContext.SaveChangesAsync();
-      
+
         return user;
     }
 

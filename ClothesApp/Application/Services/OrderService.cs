@@ -84,22 +84,16 @@ public class OrderService : IOrderService
                 dest.OrderStatus = OrderStatusType.InReview;
                 dest.CreatedAt = DateTime.Now;
             }));
+
+        await ReserveOrderProducts(orderInputDto);
         await _orderRepository.Insert(order);
 
         var orderWithId = await _orderRepository.GetLastUserOrder(o => o.CreatedAt == order.CreatedAt
                                                                        && o.UserId == order.UserId);
-
         var orderItemDtos = _mapper.Map<IList<OrderItemDto>>(orderInputDto.OrderItems);
         IList<OrderItem> orderItems = new List<OrderItem>();
         foreach (var item in orderItemDtos)
         {
-            var productExist = await _productsRepository.DoesExist(item.ProductId);
-
-            if (!productExist)
-            {
-                throw new NotFoundException(Messages.ProductNotFound);
-            }
-
             var product = await _productsRepository.GetById(item.ProductId);
             var orderItem = _mapper.Map<OrderItemDto, OrderItem>(item, opt =>
                 opt.AfterMap((_, dest) =>
@@ -113,7 +107,6 @@ public class OrderService : IOrderService
 
         await _orderItemsRepository.InsertRange(orderItems);
 
-        await ReserveOrderProducts(orderInputDto);
         orderWithId.Price = await CalcOrderPrice(orderWithId.Id);
         await _orderRepository.Update(orderWithId);
 
@@ -200,7 +193,7 @@ public class OrderService : IOrderService
             OrderStatus = order.OrderStatus,
             UpdatedAt = DateTime.Now,
         };
-        await _transactionsRepository.Add(orderTransaction);
+        await _transactionsRepository.Insert(orderTransaction);
 
         var orderDto = _mapper.Map<OrderDto>(order);
         return orderDto;

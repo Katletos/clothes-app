@@ -1,6 +1,6 @@
 using Application.Dtos.Addresses;
 using Application.Dtos.Brands;
-using Application.Dtos.Category;
+using Application.Dtos.Categories;
 using Application.Dtos.Media;
 using Application.Dtos.OrderItems;
 using Application.Dtos.Orders;
@@ -37,10 +37,11 @@ public class AppMappingProfile : Profile
         CreateMap<OrderTransaction, OrderTransactionsDto>().ReverseMap();
         CreateMap<Category, CategoryDto>().ReverseMap();
         CreateMap<CategoryInputDto, Category>();
+        CreateMap<Category, CategoryTree>();
         CreateMap<Section, SectionDto>().ReverseMap();
         CreateMap<SectionInputDto, Section>();
         CreateMap<Address, AddressDto>().ReverseMap();
-        CreateMap<Address, AddressDto>().ReverseMap();
+        CreateMap<AddAddressDto, Address>().ReverseMap();
         CreateMap<Media, MediaDto>().ReverseMap();
         CreateMap<SectionCategory, SectionCategoryDto>().ReverseMap();
     }

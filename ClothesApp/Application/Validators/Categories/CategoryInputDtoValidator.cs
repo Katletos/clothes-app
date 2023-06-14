@@ -1,4 +1,4 @@
-using Application.Dtos.Category;
+using Application.Dtos.Categories;
 using FluentValidation;
 
 namespace Application.Validators.Categories;

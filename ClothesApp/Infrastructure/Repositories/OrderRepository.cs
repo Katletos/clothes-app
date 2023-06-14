@@ -13,6 +13,7 @@ public class OrderRepository : IOrderRepository
     {
         _dbContext = context;
     }
+
     public async Task<Order> Insert(Order order)
     {
         _dbContext.Orders.Add(order);
@@ -46,11 +47,11 @@ public class OrderRepository : IOrderRepository
 
     public async Task<Order> GetLastUserOrder(Expression<Func<Order, bool>> expression)
     {
-        return await _dbContext.Set<Order>().OrderBy(o => o.Id).LastAsync(expression);
+        return await _dbContext.Orders.OrderBy(o => o.Id).LastAsync(expression);
     }
 
     public async Task<IList<Order>> FindByCondition(Expression<Func<Order, bool>> expression)
     {
-        return await _dbContext.Set<Order>().Where(expression).ToListAsync();
+        return await _dbContext.Orders.Where(expression).ToListAsync();
     }
 }

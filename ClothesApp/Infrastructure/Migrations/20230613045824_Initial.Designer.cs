@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ClothesAppContext))]
-    [Migration("20230609115031_Initial")]
+    [Migration("20230613045824_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -23,7 +23,7 @@ namespace Infrastructure.Migrations
                 .HasAnnotation("ProductVersion", "7.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "order_status_type", new[] { "on_hold", "in_review", "in_delivery", "completed" });
+            NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "order_status_type", new[] { "in_review", "in_delivery", "completed", "cancelled" });
             NpgsqlModelBuilderExtensions.HasPostgresEnum(modelBuilder, "user_type", new[] { "admin", "customer" });
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
@@ -102,6 +102,9 @@ namespace Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
+                    b.Property<byte[]>("Bytes")
+                        .HasColumnType("bytea");
+
                     b.Property<string>("FileName")
                         .IsRequired()
                         .HasColumnType("text");
@@ -112,10 +115,6 @@ namespace Infrastructure.Migrations
 
                     b.Property<long>("ProductId")
                         .HasColumnType("bigint");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
