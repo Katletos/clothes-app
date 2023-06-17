@@ -16,23 +16,23 @@ public class ExceptionHandlingMiddleware : IMiddleware
         catch (NotFoundException e)
         {
             context.Response.StatusCode = (int)HttpStatusCode.NotFound;
-
+            context.Response.ContentType = "application/json";
+            
             ProblemDetails problem = new()
             {
                 Status = (int)HttpStatusCode.NotFound,
                 Detail = e.Message,
             };
-            
+
             string json = JsonSerializer.Serialize(problem);
             
-            context.Response.ContentType = "application/json";
-
             await context.Response.WriteAsync(json);
         }
         catch (BusinessRuleException e)
         {
             context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-            
+            context.Response.ContentType = "application/json";
+
             ProblemDetails problem = new()
             {
                 Status = (int)HttpStatusCode.BadRequest,
@@ -41,8 +41,6 @@ public class ExceptionHandlingMiddleware : IMiddleware
             
             string json = JsonSerializer.Serialize(problem);
             
-            context.Response.ContentType = "application/json";
-
             await context.Response.WriteAsync(json);
         }
     }

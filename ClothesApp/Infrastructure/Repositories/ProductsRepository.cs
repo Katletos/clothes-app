@@ -1,4 +1,5 @@
-using Application.Repositories;
+using System.Linq.Expressions;
+using Application.Interfaces.Repositories;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,33 +14,73 @@ public class ProductsRepository : IProductsRepository
         _dbContext = dbContext;
     }
 
+    public async Task<Product> Delete(Product product)
+    {
+        _dbContext.Remove(product);
+        await _dbContext.SaveChangesAsync();
+
+        return product;
+    }
+
     public async Task<bool> AnyProductOfBrandIdExists(long brandId)
     {
         return await _dbContext.Products.AnyAsync(p => p.BrandId == brandId);
     }
 
-    public Task<Product> Insert(Product entity)
+    public async Task<bool> DoesExist(string name)
     {
-        throw new NotImplementedException();
+        return await _dbContext.Products.AnyAsync(p => p.Name == name);
     }
 
-    public Task<Product> Update(Product entity)
+    public async Task<IList<Product>> FindByCondition(Expression<Func<Product, bool>> expression)
     {
-        throw new NotImplementedException();
+        return await _dbContext.Products.Where(expression).ToListAsync();
     }
 
-    public Task<IList<Product>> GetAll()
+    public async Task UpdateRange(IList<Product> products)
     {
-        throw new NotImplementedException();
+        _dbContext.Products.UpdateRange(products);
+        await _dbContext.SaveChangesAsync();
     }
 
-    public Task<Product> GetById(long id)
+    public async Task<bool> DoesExistRange(IList<long> ids)
     {
-        throw new NotImplementedException();
+        return ids.Count() == await _dbContext.Products.CountAsync(p => ids.Contains(p.Id));
     }
 
-    public Task<bool> DoesExist(long id)
+    public async Task<IList<Product>> GetRange(IList<long> ids)
     {
-        throw new NotImplementedException();
+        return await _dbContext.Products.Where(p => ids.Contains(p.Id)).ToListAsync();
+    }
+
+    public async Task<Product> Insert(Product product)
+    {
+        _dbContext.Products.Add(product);
+        await _dbContext.SaveChangesAsync();
+
+        return product;
+    }
+
+    public async Task<Product> Update(Product product)
+    {
+        _dbContext.Update(product);
+        await _dbContext.SaveChangesAsync();
+
+        return product;
+    }
+
+    public async Task<IList<Product>> GetAll()
+    {
+        return await _dbContext.Products.AsNoTracking().ToListAsync();
+    }
+
+    public async Task<Product> GetById(long id)
+    {
+        return await _dbContext.Products.FindAsync(id);
+    }
+
+    public async Task<bool> DoesExist(long id)
+    {
+        return await _dbContext.Products.AnyAsync(p => p.Id == id);
     }
 }

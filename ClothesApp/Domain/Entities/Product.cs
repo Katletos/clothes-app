@@ -4,7 +4,7 @@ public class Product
 {
     public long Id { get; set; }
 
-    public long BrandId { get; set; }
+    public long? BrandId { get; set; }
 
     public long CategoryId { get; set; }
 

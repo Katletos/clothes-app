@@ -1,4 +1,4 @@
-using Application.Repositories;
+using Application.Interfaces.Repositories;
 using Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -12,7 +12,16 @@ public static class DependencyInjection
 
         services.AddScoped<IProductsRepository, ProductsRepository>();
         services.AddScoped<IBrandsRepository, BrandsRepository>();
-      
+        services.AddScoped<IReviewsRepository, ReviewsRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IOrderRepository, OrderRepository>();
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
+        services.AddScoped<IAddressRepository, AddressRepository>();
+        services.AddScoped<IOrderTransactionsRepository, OrderTransactionRepository>();
+        services.AddScoped<IOrderItemsRepository, OrderItemsRepository>();
+        services.AddScoped<ISectionRepository, SectionRepository>();
+        services.AddScoped<ISectionCategoryRepository, SectionCategoryRepository>();
+        services.AddScoped<IMediaRepository, MediaRepository>();
         return services;
     }
 }

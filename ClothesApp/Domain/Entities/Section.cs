@@ -7,6 +7,6 @@ public class Section
     public string Name { get; set; }
 
     public virtual ICollection<Category> Categories { get; set; }
-    
-    public virtual ICollection<SectionCategory> SectionCategories { get; }
+
+    public virtual ICollection<SectionCategory> SectionsCategories { get; set; }
 }

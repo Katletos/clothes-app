@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Configurations;
 
-public class OrderTransactionConfiguration : IEntityTypeConfiguration<OrdersTransaction>
+public class OrderTransactionConfiguration : IEntityTypeConfiguration<OrderTransaction>
 {
-    public void Configure(EntityTypeBuilder<OrdersTransaction> builder)
+    public void Configure(EntityTypeBuilder<OrderTransaction> builder)
     {
         builder.HasKey(e => e.Id);
 

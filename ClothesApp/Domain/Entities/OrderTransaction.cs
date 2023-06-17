@@ -2,7 +2,7 @@
 
 namespace Domain.Entities;
 
-public class OrdersTransaction
+public class OrderTransaction
 {
     public long Id { get; set; }
 

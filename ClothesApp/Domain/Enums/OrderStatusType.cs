@@ -2,7 +2,8 @@ namespace Domain.Enums;
 
 public enum OrderStatusType
 {
-    InReview,
+    InReview = 0,
     InDelivery,
-    Completed
+    Completed,
+    Cancelled
 }

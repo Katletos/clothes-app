@@ -16,5 +16,5 @@ public class Category
 
     public virtual ICollection<Section> Sections { get; set; }
 
-    public virtual ICollection<SectionCategory> SectionCategories { get; }
+    public virtual ICollection<SectionCategory> SectionCategories { get; set; }
 }

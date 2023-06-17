@@ -1,4 +1,4 @@
-using Application.Repositories;
+using Application.Interfaces.Repositories;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,12 +28,12 @@ public class BrandsRepository : IBrandsRepository
 
         return brand;
     }
-    
-    public async Task<Brand> DeleteBrand(Brand brand)
+
+    public async Task<Brand> Delete(Brand brand)
     {
         _dbContext.Brands.Remove(brand);
         await _dbContext.SaveChangesAsync();
-      
+
         return brand;
     }
 
@@ -42,7 +42,7 @@ public class BrandsRepository : IBrandsRepository
         return await _dbContext.Brands.FirstOrDefaultAsync(b => b.Id == id);
     }
 
-    public async Task<bool> DoesBrandExist(string brandName)
+    public async Task<bool> DoesExist(string brandName)
     {
         return await _dbContext.Brands.AnyAsync(b => b.Name == brandName);
     }

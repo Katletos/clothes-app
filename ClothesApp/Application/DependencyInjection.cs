@@ -1,4 +1,5 @@
 using System.Reflection;
+using Application.Interfaces.Services;
 using Application.Services;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -14,7 +15,15 @@ public static class DependencyInjection
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
         services.AddScoped<IBrandService, BrandService>();
-
+        services.AddScoped<IReviewService, ReviewService>();
+        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IProductService, ProductService>();
+        services.AddScoped<IOrderService, OrderService>();
+        services.AddScoped<IAddressService, AddressService>();
+        services.AddScoped<ICategoryService, CategoryService>();
+        services.AddScoped<ISectionService, SectionService>();
+        services.AddScoped<IMediaService, MediaService>();
+        
         services.AddAutoMapper(typeof(AppMappingProfile));
 
         return services;

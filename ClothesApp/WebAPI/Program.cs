@@ -4,11 +4,9 @@ using WebAPI.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure();
-
-builder.Services.AddTransient<ExceptionHandlingMiddleware>();
-
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();

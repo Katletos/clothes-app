@@ -5,7 +5,7 @@ namespace Domain.Entities;
 public class Order
 {
     public long Id { get; set; }
-    
+
     public OrderStatusType OrderStatus { get; set; }
 
     public long UserId { get; set; }
@@ -20,7 +20,7 @@ public class Order
 
     public virtual ICollection<OrderItem> OrdersItems { get; set; }
 
-    public virtual ICollection<OrdersTransaction> OrdersTransactions { get; set; }
+    public virtual ICollection<OrderTransaction> OrdersTransactions { get; set; }
 
     public virtual User User { get; set; }
 }

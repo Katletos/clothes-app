@@ -14,7 +14,6 @@ public class MediaConfiguration : IEntityTypeConfiguration<Media>
         builder.Property(e => e.FileName).IsRequired();
         builder.Property(e => e.FileType).IsRequired();
         builder.Property(e => e.ProductId).IsRequired();
-        builder.Property(e => e.Url).IsRequired();
 
         builder.HasOne(d => d.Product)
             .WithMany(p => p.Media)
