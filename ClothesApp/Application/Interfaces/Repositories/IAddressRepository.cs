@@ -7,5 +7,7 @@ public interface IAddressRepository : IBaseRepository<Address>
 {
     Task<IList<Address>> FindByCondition(Expression<Func<Address, bool>> expression);
 
+    Task<bool> DoesAddressBelongToUser(long addressId, long userId);
+
     Task<Address> Delete(Address address);
 }

@@ -113,13 +113,14 @@ public class ReviewService : IReviewService
 
     public async Task<ReviewDto> GetById(long id)
     {
-        var review = await _reviewsRepository.GetById(id);
-
-        if (review is null)
+        var exist = await _reviewsRepository.DoesExist(id);
+        
+        if (!exist)
         {
             throw new NotFoundException(Messages.ReviewNotFound);
         }
 
+        var review = await _reviewsRepository.GetById(id);
         var reviewDto = _mapper.Map<ReviewDto>(review);
 
         return reviewDto;

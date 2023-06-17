@@ -16,7 +16,7 @@ public class OrderService : IOrderService
 
     private readonly IOrderRepository _orderRepository;
 
-    private readonly IAddressService _addressService;
+    private readonly IAddressRepository _addressRepository;
 
     private readonly IUserRepository _userRepository;
 
@@ -28,14 +28,14 @@ public class OrderService : IOrderService
 
     public OrderService(IOrderRepository orderRepository, IMapper mapper,
         IOrderTransactionsRepository transactionsRepository, IUserRepository userRepository,
-        IAddressService addressService, IOrderItemsRepository orderItemsRepository,
+        IAddressRepository addressRepository, IOrderItemsRepository orderItemsRepository,
         IProductsRepository productsRepository)
     {
         _orderRepository = orderRepository;
         _mapper = mapper;
         _transactionsRepository = transactionsRepository;
         _userRepository = userRepository;
-        _addressService = addressService;
+        _addressRepository = addressRepository;
         _orderItemsRepository = orderItemsRepository;
         _productsRepository = productsRepository;
     }
@@ -71,7 +71,7 @@ public class OrderService : IOrderService
             throw new NotFoundException(Messages.UserNotFound);
         }
 
-        var belongs = await _addressService.DoesAddressBelongToUser(orderInputDto.AddressId, orderInputDto.UserId);
+        var belongs = await _addressRepository.DoesAddressBelongToUser(orderInputDto.AddressId, orderInputDto.UserId);
 
         if (!belongs)
         {
@@ -80,7 +80,7 @@ public class OrderService : IOrderService
         
         var orderItems =  await ReserveOrderProducts(orderInputDto);
         var order = _mapper.Map<OrderInputDto, Order>(orderInputDto);
-        
+
         order.Price = CalcOrderPrice(orderItems);
         order.OrdersItems = orderItems;
         order.OrderStatus = OrderStatusType.InReview;

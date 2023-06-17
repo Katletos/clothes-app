@@ -50,6 +50,11 @@ public class AddressRepository : IAddressRepository
         return await _dbContext.Addresses.Where(expression).ToListAsync();
     }
 
+    public async Task<bool> DoesAddressBelongToUser(long addressId, long userId)
+    {
+        return await _dbContext.Addresses.AnyAsync(a => a.Id == addressId && a.UserId == userId);
+    }
+
     public async Task<Address> Delete(Address address)
     {
         _dbContext.Addresses.Remove(address);
