@@ -33,7 +33,7 @@ public class ReviewServiceTests
 
     [Theory]
     [ClassData(typeof(GetByProductIdTestData))]
-    public async Task GetByProductId(GetByProductIdTestCase testCase)
+    public async Task GetByProductId_WhereCalledWithCorrectData(GetByProductIdTestCase testCase)
     {
         var reviewService = GetReviewService();
         var productId = testCase.ProductId;
@@ -51,7 +51,7 @@ public class ReviewServiceTests
     [InlineData(1)]
     [InlineData(25)]
     [InlineData(123123)]
-    public async Task GetById_WhereCalledWithDefunctId_ThrowsNotFound(long reviewId)
+    public async Task GetById_WhereCalledWithUndiscoveredReviewId_ThrowsNotFound(long reviewId)
     {
         var reviewService = GetReviewService();
         _reviewsRepositoryMock.Setup(x => x.DoesExist(It.Is<long>(l => l == reviewId))).ReturnsAsync(false);
@@ -63,7 +63,7 @@ public class ReviewServiceTests
 
     [Theory]
     [ClassData(typeof(GetByIdTestData))]
-    public async Task GetById_WhereCalledWithValidId(GetByIdTestCase testCase)
+    public async Task GetById_WhereCalledWithValidData(GetByIdTestCase testCase)
     {
         var reviewService = GetReviewService();
         _reviewsRepositoryMock.Setup(x => x.DoesExist(

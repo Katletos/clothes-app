@@ -31,7 +31,7 @@ public class AddressServiceTests
 
     [Theory]
     [ClassData(typeof(GetAddressesTestData))]
-    public async Task GetAddresses_WhereCalledWithCorrectUserId(GetAddressTestCase testCase)
+    public async Task GetAddresses_WhereCalledWithCorrectData(GetAddressTestCase testCase)
     {
         var addressService = CreateAddressService();
         var userId = testCase.UserId;
@@ -48,7 +48,7 @@ public class AddressServiceTests
     }
 
     [Fact]
-    public async Task GetAddresses_WhereCalledWithInvalidUserId_ThrowNotFound()
+    public async Task GetAddresses_WhereCalledWithUndiscoveredUserId_ThrowNotFound()
     {
         var addressService = CreateAddressService();
         _userRepositoryMock.Setup(x => x.DoesExist(1)).ReturnsAsync(false);
@@ -102,7 +102,7 @@ public class AddressServiceTests
     [InlineData(1)]
     [InlineData(132)]
     [InlineData(112315151)]
-    public async Task Update_WhereCalledWithIncorrectUserId_ThrowsNotFound(long userId)
+    public async Task Update_WhereCalledWithUndiscoveredUserId_ThrowsNotFound(long userId)
     {
         var addressService = CreateAddressService();
         var addressInputDto = new AddressInputDto(); 
