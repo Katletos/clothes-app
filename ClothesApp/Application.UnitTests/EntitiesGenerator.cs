@@ -4,7 +4,7 @@ using Domain.Enums;
 
 namespace UnitTests;
 
-public class EntitiesGenerator
+public static class EntitiesGenerator
 {
     public static User GenerateUser()
     {

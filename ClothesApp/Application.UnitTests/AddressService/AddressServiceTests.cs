@@ -125,7 +125,6 @@ public class AddressServiceTests : BaseTest
     public async Task UpdateAddress_WhereCalledWithCorrectData(UpdateAddressTestCase testCase)
     {
         var addressService = CreateAddressService(Context);
-        
         Context.Users.Add(testCase.User);
         Context.Addresses.Add(testCase.Address);
         await Context.SaveChangesAsync();
