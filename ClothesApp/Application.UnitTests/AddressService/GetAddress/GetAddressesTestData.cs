@@ -2,6 +2,7 @@ using Application.Dtos.Addresses;
 using Bogus;
 using Domain.Entities;
 using Domain.Enums;
+using static UnitTests.EntitiesGenerator;
 
 namespace UnitTests.AddressService.GetAddress;
 
@@ -54,17 +55,7 @@ public class GetAddressesTestData : TestDataBase<GetAddressTestCase>
         yield return new GetAddressTestCase()
         {
             Description = "If user have no addresses return empty list",
-            User = new User()
-            {
-                Id = faker.Random.Long(1),
-                Email = faker.Internet.Email(),
-                Password = faker.Internet.Password(),
-                Phone = faker.Phone.PhoneNumber(),
-                CreatedAt = DateTime.Now,
-                UserType = faker.PickRandom<UserType>(),
-                FirstName = faker.Name.FirstName(),
-                LastName = faker.Name.LastName(),
-            },
+            User = GenerateUser(),
             Addresses = new List<Address>() {},
             ExpectedResult = new List<AddressDto>() {}
         };

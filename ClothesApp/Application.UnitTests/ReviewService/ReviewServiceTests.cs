@@ -1,9 +1,6 @@
 using Application;
-using Application.Dtos.Reviews;
 using Application.Exceptions;
 using AutoMapper;
-using Bogus;
-using Domain.Entities;
 using Infrastructure;
 using Infrastructure.Repositories;
 using UnitTests.ReviewService.GetById;

@@ -39,7 +39,7 @@ public class AddOrderTestData : TestDataBase<AddOrderTestCase>
                 BrandId = faker.Random.Long(1),
                 Name = faker.Commerce.ProductName(),
             },
-            OrderDto = new OrderDto()
+            ExpectedResult = new OrderDto()
             {
                 Id = 1,
                 UserId = userId,

@@ -15,7 +15,7 @@ public class UpdateAddressesTestData : TestDataBase<UpdateAddressTestCase>
         var address = faker.Address.FullAddress();
         yield return new UpdateAddressTestCase()
         {
-            Description = "Сase of the ",
+            Description = "Update address",
             User = new User()
             {
                 Id = userId,
@@ -29,7 +29,7 @@ public class UpdateAddressesTestData : TestDataBase<UpdateAddressTestCase>
             },
             Address = new Address(){Id = addressId, UserId = userId, AddressLine = address},
             AddressInputDto = new AddressInputDto() {Id = addressId, AddressLine = address},
-            ExpectedResult = new AddressDto() {Id = addressId, AddressLine = address, UserId = userId},
+            ExpectedResult = new AddressDto() {Id = addressId, UserId = userId, AddressLine = address},
         };
     }
 }

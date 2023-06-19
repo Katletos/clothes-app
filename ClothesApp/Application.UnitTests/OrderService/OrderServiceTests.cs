@@ -1,7 +1,10 @@
+using System.Security.Cryptography.X509Certificates;
 using Application;
+using Application.Dtos.Orders;
 using AutoMapper;
 using Infrastructure;
 using Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
 using UnitTests.OrderService.AddOrder;
 using UnitTests.OrderService.ReserveOrderProduct;
 
@@ -32,9 +35,12 @@ public class OrderServiceTests : BaseTest
         Context.Products.Add(testCase.Product);
         await Context.SaveChangesAsync();
 
-        var act = await orderService.Add(testCase.OrderInputDto);
+        await orderService.Add(testCase.OrderInputDto);
 
-        act.Should().BeEquivalentTo(testCase.OrderDto);
+        var order = await Context.Orders.FirstAsync(o => o.UserId == testCase.User.Id 
+                                                            && o.AddressId == testCase.Address.Id);
+        var orderDto = Mapper.Map<OrderDto>(order);
+        orderDto.Should().BeEquivalentTo(testCase.ExpectedResult);
     }
 
     [Theory]

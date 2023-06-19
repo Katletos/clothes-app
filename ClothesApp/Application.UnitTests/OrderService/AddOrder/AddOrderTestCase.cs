@@ -12,7 +12,7 @@ public class AddOrderTestCase
     
     public OrderInputDto OrderInputDto { get; set; }
 
-    public OrderDto OrderDto { get; set; }
+    public OrderDto ExpectedResult { get; set; }
     
     public Address Address { get; set; }
     

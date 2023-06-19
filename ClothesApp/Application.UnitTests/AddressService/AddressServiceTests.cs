@@ -3,13 +3,13 @@ using Application.Dtos.Addresses;
 using Application.Exceptions;
 using AutoMapper;
 using Bogus;
-using Domain.Entities;
-using Domain.Enums;
 using Infrastructure;
 using Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
 using UnitTests.AddressService.AddAddress;
 using UnitTests.AddressService.GetAddress;
 using UnitTests.AddressService.UpdateAddress;
+using static UnitTests.EntitiesGenerator;
 
 namespace UnitTests.AddressService;
 
@@ -50,23 +50,7 @@ public class AddressServiceTests : BaseTest
 
         await act.Should().ThrowAsync<NotFoundException>();
     }
-
-    private User GenerateUser()
-    {
-        var faker = new Faker();
-        return new User()
-        {
-            Id = faker.Random.Long(1),
-            Email = faker.Internet.Email(),
-            Password = faker.Internet.Password(),
-            Phone = faker.Phone.PhoneNumber(),
-            CreatedAt = DateTime.Now,
-            UserType = faker.PickRandom<UserType>(),
-            FirstName = faker.Name.FirstName(),
-            LastName = faker.Name.LastName(),
-        };
-    }
-
+    
     [Theory]
     [ClassData(typeof(AddAddressTestData))]
     public async Task AddAddress_WhereCalledWithCorrectAddAddressDto(AddAddressTestCase testCase)
@@ -75,9 +59,12 @@ public class AddressServiceTests : BaseTest
         Context.Users.Add(testCase.User);
         await Context.SaveChangesAsync();
         
-        var act = await addressService.AddAddress(testCase.AddAddressDto);
-        
-        act.Should().BeEquivalentTo(testCase.AddAddressDto);
+        await addressService.AddAddress(testCase.AddAddressDto);
+
+        var address = await Context.Addresses.FirstAsync(a => a.UserId == testCase.AddAddressDto.UserId &&
+                                                              a.AddressLine == testCase.AddAddressDto.AddressLine);
+        var addressDto = Mapper.Map<AddressDto>(address);
+        addressDto.Should().BeEquivalentTo(testCase.AddAddressDto);
     }
     
     [Theory]
@@ -143,8 +130,11 @@ public class AddressServiceTests : BaseTest
         Context.Addresses.Add(testCase.Address);
         await Context.SaveChangesAsync();
         
-        var act = await addressService.UpdateAddress(testCase.User.Id, testCase.AddressInputDto);
-        
-        act.Should().BeEquivalentTo(testCase.ExpectedResult);
+        await addressService.UpdateAddress(testCase.User.Id, testCase.AddressInputDto);
+
+        var address = await Context.Addresses.FirstAsync(a => a.UserId == testCase.User.Id 
+                                                              && a.AddressLine == testCase.ExpectedResult.AddressLine);
+        var addressDto = Mapper.Map<AddressDto>(address);
+        addressDto.Should().BeEquivalentTo(testCase.ExpectedResult);
     }
 }
