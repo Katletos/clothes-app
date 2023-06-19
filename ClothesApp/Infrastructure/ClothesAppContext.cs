@@ -9,6 +9,10 @@ namespace Infrastructure;
 
 public class ClothesAppContext : DbContext
 {
+    public ClothesAppContext(DbContextOptions<ClothesAppContext> options)
+        :base(options)
+    {
+    }
     public virtual DbSet<Address> Addresses { get; set; }
 
     public virtual DbSet<Brand> Brands { get; set; }
@@ -35,15 +39,6 @@ public class ClothesAppContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        var configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json")
-            .Build();
-
-        var connectionString = configuration.GetConnectionString("DefaultConnection");
-        optionsBuilder
-            .LogTo(Console.WriteLine, LogLevel.Information)
-            .UseNpgsql(connectionString);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

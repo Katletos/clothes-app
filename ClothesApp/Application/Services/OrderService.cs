@@ -39,7 +39,7 @@ public class OrderService : IOrderService
         _orderItemsRepository = orderItemsRepository;
         _productsRepository = productsRepository;
     }
-
+    
     public async Task<IList<OrderDto>> GetAll()
     {
         var orders = await _orderRepository.GetAll();
@@ -84,7 +84,6 @@ public class OrderService : IOrderService
         order.Price = CalcOrderPrice(orderItems);
         order.OrdersItems = orderItems;
         order.OrderStatus = OrderStatusType.InReview;
-        order.CreatedAt = DateTime.Now;
         await _orderRepository.Insert(order);
         
         var orderDto = _mapper.Map<OrderDto>(order);
@@ -102,7 +101,7 @@ public class OrderService : IOrderService
         return sum;
     }
 
-    private async Task<IList<OrderItem>> ReserveOrderProducts(OrderInputDto orderInputDto)
+    public async Task<IList<OrderItem>> ReserveOrderProducts(OrderInputDto orderInputDto)
     {
         var orderItems = _mapper.Map<IList<OrderItem>>(orderInputDto.OrderItems);
 
@@ -135,7 +134,7 @@ public class OrderService : IOrderService
         }
 
         await _productsRepository.UpdateRange(products);
-        
+
         return orderItems;
     }
 

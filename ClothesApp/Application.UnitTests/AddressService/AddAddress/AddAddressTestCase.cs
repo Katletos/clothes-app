@@ -12,4 +12,6 @@ public class AddAddressTestCase
     public AddressDto ExpectedResult { get; set; }
 
     public Address ExpectedAddressToInsert { get; set; }
+    
+    public User User { get; set; }
 }

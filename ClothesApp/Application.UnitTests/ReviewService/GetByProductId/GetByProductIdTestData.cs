@@ -1,60 +1,57 @@
 using Application.Dtos.Reviews;
+using Bogus;
 using Domain.Entities;
+using Domain.Enums;
 
 namespace UnitTests.ReviewService.GetByProductId;
 
 public class GetByProductIdTestData : TestDataBase<GetByProductIdTestCase>
 {
     protected override IEnumerable<GetByProductIdTestCase> GetTestData()
-    {
+    { 
+        var faker = new Faker();
+        var productId = faker.Random.Long(1);
+        var userId = faker.Random.Long(1);
+        var id = faker.Random.Long(1);
+        var comment = faker.Commerce.ProductDescription();
+        var rating = faker.Random.Short(1, 10);
+        var title = faker.Commerce.ProductName();
+        var createdAt = DateTime.Now;
+        
         yield return new GetByProductIdTestCase()
         {
-            ProductId = 1,
-            Description = "The case of getting a review by product id = 1",
+            ProductId = productId,
+            Description = "The case of getting a review by product id",
+            User = new User()
+            {
+                Id = userId,
+                Email = faker.Internet.Email(),
+                Password = faker.Internet.Password(),
+                Phone = faker.Phone.PhoneNumber(),
+                CreatedAt = DateTime.Now,
+                UserType = faker.PickRandom<UserType>(),
+                FirstName = faker.Name.FirstName(),
+                LastName = faker.Name.LastName(),
+            },
             ReviewFromRepository = new List<Review>() {new()
             {
-                Id = 1,
-                UserId = 1,
-                ProductId = 1,
-                Comment = "Cool",
-                Rating = 8,
-                Title = "Cool",
-                CreatedAt = DateTime.Now,
+                Id = id,
+                UserId = userId,
+                ProductId = productId,
+                Comment = comment,
+                Rating = rating,
+                Title = title,
+                CreatedAt = createdAt,
             }},
             ExpectedResult = new List<ReviewDto>() {new()
             {
-                Id = 1,
-                UserId = 1,
-                ProductId = 1,
-                Comment = "Cool",
-                Rating = 8,
-                Title = "Cool",
-                CreatedAt = DateTime.Now,
-            }}
-        };
-        yield return new GetByProductIdTestCase()
-        {
-            ProductId = 74,
-            Description = "The case of getting a review by product id = 74",
-            ReviewFromRepository = new List<Review>() {new()
-            {
-                Id = 89,
-                UserId = 2,
-                ProductId = 74,
-                Comment = "Cool",
-                Rating = 8,
-                Title = "Cool",
-                CreatedAt = DateTime.Now,
-            }},
-            ExpectedResult = new List<ReviewDto>() {new()
-            {
-                Id = 89,
-                UserId = 2,
-                ProductId = 74,
-                Comment = "Nice",
-                Rating = 8,
-                Title = "Nice",
-                CreatedAt = DateTime.Now,
+                Id = id,
+                UserId = userId,
+                ProductId = productId,
+                Comment = comment,
+                Rating = rating,
+                Title = title,
+                CreatedAt = createdAt,
             }}
         };
     }

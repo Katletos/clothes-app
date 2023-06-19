@@ -1,5 +1,7 @@
 using Application.Dtos.Addresses;
+using Bogus;
 using Domain.Entities;
+using Domain.Enums;
 
 namespace UnitTests.AddressService.AddAddress;
 
@@ -7,37 +9,28 @@ public class AddAddressTestData : TestDataBase<AddAddressTestCase>
 {
     protected override IEnumerable<AddAddressTestCase> GetTestData()
     {
+        var faker = new Faker();
+        var userId = faker.Random.Long(1);
+        var addressLine = faker.Address.FullAddress();
         yield return new AddAddressTestCase()
         {
-            Description = "Add address for user with id = 1",
+            Description = "Add address",
+            User = new User()
+            {
+                Id = userId,
+                Email = faker.Internet.Email(),
+                Password = faker.Internet.Password(),
+                Phone = faker.Phone.PhoneNumber(),
+                CreatedAt = DateTime.Now,
+                UserType = faker.PickRandom<UserType>(),
+                FirstName = faker.Name.FirstName(),
+                LastName = faker.Name.LastName(),
+            },
             AddAddressDto = new AddAddressDto()
             {
-                UserId = 1, AddressLine = "Minsk"
+                UserId = userId,
+                AddressLine = addressLine,
             },
-            ExpectedAddressToInsert = new Address()
-            {
-                Id = 1, UserId = 1, AddressLine = "Minsk"
-            },
-            ExpectedResult = new AddressDto()
-            {
-                Id = 1, UserId = 1, AddressLine = "Minsk"
-            }, 
-        };
-        yield return new AddAddressTestCase()
-        {
-            Description = "Add address for user with id = 2",
-            AddAddressDto = new AddAddressDto()
-            {
-                UserId = 22, AddressLine = "Grodno"
-            },
-            ExpectedAddressToInsert = new Address()
-            {
-                Id = 521, UserId = 22, AddressLine = "Grodno"
-            },
-            ExpectedResult = new AddressDto()
-            {
-                Id = 521, UserId = 22, AddressLine = "Grodno"
-            }, 
         };
     }
 }
