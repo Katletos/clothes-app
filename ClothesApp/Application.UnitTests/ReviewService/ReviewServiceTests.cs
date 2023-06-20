@@ -44,7 +44,8 @@ public class ReviewServiceTests : BaseTest
         
         Func<Task> act = async () => await reviewService.GetById(testCase.Id - 1);
 
-        await act.Should().ThrowAsync<NotFoundException>();
+        var exception = await Assert.ThrowsAsync<NotFoundException>(act);
+        exception.Message.Should().BeEquivalentTo(Messages.ReviewNotFound);
     }
 
     [Theory]

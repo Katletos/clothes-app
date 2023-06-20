@@ -53,8 +53,9 @@ public class OrderServiceTests : BaseTest
         await Context.SaveChangesAsync();
         
         Func<Task> act = async () => await orderService.Add(testCase.OrderInputDto);
-
-        await act.Should().ThrowAsync<NotFoundException>();
+        
+        var exception = await Assert.ThrowsAsync<NotFoundException>(act);
+        exception.Message.Should().BeEquivalentTo(Messages.UserNotFound);
     }
     
     [Theory]
@@ -71,8 +72,9 @@ public class OrderServiceTests : BaseTest
         await Context.SaveChangesAsync();
         
         Func<Task> act = async () => await orderService.Add(testCase.OrderInputDto);
-
-        await act.Should().ThrowAsync<BusinessRuleException>();
+        
+        var exception = await Assert.ThrowsAsync<BusinessRuleException>(act);
+        exception.Message.Should().BeEquivalentTo(Messages.AddressUserConstraint);
     }
 
     [Theory]
@@ -99,7 +101,8 @@ public class OrderServiceTests : BaseTest
         
         Func<Task> act = async () => await orderService.ReserveOrderProducts(testCase.OrderInputDto);
 
-        await act.Should().ThrowAsync<BusinessRuleException>();
+        var exception = await Assert.ThrowsAsync<BusinessRuleException>(act);
+        exception.Message.Should().BeEquivalentTo(Messages.ProductOutOfStock);
     }  
     
     [Theory]
@@ -111,7 +114,8 @@ public class OrderServiceTests : BaseTest
         await Context.SaveChangesAsync();
         
         Func<Task> act = async () => await orderService.ReserveOrderProducts(testCase.OrderInputDto);
-
-        await act.Should().ThrowAsync<NotFoundException>();
+        
+        var exception = await Assert.ThrowsAsync<NotFoundException>(act);
+        exception.Message.Should().BeEquivalentTo(Messages.ProductNotFound);
     }
 }

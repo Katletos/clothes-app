@@ -6,6 +6,7 @@ using Bogus;
 using Infrastructure;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using UnitTests.AddressService.AddAddress;
 using UnitTests.AddressService.GetAddress;
 using UnitTests.AddressService.UpdateAddress;
@@ -47,8 +48,9 @@ public class AddressServiceTests : BaseTest
         await Context.SaveChangesAsync();
         
         Func<Task> act = async () => await addressService.GetAddresses(testCase.User.Id - 1);
-
-        await act.Should().ThrowAsync<NotFoundException>();
+        
+        var exception = await Assert.ThrowsAsync<NotFoundException>(act);
+        exception.Message.Should().BeEquivalentTo(Messages.UserNotFound);
     }
     
     [Theory]
@@ -80,7 +82,8 @@ public class AddressServiceTests : BaseTest
         
         Func<Task> act = async () => await addressService.UpdateAddress(testCase.User.Id, testCase.AddressInputDto);
 
-        await act.Should().ThrowAsync<BusinessRuleException>();
+        var exception = await Assert.ThrowsAsync<BusinessRuleException>(act);
+        exception.Message.Should().BeEquivalentTo(Messages.AddressUserConstraint);
     }
     
     [Fact]
@@ -98,7 +101,8 @@ public class AddressServiceTests : BaseTest
 
         Func<Task> act = async () => await addressService.UpdateAddress(user.Id - 1, addressInputDto);
 
-        await act.Should().ThrowAsync<NotFoundException>();
+        var exception = await Assert.ThrowsAsync<NotFoundException>(act);
+        exception.Message.Should().BeEquivalentTo(Messages.UserNotFound);
     }
     
     [Fact]
@@ -116,8 +120,9 @@ public class AddressServiceTests : BaseTest
         await Context.SaveChangesAsync();
 
         Func<Task> act = async () => await addressService.UpdateAddress(user.Id, addressInputDto);
-
-        await act.Should().ThrowAsync<NotFoundException>();
+        
+        var exception = await Assert.ThrowsAsync<NotFoundException>(act);
+        exception.Message.Should().BeEquivalentTo(Messages.AddressNotFound);
     }
     
     [Theory]

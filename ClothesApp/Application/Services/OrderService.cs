@@ -124,7 +124,7 @@ public class OrderService : IOrderService
 
             if (!enough)
             {
-                throw new BusinessRuleException($"Product with id {products[i].Id} don't have enough quantity on stock");
+                throw new BusinessRuleException(Messages.ProductOutOfStock);
             }
 
             products[i].Quantity -= orderItems[i].Quantity;
