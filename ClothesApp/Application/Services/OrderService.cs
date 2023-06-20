@@ -16,7 +16,7 @@ public class OrderService : IOrderService
 
     private readonly IOrderRepository _orderRepository;
 
-    private readonly IAddressService _addressService;
+    private readonly IAddressRepository _addressRepository;
 
     private readonly IUserRepository _userRepository;
 
@@ -28,18 +28,18 @@ public class OrderService : IOrderService
 
     public OrderService(IOrderRepository orderRepository, IMapper mapper,
         IOrderTransactionsRepository transactionsRepository, IUserRepository userRepository,
-        IAddressService addressService, IOrderItemsRepository orderItemsRepository,
+        IAddressRepository addressRepository, IOrderItemsRepository orderItemsRepository,
         IProductsRepository productsRepository)
     {
         _orderRepository = orderRepository;
         _mapper = mapper;
         _transactionsRepository = transactionsRepository;
         _userRepository = userRepository;
-        _addressService = addressService;
+        _addressRepository = addressRepository;
         _orderItemsRepository = orderItemsRepository;
         _productsRepository = productsRepository;
     }
-
+    
     public async Task<IList<OrderDto>> GetAll()
     {
         var orders = await _orderRepository.GetAll();
@@ -71,7 +71,7 @@ public class OrderService : IOrderService
             throw new NotFoundException(Messages.UserNotFound);
         }
 
-        var belongs = await _addressService.DoesAddressBelongToUser(orderInputDto.AddressId, orderInputDto.UserId);
+        var belongs = await _addressRepository.DoesAddressBelongToUser(orderInputDto.AddressId, orderInputDto.UserId);
 
         if (!belongs)
         {
@@ -80,11 +80,10 @@ public class OrderService : IOrderService
         
         var orderItems =  await ReserveOrderProducts(orderInputDto);
         var order = _mapper.Map<OrderInputDto, Order>(orderInputDto);
-        
+
         order.Price = CalcOrderPrice(orderItems);
         order.OrdersItems = orderItems;
         order.OrderStatus = OrderStatusType.InReview;
-        order.CreatedAt = DateTime.Now;
         await _orderRepository.Insert(order);
         
         var orderDto = _mapper.Map<OrderDto>(order);
@@ -102,7 +101,7 @@ public class OrderService : IOrderService
         return sum;
     }
 
-    private async Task<IList<OrderItem>> ReserveOrderProducts(OrderInputDto orderInputDto)
+    public async Task<IList<OrderItem>> ReserveOrderProducts(OrderInputDto orderInputDto)
     {
         var orderItems = _mapper.Map<IList<OrderItem>>(orderInputDto.OrderItems);
 
@@ -125,7 +124,7 @@ public class OrderService : IOrderService
 
             if (!enough)
             {
-                throw new BusinessRuleException($"Product with id {products[i].Id} don't have enough quantity on stock");
+                throw new BusinessRuleException(Messages.ProductOutOfStock);
             }
 
             products[i].Quantity -= orderItems[i].Quantity;
@@ -135,7 +134,7 @@ public class OrderService : IOrderService
         }
 
         await _productsRepository.UpdateRange(products);
-        
+
         return orderItems;
     }
 

@@ -52,14 +52,7 @@ public class AddressService : IAddressService
 
         return addressDto;
     }
-
-    public async Task<bool> DoesAddressBelongToUser(long addressId, long userId)
-    {
-        var address = await _addressRepository.FindByCondition(a => a.Id == addressId && a.UserId == userId);
-
-        return address.Count > 0;
-    }
-
+    
     public async Task<AddressDto> UpdateAddress(long userId, AddressInputDto addressInputDto)
     {
         var exist = await _userRepository.DoesExist(userId);
@@ -76,9 +69,16 @@ public class AddressService : IAddressService
             throw new NotFoundException(Messages.AddressNotFound);
         }
 
+        var belong = await _addressRepository.DoesAddressBelongToUser(addressInputDto.Id, userId);
+
+        if (!belong)
+        {
+            throw new BusinessRuleException(Messages.AddressUserConstraint);
+        }
+
         var address = await _addressRepository.GetById(addressInputDto.Id);
-        var addressDto = _mapper.Map<Address, AddressDto>(address, opt =>
-            opt.BeforeMap((src, _) => src.AddressLine = addressInputDto.AddressLine));
+        address.AddressLine = addressInputDto.AddressLine;
+        var addressDto = _mapper.Map<Address, AddressDto>(address);
         await _addressRepository.Update(address);
 
         return addressDto;
