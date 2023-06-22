@@ -1,12 +1,13 @@
 using Application.Dtos.Products;
 using Application.Dtos.Reviews;
 using Application.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
 
 [ApiController]
-[Route("api/products")] 
+[Route("api/products")]
 public class ProductsController : ControllerBase
 {
     private readonly IProductService _productService;
@@ -15,17 +16,20 @@ public class ProductsController : ControllerBase
     {
         _productService = productService;
     }
-    
+
+    [AllowAnonymous]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<ReviewDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
-    public async Task<ActionResult> GetProductsBySectionAndCategory([FromQuery]long sectionId,[FromQuery] long categoryId)
+    public async Task<ActionResult> GetProductsBySectionAndCategory([FromQuery] long sectionId,
+        [FromQuery] long categoryId)
     {
         var reviewDto = await _productService.GetProductsBySectionAndCategory(sectionId, categoryId);
 
         return Ok(reviewDto);
     }
-    
+
+    [Authorize(Policy = "Admin")]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
@@ -35,7 +39,8 @@ public class ProductsController : ControllerBase
 
         return Ok(products);
     }
-    
+
+    [Authorize(Policy = "Admin")]
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
@@ -46,6 +51,7 @@ public class ProductsController : ControllerBase
         return Ok(productDtos);
     }
 
+    [Authorize(Policy = "Admin")]
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
@@ -56,6 +62,7 @@ public class ProductsController : ControllerBase
         return Ok(productDto);
     }
 
+    [AllowAnonymous]
     [HttpGet("brands/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<ProductDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]

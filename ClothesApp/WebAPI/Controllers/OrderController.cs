@@ -3,21 +3,23 @@ using Application.Dtos.Orders;
 using Application.Dtos.OrderTransactions;
 using Application.Interfaces.Services;
 using Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
 
 [ApiController]
-[Route("api/orders")] 
+[Route("api/orders")]
 public class OrderController : ControllerBase
 {
-    private readonly IOrderService _orderService;   
-    
+    private readonly IOrderService _orderService;
+
     public OrderController(IOrderService orderService)
     {
         _orderService = orderService;
     }
-    
+
+    [Authorize(Policy = "Admin, Customer")]
     [HttpGet("{id}/history")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<OrderTransactionsDto>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
@@ -27,7 +29,8 @@ public class OrderController : ControllerBase
 
         return Ok(orderHistory);
     }
-    
+
+    [Authorize(Policy = "Customer")]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderDto))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
@@ -37,17 +40,20 @@ public class OrderController : ControllerBase
 
         return Ok(orderDto);
     }
-    
+
+    [Authorize(Policy = "Admin")]
     [HttpPost("{id}/update-status")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderDto))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
-    public async Task<ActionResult<IList<OrderDto>>> ChangeOrderStatus([FromRoute] long id, [FromQuery] OrderStatusType newOrderStatus)
+    public async Task<ActionResult<IList<OrderDto>>> ChangeOrderStatus([FromRoute] long id,
+        [FromQuery] OrderStatusType newOrderStatus)
     {
         var orderDto = await _orderService.UpdateStatus(id, newOrderStatus);
-        
+
         return Ok(orderDto);
     }
-    
+
+    [Authorize(Policy = "Admin, Customer")]
     [HttpGet("{id}/items")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<OrderItemDto>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
@@ -58,6 +64,7 @@ public class OrderController : ControllerBase
         return Ok(orderItems);
     }
 
+    [Authorize(Policy = "Admin, Customer")]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<OrderItemDto>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]

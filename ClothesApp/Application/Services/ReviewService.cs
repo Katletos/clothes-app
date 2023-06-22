@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Application.Dtos.Reviews;
 using Application.Exceptions;
 using Application.Interfaces.Repositories;
@@ -14,10 +15,11 @@ public class ReviewService : IReviewService
     private readonly IProductsRepository _productsRepository;
 
     private readonly IUserRepository _userRepository;
-    
+
     private readonly IMapper _mapper;
 
-    public ReviewService(IReviewsRepository reviewsRepository, IMapper mapper, IProductsRepository productsRepository, IUserRepository userRepository)
+    public ReviewService(IReviewsRepository reviewsRepository, IMapper mapper, IProductsRepository productsRepository,
+        IUserRepository userRepository)
     {
         _reviewsRepository = reviewsRepository;
         _mapper = mapper;
@@ -25,7 +27,7 @@ public class ReviewService : IReviewService
         _userRepository = userRepository;
     }
 
-    public async Task<ReviewDto> Add(ReviewInputDto reviewInputDto)
+    public async Task<ReviewDto> Add(ReviewInputDto reviewInputDto, Claim userClaimId)
     {
         var exist = await _productsRepository.DoesExist(reviewInputDto.ProductId);
 
@@ -40,18 +42,26 @@ public class ReviewService : IReviewService
         {
             throw new NotFoundException(Messages.UserNotFound);
         }
-        
+
         exist = await _reviewsRepository.DoesReviewExist(reviewInputDto);
 
         if (exist)
         {
             throw new BusinessRuleException(Messages.ReviewUniqueConstraint);
         }
-        
+
+        var userId = Convert.ToInt64(userClaimId.Value);
+        var bought = await _userRepository.DidUserBuyProduct(userId, reviewInputDto.ProductId);
+
+        if (!bought)
+        {
+            throw new BusinessRuleException(Messages.ReviewAddConstraint);
+        }
+
         var review = _mapper.Map<Review>(reviewInputDto);
         await _reviewsRepository.Insert(review);
         var reviewDto = _mapper.Map<ReviewDto>(review);
-        
+
         return reviewDto;
     }
 
@@ -81,11 +91,11 @@ public class ReviewService : IReviewService
     {
         var exist = await _reviewsRepository.DoesExist(id);
 
-        if (!exist) 
+        if (!exist)
         {
             throw new NotFoundException(Messages.ReviewNotFound);
         }
-        
+
         var review = await _reviewsRepository.GetById(id);
         await _reviewsRepository.Delete(review);
         var reviewDto = _mapper.Map<ReviewDto>(review);
@@ -114,7 +124,7 @@ public class ReviewService : IReviewService
     public async Task<ReviewDto> GetById(long id)
     {
         var exist = await _reviewsRepository.DoesExist(id);
-        
+
         if (!exist)
         {
             throw new NotFoundException(Messages.ReviewNotFound);
