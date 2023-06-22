@@ -2,18 +2,17 @@ using Application;
 using Infrastructure;
 using Infrastructure.Authentication;
 using WebAPI.Authentication;
+using WebAPI.Cors;
 using WebAPI.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var myAllowSpecificOrigins = "_myAllowSpecificOrigins";
-
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(myAllowSpecificOrigins,
+    options.AddPolicy(CustomCorsConfiguration.Name,
         policy =>
         {
-            policy.WithOrigins("http://127.0.0.1:5500", "http://127.0.0.1:5500/#")
+            policy.WithOrigins(CustomCorsConfiguration.Origins)
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials();
@@ -44,7 +43,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors(myAllowSpecificOrigins);
+app.UseCors(CustomCorsConfiguration.Name);
 app.UseHttpsRedirection();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseAuthentication();
