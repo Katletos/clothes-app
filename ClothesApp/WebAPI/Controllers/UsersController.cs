@@ -2,6 +2,7 @@ using Application.Dtos.Users;
 using Application.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Authentication;
 
 namespace WebAPI.Controllers;
 
@@ -16,7 +17,7 @@ public class UsersController : ControllerBase
         _userService = userService;
     }
 
-    [Authorize(Policy = "Admin")]
+    [Authorize(Policy = Policies.Admin)]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<UserDto>))]
     public async Task<ActionResult<IList<UserDto>>> GetAllUsers()
@@ -26,7 +27,7 @@ public class UsersController : ControllerBase
         return Ok(userDtos);
     }
 
-    [Authorize(Policy = "Admin")]
+    [Authorize(Policy = Policies.Admin)]
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDto))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
@@ -37,7 +38,7 @@ public class UsersController : ControllerBase
         return Ok(userDto);
     }
 
-    [Authorize(Policy = "Admin, Customer")]
+    [Authorize]
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]

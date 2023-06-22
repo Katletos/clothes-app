@@ -22,6 +22,9 @@ public static class DependencyInjection
         services.AddDbContext<ClothesAppContext>(options =>
             options.UseNpgsql(connectionString));
 
+        services.Configure<JwtOptions>(
+            configuration.GetSection(JwtOptions.SectionName));
+
         services.AddScoped<IJwtProvider, JwtProvider>();
         services.AddScoped<IProductsRepository, ProductsRepository>();
         services.AddScoped<IBrandsRepository, BrandsRepository>();

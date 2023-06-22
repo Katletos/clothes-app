@@ -3,6 +3,7 @@ using Application.Dtos.Users;
 using Application.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Authentication;
 
 namespace WebAPI.Controllers;
 
@@ -17,7 +18,7 @@ public class AddressController : ControllerBase
         _addressService = addressService;
     }
 
-    [Authorize(Policy = "Customer")]
+    [Authorize(Policy = Policies.Customer)]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AddressDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
@@ -28,7 +29,7 @@ public class AddressController : ControllerBase
         return Ok(addressDto);
     }
 
-    [Authorize(Policy = "Customer")]
+    [Authorize(Policy = Policies.Customer)]
     [HttpPut("users/{userId}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(UserDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
@@ -40,7 +41,7 @@ public class AddressController : ControllerBase
         return Ok(userDto);
     }
 
-    [Authorize(Policy = "Admin, Customer")]
+    [Authorize]
     [HttpGet("users/{userId}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<AddressDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
@@ -51,7 +52,7 @@ public class AddressController : ControllerBase
         return Ok(addressDto);
     }
 
-    [Authorize(Policy = "Customer")]
+    [Authorize(Policy = Policies.Customer)]
     [HttpDelete("{addressId}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AddressDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]

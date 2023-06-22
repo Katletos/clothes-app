@@ -22,24 +22,25 @@ public class JwtProvider : IJwtProvider
     {
         var role = user.UserType switch
         {
-            UserType.Customer => "Customer",
-            UserType.Admin => "Admin",
+            UserType.Customer => Roles.Customer,
+            UserType.Admin => Roles.Admin,
             _ => throw new ArgumentOutOfRangeException(),
         };
 
         var claims = new Claim[]
         {
             new(JwtRegisteredClaimNames.Email, user.Email),
-            new("Id", user.Id.ToString()),
-            new("Role", role),
+            new(CustomClaims.Id, user.Id.ToString()),
+            new(CustomClaims.Role, role),
         };
-        var key = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes("This is my supper secret key for jwt")); //add options
-
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
-        var token = new JwtSecurityToken(null, null,
+
+        var token = new JwtSecurityToken(
+            _options.Issuer,
+            _options.Audience,
             claims,
-            expires: DateTime.Now.AddMinutes(180),
+            expires: DateTime.Now.AddMinutes(_options.ExpiredTimeMinutes),
             signingCredentials: credentials
         );
 

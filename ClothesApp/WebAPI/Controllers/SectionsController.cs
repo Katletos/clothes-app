@@ -2,6 +2,7 @@ using Application.Dtos.Sections;
 using Application.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Authentication;
 
 namespace WebAPI.Controllers;
 
@@ -37,7 +38,7 @@ public class SectionsController : ControllerBase
         return Ok(sectionDto);
     }
 
-    [Authorize(Policy = "Admin")]
+    [Authorize(Policy = Policies.Admin)]
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SectionDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
@@ -49,7 +50,7 @@ public class SectionsController : ControllerBase
         return Ok(sectionDto);
     }
 
-    [Authorize(Policy = "Admin")]
+    [Authorize(Policy = Policies.Admin)]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SectionDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
@@ -60,7 +61,7 @@ public class SectionsController : ControllerBase
         return Ok(sectionDto);
     }
 
-    [Authorize(Policy = "Admin")]
+    [Authorize(Policy = Policies.Admin)]
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SectionDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]

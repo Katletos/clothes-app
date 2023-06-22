@@ -2,6 +2,7 @@ using Application.Dtos.Media;
 using Application.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Authentication;
 
 namespace WebAPI.Controllers;
 
@@ -38,7 +39,7 @@ public class MediaController : ControllerBase
         return File(media.Bytes, media.FileType, media.FileName);
     }
 
-    [Authorize(Policy = "Admin")]
+    [Authorize(Policy = Policies.Admin)]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(MediaDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]

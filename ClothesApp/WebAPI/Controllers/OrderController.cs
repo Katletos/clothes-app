@@ -5,6 +5,7 @@ using Application.Interfaces.Services;
 using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Authentication;
 
 namespace WebAPI.Controllers;
 
@@ -19,7 +20,7 @@ public class OrderController : ControllerBase
         _orderService = orderService;
     }
 
-    [Authorize(Policy = "Admin, Customer")]
+    [Authorize]
     [HttpGet("{id}/history")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<OrderTransactionsDto>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
@@ -30,7 +31,7 @@ public class OrderController : ControllerBase
         return Ok(orderHistory);
     }
 
-    [Authorize(Policy = "Customer")]
+    [Authorize(Policy = Policies.Customer)]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderDto))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
@@ -41,7 +42,7 @@ public class OrderController : ControllerBase
         return Ok(orderDto);
     }
 
-    [Authorize(Policy = "Admin")]
+    [Authorize(Policy = Policies.Admin)]
     [HttpPost("{id}/update-status")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(OrderDto))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
@@ -53,7 +54,7 @@ public class OrderController : ControllerBase
         return Ok(orderDto);
     }
 
-    [Authorize(Policy = "Admin, Customer")]
+    [Authorize]
     [HttpGet("{id}/items")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<OrderItemDto>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
@@ -64,7 +65,7 @@ public class OrderController : ControllerBase
         return Ok(orderItems);
     }
 
-    [Authorize(Policy = "Admin, Customer")]
+    [Authorize]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<OrderItemDto>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]

@@ -2,6 +2,7 @@ using Application.Dtos.Brands;
 using Application.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Authentication;
 
 namespace WebAPI.Controllers;
 
@@ -26,7 +27,7 @@ public class BrandsController : ControllerBase
         return Ok(brandDtos);
     }
 
-    [Authorize(Policy = "Admin")]
+    [Authorize(Policy = Policies.Admin)]
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BrandDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
@@ -38,7 +39,7 @@ public class BrandsController : ControllerBase
         return Ok(brandDto);
     }
 
-    [Authorize(Policy = "Admin")]
+    [Authorize(Policy = Policies.Admin)]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BrandDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
@@ -49,7 +50,7 @@ public class BrandsController : ControllerBase
         return Ok(brandDto);
     }
 
-    [Authorize(Policy = "Admin")]
+    [Authorize(Policy = Policies.Admin)]
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BrandDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]

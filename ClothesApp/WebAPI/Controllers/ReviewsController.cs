@@ -1,7 +1,9 @@
 using Application.Dtos.Reviews;
 using Application.Interfaces.Services;
+using Infrastructure.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Authentication;
 
 namespace WebAPI.Controllers;
 
@@ -16,13 +18,13 @@ public class ReviewsController : ControllerBase
         _reviewService = reviewService;
     }
 
-    [Authorize(Policy = "Customer")]
+    [Authorize(Policy = Policies.Customer)]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ReviewDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     public async Task<ActionResult> AddProductReview([FromBody] ReviewInputDto reviewInputDto)
     {
-        var userClaimId = User.FindFirst("Id");
+        var userClaimId = User.FindFirst(CustomClaims.Id);
 
         var reviewDto = await _reviewService.Add(reviewInputDto, userClaimId);
 
@@ -62,7 +64,7 @@ public class ReviewsController : ControllerBase
         return Ok(productReviews);
     }
 
-    [Authorize(Policy = "Admin")]
+    [Authorize(Policy = Policies.Admin)]
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ReviewDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
@@ -74,7 +76,7 @@ public class ReviewsController : ControllerBase
         return Ok(reviewDto);
     }
 
-    [Authorize(Policy = "Customer")]
+    [Authorize(Policy = Policies.Customer)]
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ReviewDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
