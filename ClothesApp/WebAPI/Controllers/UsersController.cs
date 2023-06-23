@@ -1,5 +1,9 @@
+using Application;
 using Application.Dtos.Users;
+using Application.Exceptions;
 using Application.Interfaces.Services;
+using Domain.Enums;
+using Infrastructure.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Authentication;
@@ -44,9 +48,20 @@ public class UsersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     public async Task<ActionResult> UpdateUser([FromRoute] long id, [FromBody] UserInputInfoDto userInputInfoDto)
     {
-        var userDto = await _userService.Update(id, userInputInfoDto);
+        var userClaimId = User.FindFirst(CustomClaims.Id);
+        var userId = Convert.ToInt64(userClaimId?.Value);
 
-        return Ok(userDto);
+        var user = await _userService.GetById(userId);
+
+        if (user.UserType == UserType.Admin || user.Id == userId)
+        {
+            var userDto = await _userService.Update(id, userInputInfoDto);
+            return Ok(userDto);
+        }
+        else
+        {
+            throw new BusinessRuleException(Messages.AuthorizationConstraint);
+        }
     }
 
     [AllowAnonymous]

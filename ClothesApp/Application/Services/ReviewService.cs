@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using Application.Dtos.Reviews;
 using Application.Exceptions;
 using Application.Interfaces.Repositories;
@@ -27,7 +26,7 @@ public class ReviewService : IReviewService
         _userRepository = userRepository;
     }
 
-    public async Task<ReviewDto> Add(ReviewInputDto reviewInputDto, Claim userClaimId)
+    public async Task<ReviewDto> Add(ReviewInputDto reviewInputDto, long userId)
     {
         var exist = await _productsRepository.DoesExist(reviewInputDto.ProductId);
 
@@ -50,7 +49,6 @@ public class ReviewService : IReviewService
             throw new BusinessRuleException(Messages.ReviewUniqueConstraint);
         }
 
-        var userId = Convert.ToInt64(userClaimId.Value);
         var bought = await _userRepository.DidUserBuyProduct(userId, reviewInputDto.ProductId);
 
         if (!bought)

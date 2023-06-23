@@ -1,5 +1,8 @@
+using Application;
 using Application.Dtos.Reviews;
+using Application.Exceptions;
 using Application.Interfaces.Services;
+using Domain.Enums;
 using Infrastructure.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,9 +16,12 @@ public class ReviewsController : ControllerBase
 {
     private readonly IReviewService _reviewService;
 
-    public ReviewsController(IReviewService reviewService)
+    private readonly IUserService _userService;
+
+    public ReviewsController(IReviewService reviewService, IUserService userService)
     {
         _reviewService = reviewService;
+        _userService = userService;
     }
 
     [Authorize(Policy = Policies.Customer)]
@@ -25,8 +31,9 @@ public class ReviewsController : ControllerBase
     public async Task<ActionResult> AddProductReview([FromBody] ReviewInputDto reviewInputDto)
     {
         var userClaimId = User.FindFirst(CustomClaims.Id);
+        var userId = Convert.ToInt64(userClaimId?.Value);
 
-        var reviewDto = await _reviewService.Add(reviewInputDto, userClaimId);
+        var reviewDto = await _reviewService.Add(reviewInputDto, userId);
 
         return Ok(reviewDto);
     }
@@ -64,26 +71,51 @@ public class ReviewsController : ControllerBase
         return Ok(productReviews);
     }
 
-    [Authorize(Policy = Policies.Admin)]
+    [Authorize]
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ReviewDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
     public async Task<IActionResult> DeleteReviewById([FromRoute] long id)
     {
-        var reviewDto = await _reviewService.DeleteById(id);
+        var userClaimId = User.FindFirst(CustomClaims.Id);
+        var userId = Convert.ToInt64(userClaimId?.Value);
 
-        return Ok(reviewDto);
+        var user = await _userService.GetById(userId);
+        var review = await _reviewService.GetById(id);
+
+        if (user.UserType == UserType.Admin || review.UserId == userId)
+        {
+            var reviewDto = await _reviewService.DeleteById(id);
+
+            return Ok(reviewDto);
+        }
+        else
+        {
+            throw new BusinessRuleException(Messages.AuthorizationConstraint);
+        }
     }
 
-    [Authorize(Policy = Policies.Customer)]
+    [Authorize]
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ReviewDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     public async Task<ActionResult> UpdateReview([FromRoute] long id, [FromBody] UpdateReviewDto updateReviewDto)
     {
-        var reviewDto = await _reviewService.Update(id, updateReviewDto);
+        var userClaimId = User.FindFirst(CustomClaims.Id);
+        var userId = Convert.ToInt64(userClaimId?.Value);
 
-        return Ok(reviewDto);
+        var user = await _userService.GetById(userId);
+        var review = await _reviewService.GetById(id);
+
+        if (user.UserType == UserType.Admin || review.UserId == userId)
+        {
+            var reviewDto = await _reviewService.Update(id, updateReviewDto);
+            return Ok(reviewDto);
+        }
+        else
+        {
+            throw new BusinessRuleException(Messages.AuthorizationConstraint);
+        }
     }
 }

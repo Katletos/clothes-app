@@ -1,8 +1,11 @@
+using Application;
 using Application.Dtos.OrderItems;
 using Application.Dtos.Orders;
 using Application.Dtos.OrderTransactions;
+using Application.Exceptions;
 using Application.Interfaces.Services;
 using Domain.Enums;
+using Infrastructure.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Authentication;
@@ -15,9 +18,12 @@ public class OrderController : ControllerBase
 {
     private readonly IOrderService _orderService;
 
-    public OrderController(IOrderService orderService)
+    private readonly IUserService _userService;
+
+    public OrderController(IOrderService orderService, IUserService userService)
     {
         _orderService = orderService;
+        _userService = userService;
     }
 
     [Authorize]
@@ -26,9 +32,21 @@ public class OrderController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
     public async Task<ActionResult<IList<OrderDto>>> GetOrderHistory([FromRoute] long id)
     {
-        var orderHistory = await _orderService.GetOrderHistoryByOrderId(id);
+        var userClaimId = User.FindFirst(CustomClaims.Id);
+        var userId = Convert.ToInt64(userClaimId?.Value);
 
-        return Ok(orderHistory);
+        var user = await _userService.GetById(userId);
+        var order = await _orderService.GetById(id);
+
+        if (user.UserType == UserType.Admin || order.UserId == userId)
+        {
+            var orderHistory = await _orderService.GetOrderHistoryByOrderId(id);
+            return Ok(orderHistory);
+        }
+        else
+        {
+            throw new BusinessRuleException(Messages.AuthorizationConstraint);
+        }
     }
 
     [Authorize(Policy = Policies.Customer)]
@@ -60,12 +78,24 @@ public class OrderController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
     public async Task<ActionResult<IList<OrderDto>>> GetOrderItemsForOrder([FromRoute] long id)
     {
-        var orderItems = await _orderService.GetOrderItemsByOrderId(id);
+        var userClaimId = User.FindFirst(CustomClaims.Id);
+        var userId = Convert.ToInt64(userClaimId?.Value);
 
-        return Ok(orderItems);
+        var user = await _userService.GetById(userId);
+        var order = await _orderService.GetById(id);
+
+        if (user.UserType == UserType.Admin || order.UserId == userId)
+        {
+            var orderItems = await _orderService.GetOrderItemsByOrderId(id);
+            return Ok(orderItems);
+        }
+        else
+        {
+            throw new BusinessRuleException(Messages.AuthorizationConstraint);
+        }
     }
 
-    [Authorize]
+    [Authorize(Policy = Policies.Admin)]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<OrderItemDto>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]

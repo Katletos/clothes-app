@@ -1,6 +1,10 @@
+using Application;
 using Application.Dtos.Addresses;
 using Application.Dtos.Users;
+using Application.Exceptions;
 using Application.Interfaces.Services;
+using Domain.Enums;
+using Infrastructure.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Authentication;
@@ -13,9 +17,12 @@ public class AddressController : ControllerBase
 {
     private readonly IAddressService _addressService;
 
-    public AddressController(IAddressService addressService)
+    private readonly IUserService _userService;
+
+    public AddressController(IAddressService addressService, IUserService userService)
     {
         _addressService = addressService;
+        _userService = userService;
     }
 
     [Authorize(Policy = Policies.Customer)]
@@ -47,9 +54,20 @@ public class AddressController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     public async Task<ActionResult> GetAddress([FromRoute] long userId)
     {
-        var addressDto = await _addressService.GetAddresses(userId);
+        var userClaimId = User.FindFirst(CustomClaims.Id);
+        var callingUserId = Convert.ToInt64(userClaimId?.Value);
 
-        return Ok(addressDto);
+        var callingUser = await _userService.GetById(callingUserId);
+
+        if (callingUser.UserType == UserType.Admin || callingUserId == userId)
+        {
+            var addressDto = await _addressService.GetAddresses(userId);
+            return Ok(addressDto);
+        }
+        else
+        {
+            throw new BusinessRuleException(Messages.AuthorizationConstraint);
+        }
     }
 
     [Authorize(Policy = Policies.Customer)]

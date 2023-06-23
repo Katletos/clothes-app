@@ -1,11 +1,10 @@
-using System.Security.Claims;
 using Application.Dtos.Reviews;
 
 namespace Application.Interfaces.Services;
 
 public interface IReviewService
 {
-    Task<ReviewDto> Add(ReviewInputDto reviewInputDto, Claim userClaimId);
+    Task<ReviewDto> Add(ReviewInputDto reviewInputDto, long userId);
 
     Task<ReviewDto> Update(long reviewId, UpdateReviewDto updateReviewDto);
 
