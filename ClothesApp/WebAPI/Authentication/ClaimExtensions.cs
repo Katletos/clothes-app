@@ -4,7 +4,7 @@ using Infrastructure.Authentication;
 
 namespace WebAPI.Authentication;
 
-public static class ClaimExtractor
+public static class ClaimExtensions
 {
     public static long GetUserId(this ClaimsPrincipal user)
     {
