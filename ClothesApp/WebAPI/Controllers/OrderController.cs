@@ -5,7 +5,6 @@ using Application.Dtos.OrderTransactions;
 using Application.Exceptions;
 using Application.Interfaces.Services;
 using Domain.Enums;
-using Infrastructure.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Authentication;
@@ -18,12 +17,9 @@ public class OrderController : ControllerBase
 {
     private readonly IOrderService _orderService;
 
-    private readonly IUserService _userService;
-
-    public OrderController(IOrderService orderService, IUserService userService)
+    public OrderController(IOrderService orderService)
     {
         _orderService = orderService;
-        _userService = userService;
     }
 
     [Authorize]
@@ -32,13 +28,10 @@ public class OrderController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
     public async Task<ActionResult<IList<OrderDto>>> GetOrderHistory([FromRoute] long id)
     {
-        var userClaimId = User.FindFirst(CustomClaims.Id);
-        var userId = Convert.ToInt64(userClaimId?.Value);
-
-        var user = await _userService.GetById(userId);
+        var userInfo = ClaimExtractor.GetUserInfo(User);
         var order = await _orderService.GetById(id);
 
-        if (user.UserType == UserType.Admin || order.UserId == userId)
+        if (userInfo.UserType == UserType.Admin || order.UserId == userInfo.Id)
         {
             var orderHistory = await _orderService.GetOrderHistoryByOrderId(id);
             return Ok(orderHistory);
@@ -78,13 +71,10 @@ public class OrderController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
     public async Task<ActionResult<IList<OrderDto>>> GetOrderItemsForOrder([FromRoute] long id)
     {
-        var userClaimId = User.FindFirst(CustomClaims.Id);
-        var userId = Convert.ToInt64(userClaimId?.Value);
-
-        var user = await _userService.GetById(userId);
+        var userInfo = ClaimExtractor.GetUserInfo(User);
         var order = await _orderService.GetById(id);
 
-        if (user.UserType == UserType.Admin || order.UserId == userId)
+        if (userInfo.UserType == UserType.Admin || order.UserId == userInfo.Id)
         {
             var orderItems = await _orderService.GetOrderItemsByOrderId(id);
             return Ok(orderItems);

@@ -1,6 +1,10 @@
+using System.Text;
 using Application;
+using Domain.Enums;
 using Infrastructure;
 using Infrastructure.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using WebAPI.Authentication;
 using WebAPI.Cors;
 using WebAPI.Middlewares;
@@ -19,15 +23,25 @@ builder.Services.AddCors(options =>
         });
 });
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o =>
+{
+    o.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"])),
+    };
+});
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy(Policies.Admin, policy =>
-        policy.RequireClaim(CustomClaims.Role, Roles.Admin));
+        policy.RequireClaim(CustomClaims.UserType, UserType.Admin.ToString()));
     options.AddPolicy(Policies.Customer, policy =>
-        policy.RequireClaim(CustomClaims.Role, Roles.Customer));
+        policy.RequireClaim(CustomClaims.UserType, UserType.Customer.ToString()));
 });
 
-builder.Services.AddAuthorization();
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure();

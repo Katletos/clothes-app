@@ -3,7 +3,6 @@ using System.Security.Claims;
 using System.Text;
 using Application.Interfaces;
 using Domain.Entities;
-using Domain.Enums;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -20,18 +19,11 @@ public class JwtProvider : IJwtProvider
 
     public string Generate(User user)
     {
-        var role = user.UserType switch
-        {
-            UserType.Customer => Roles.Customer,
-            UserType.Admin => Roles.Admin,
-            _ => throw new ArgumentOutOfRangeException(),
-        };
-
         var claims = new Claim[]
         {
             new(JwtRegisteredClaimNames.Email, user.Email),
             new(CustomClaims.Id, user.Id.ToString()),
-            new(CustomClaims.Role, role),
+            new(CustomClaims.UserType, user.UserType.ToString()),
         };
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);

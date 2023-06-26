@@ -3,7 +3,6 @@ using Application.Dtos.Reviews;
 using Application.Exceptions;
 using Application.Interfaces.Services;
 using Domain.Enums;
-using Infrastructure.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Authentication;
@@ -16,12 +15,9 @@ public class ReviewsController : ControllerBase
 {
     private readonly IReviewService _reviewService;
 
-    private readonly IUserService _userService;
-
-    public ReviewsController(IReviewService reviewService, IUserService userService)
+    public ReviewsController(IReviewService reviewService)
     {
         _reviewService = reviewService;
-        _userService = userService;
     }
 
     [Authorize(Policy = Policies.Customer)]
@@ -30,10 +26,9 @@ public class ReviewsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     public async Task<ActionResult> AddProductReview([FromBody] ReviewInputDto reviewInputDto)
     {
-        var userClaimId = User.FindFirst(CustomClaims.Id);
-        var userId = Convert.ToInt64(userClaimId?.Value);
+        var userInfo = ClaimExtractor.GetUserInfo(User);
 
-        var reviewDto = await _reviewService.Add(reviewInputDto, userId);
+        var reviewDto = await _reviewService.Add(reviewInputDto, userInfo.Id);
 
         return Ok(reviewDto);
     }
@@ -78,13 +73,10 @@ public class ReviewsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
     public async Task<IActionResult> DeleteReviewById([FromRoute] long id)
     {
-        var userClaimId = User.FindFirst(CustomClaims.Id);
-        var userId = Convert.ToInt64(userClaimId?.Value);
-
-        var user = await _userService.GetById(userId);
+        var userInfo = ClaimExtractor.GetUserInfo(User);
         var review = await _reviewService.GetById(id);
 
-        if (user.UserType == UserType.Admin || review.UserId == userId)
+        if (userInfo.UserType == UserType.Admin || review.UserId == userInfo.Id)
         {
             var reviewDto = await _reviewService.DeleteById(id);
 
@@ -102,13 +94,10 @@ public class ReviewsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     public async Task<ActionResult> UpdateReview([FromRoute] long id, [FromBody] UpdateReviewDto updateReviewDto)
     {
-        var userClaimId = User.FindFirst(CustomClaims.Id);
-        var userId = Convert.ToInt64(userClaimId?.Value);
-
-        var user = await _userService.GetById(userId);
+        var userInfo = ClaimExtractor.GetUserInfo(User);
         var review = await _reviewService.GetById(id);
 
-        if (user.UserType == UserType.Admin || review.UserId == userId)
+        if (userInfo.UserType == UserType.Admin || review.UserId == userInfo.Id)
         {
             var reviewDto = await _reviewService.Update(id, updateReviewDto);
             return Ok(reviewDto);
