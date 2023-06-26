@@ -28,10 +28,9 @@ public class OrderController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
     public async Task<ActionResult<IList<OrderDto>>> GetOrderHistory([FromRoute] long id)
     {
-        var userInfo = ClaimExtractor.GetUserInfo(User);
         var order = await _orderService.GetById(id);
 
-        if (userInfo.UserType == UserType.Admin || order.UserId == userInfo.Id)
+        if (User.GetUserType() == UserType.Admin || order.UserId == User.GetUserId())
         {
             var orderHistory = await _orderService.GetOrderHistoryByOrderId(id);
             return Ok(orderHistory);
@@ -71,10 +70,9 @@ public class OrderController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
     public async Task<ActionResult<IList<OrderDto>>> GetOrderItemsForOrder([FromRoute] long id)
     {
-        var userInfo = ClaimExtractor.GetUserInfo(User);
         var order = await _orderService.GetById(id);
 
-        if (userInfo.UserType == UserType.Admin || order.UserId == userInfo.Id)
+        if (User.GetUserType() == UserType.Admin || order.UserId == User.GetUserId())
         {
             var orderItems = await _orderService.GetOrderItemsByOrderId(id);
             return Ok(orderItems);

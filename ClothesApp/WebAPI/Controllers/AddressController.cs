@@ -50,9 +50,7 @@ public class AddressController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     public async Task<ActionResult> GetAddress([FromRoute] long userId)
     {
-        var userInfo = ClaimExtractor.GetUserInfo(User);
-
-        if (userInfo.UserType == UserType.Admin || userInfo.Id == userId)
+        if (User.GetUserType() == UserType.Admin || User.GetUserId() == userId)
         {
             var addressDto = await _addressService.GetAddresses(userId);
             return Ok(addressDto);

@@ -47,9 +47,7 @@ public class UsersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     public async Task<ActionResult> UpdateUser([FromRoute] long id, [FromBody] UserInputInfoDto userInputInfoDto)
     {
-        var userInfo = ClaimExtractor.GetUserInfo(User);
-
-        if (userInfo.UserType == UserType.Admin || userInfo.Id == id)
+        if (User.GetUserType() == UserType.Admin || User.GetUserId() == id)
         {
             var userDto = await _userService.Update(id, userInputInfoDto);
             return Ok(userDto);

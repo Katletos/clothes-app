@@ -26,9 +26,7 @@ public class ReviewsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     public async Task<ActionResult> AddProductReview([FromBody] ReviewInputDto reviewInputDto)
     {
-        var userInfo = ClaimExtractor.GetUserInfo(User);
-
-        var reviewDto = await _reviewService.Add(reviewInputDto, userInfo.Id);
+        var reviewDto = await _reviewService.Add(reviewInputDto, User.GetUserId());
 
         return Ok(reviewDto);
     }
@@ -73,10 +71,9 @@ public class ReviewsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(ProblemDetails))]
     public async Task<IActionResult> DeleteReviewById([FromRoute] long id)
     {
-        var userInfo = ClaimExtractor.GetUserInfo(User);
         var review = await _reviewService.GetById(id);
 
-        if (userInfo.UserType == UserType.Admin || review.UserId == userInfo.Id)
+        if (User.GetUserType() == UserType.Admin || review.UserId == User.GetUserId())
         {
             var reviewDto = await _reviewService.DeleteById(id);
 
@@ -94,10 +91,9 @@ public class ReviewsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     public async Task<ActionResult> UpdateReview([FromRoute] long id, [FromBody] UpdateReviewDto updateReviewDto)
     {
-        var userInfo = ClaimExtractor.GetUserInfo(User);
         var review = await _reviewService.GetById(id);
 
-        if (userInfo.UserType == UserType.Admin || review.UserId == userInfo.Id)
+        if (User.GetUserType() == UserType.Admin || review.UserId == User.GetUserId())
         {
             var reviewDto = await _reviewService.Update(id, updateReviewDto);
             return Ok(reviewDto);
