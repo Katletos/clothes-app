@@ -4,7 +4,7 @@ namespace Application.Interfaces.Services;
 
 public interface IReviewService
 {
-    Task<ReviewDto> Add(ReviewInputDto reviewInputDto);
+    Task<ReviewDto> Add(ReviewInputDto reviewInputDto, long userId);
 
     Task<ReviewDto> Update(long reviewId, UpdateReviewDto updateReviewDto);
 

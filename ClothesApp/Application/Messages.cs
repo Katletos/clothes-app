@@ -55,4 +55,10 @@ public class Messages
     public const string FileUploadConstraint = "File size is more than 50MB";
 
     public const string EmptyFile = "File is empty";
+
+    public const string ReviewAddConstraint = "The user did not purchase this product";
+
+    public const string InvalidPassword = "Invalid password";
+
+    public const string AuthorizationConstraint = "You are not authorised to access this resource";
 }

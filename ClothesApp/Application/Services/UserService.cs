@@ -1,5 +1,6 @@
 using Application.Dtos.Users;
 using Application.Exceptions;
+using Application.Interfaces;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using AutoMapper;
@@ -11,12 +12,15 @@ public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
 
+    private readonly IJwtProvider _jwtProvider;
+
     private readonly IMapper _mapper;
 
-    public UserService(IUserRepository userRepository, IMapper mapper)
+    public UserService(IUserRepository userRepository, IMapper mapper, IJwtProvider jwtProvider)
     {
         _userRepository = userRepository;
         _mapper = mapper;
+        _jwtProvider = jwtProvider;
     }
 
     public async Task<IList<UserDto>> GetAll()
@@ -41,7 +45,7 @@ public class UserService : IUserService
 
         return userDto;
     }
-    
+
     public async Task<UserDto> Add(RegisterUserDto registerUserDto)
     {
         var exist = await _userRepository.DoesExist(registerUserDto.Email);
@@ -88,7 +92,7 @@ public class UserService : IUserService
         return userDto;
     }
 
-    public async Task<bool> Login(UserLoginDto userLoginDto)
+    public async Task<string> Login(UserLoginDto userLoginDto)
     {
         var exist = await _userRepository.DoesExist(userLoginDto.Email);
 
@@ -97,6 +101,15 @@ public class UserService : IUserService
             throw new NotFoundException(Messages.UserNotFound);
         }
 
-        return await _userRepository.Login(userLoginDto);
+        var login = await _userRepository.Login(userLoginDto);
+
+        if (!login)
+        {
+            throw new BusinessRuleException(Messages.InvalidPassword);
+        }
+
+        var user = await _userRepository.GetByEmail(userLoginDto.Email);
+
+        return _jwtProvider.Generate(user);
     }
 }
