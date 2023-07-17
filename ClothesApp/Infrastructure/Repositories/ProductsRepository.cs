@@ -14,6 +14,11 @@ public class ProductsRepository : IProductsRepository
         _dbContext = dbContext;
     }
 
+    public async Task<bool> DoesEnoughQuantity(long productId, long quantity)
+    {
+        return await _dbContext.Products.AnyAsync(p => p.Id == productId && p.Quantity > quantity);
+    }
+
     public async Task<Product> Delete(Product product)
     {
         _dbContext.Remove(product);
@@ -51,6 +56,13 @@ public class ProductsRepository : IProductsRepository
     public async Task<IList<Product>> GetRange(IList<long> ids)
     {
         return await _dbContext.Products.Where(p => ids.Contains(p.Id)).ToListAsync();
+    }
+
+    public async Task UpdateQuantity(long productId, long incDecQuantity)
+    {
+        await _dbContext.Products.Where(p => p.Id == productId)
+            .ExecuteUpdateAsync(s => s.SetProperty(
+                p => p.Quantity, p => p.Quantity + incDecQuantity));
     }
 
     public async Task<Product> Insert(Product product)

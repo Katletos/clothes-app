@@ -68,8 +68,7 @@ public class ProductService : IProductService
         }
 
         var product = _mapper.Map<Product>(productInputDto);
-        var productDto = _mapper.Map<Product, ProductDto>(product, opt =>
-            opt.BeforeMap((src, _) => src.CreatedAt = DateTime.Now));
+        var productDto = _mapper.Map<ProductDto>(product);
         await _productsRepository.Insert(product);
 
         return productDto;

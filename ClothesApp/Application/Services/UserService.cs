@@ -92,7 +92,7 @@ public class UserService : IUserService
         return userDto;
     }
 
-    public async Task<string> Login(UserLoginDto userLoginDto)
+    public async Task<DtoToLocalStorage> Login(UserLoginDto userLoginDto)
     {
         var exist = await _userRepository.DoesExist(userLoginDto.Email);
 
@@ -110,6 +110,10 @@ public class UserService : IUserService
 
         var user = await _userRepository.GetByEmail(userLoginDto.Email);
 
-        return _jwtProvider.Generate(user);
+        return new DtoToLocalStorage()
+        {
+            UserId = user.Id,
+            Token = _jwtProvider.Generate(user),
+        };
     }
 }

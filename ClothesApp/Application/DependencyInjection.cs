@@ -23,7 +23,8 @@ public static class DependencyInjection
         services.AddScoped<ICategoryService, CategoryService>();
         services.AddScoped<ISectionService, SectionService>();
         services.AddScoped<IMediaService, MediaService>();
-        
+        services.AddScoped<ICartItemsService, CartItemsService>();
+
         services.AddAutoMapper(typeof(AppMappingProfile));
 
         return services;

@@ -8,7 +8,7 @@ namespace Infrastructure;
 public class ClothesAppContext : DbContext
 {
     public ClothesAppContext(DbContextOptions<ClothesAppContext> options)
-        :base(options)
+        : base(options)
     {
     }
     public virtual DbSet<Address> Addresses { get; set; }
@@ -32,8 +32,10 @@ public class ClothesAppContext : DbContext
     public virtual DbSet<Section> Sections { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
-    
+
     public virtual DbSet<SectionCategory> SectionCategories { get; set; }
+
+    public virtual DbSet<CartItem> CartItems { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

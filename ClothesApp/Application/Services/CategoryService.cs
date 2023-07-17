@@ -63,7 +63,10 @@ public class CategoryService : ICategoryService
             .Where(b => b.ParentCategoryId == category.Id)
             .ToList();
 
-        foreach (var item in category.Children) item.Children = GetCategoryChildren(allCategories, item);
+        foreach (var item in category.Children)
+        {
+            item.Children = GetCategoryChildren(allCategories, item);
+        }
 
         return category.Children;
     }

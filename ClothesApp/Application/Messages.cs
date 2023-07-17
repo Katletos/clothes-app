@@ -61,4 +61,8 @@ public class Messages
     public const string InvalidPassword = "Invalid password";
 
     public const string AuthorizationConstraint = "You are not authorised to access this resource";
+
+    public const string CartItemNotFound = "Cart item not found";
+
+    public const string NotEnoughQuantity = "Don't enough quantity";
 }

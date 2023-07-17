@@ -38,6 +38,7 @@ public static class DependencyInjection
         services.AddScoped<ISectionRepository, SectionRepository>();
         services.AddScoped<ISectionCategoryRepository, SectionCategoryRepository>();
         services.AddScoped<IMediaRepository, MediaRepository>();
+        services.AddScoped<ICartItemsRepository, CartItemsRepository>();
 
         return services;
     }

@@ -15,8 +15,6 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property(e => e.Id);
         builder.Property(e => e.BrandId).IsRequired();
         builder.Property(e => e.CategoryId).IsRequired();
-        builder.Property(e => e.CreatedAt).IsRequired()
-            .HasColumnType("timestamp without time zone");
         builder.Property(e => e.Name).IsRequired();
         builder.Property(e => e.Price).IsRequired()
             .HasColumnType("money");
