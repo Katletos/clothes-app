@@ -5,8 +5,8 @@ namespace Domain.Entities;
 public class User
 {
     public long Id { get; set; }
-    
-    public UserType UserType { get; set; } 
+
+    public UserType UserType { get; set; }
 
     public string Email { get; set; }
 
@@ -19,6 +19,8 @@ public class User
     public string LastName { get; set; }
 
     public DateTime CreatedAt { get; set; }
+
+    public virtual ICollection<CartItem> CartItems { get; set; }
 
     public virtual ICollection<Address> Addresses { get; set; }
 

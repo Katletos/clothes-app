@@ -14,13 +14,13 @@ public class Product
 
     public long Quantity { get; set; }
 
-    public DateTime CreatedAt { get; set; }
-
     public virtual Brand Brand { get; set; }
 
     public virtual Category Category { get; set; }
 
     public virtual ICollection<Media> Media { get; set; }
+
+    public virtual ICollection<CartItem> CartItems { get; set; }
 
     public virtual ICollection<OrderItem> OrdersItems { get; set; }
 
