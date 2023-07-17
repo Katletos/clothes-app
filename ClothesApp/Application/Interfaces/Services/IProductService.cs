@@ -13,6 +13,6 @@ public interface IProductService
     Task<ProductDto> DeleteById(long id);
 
     Task<IList<ProductDto>> GetProductsBySectionAndCategory(long sectionId, long categoryId);
-    
+
     Task<IList<ProductDto>> GetProductsByBrandId(long brandId);
 }

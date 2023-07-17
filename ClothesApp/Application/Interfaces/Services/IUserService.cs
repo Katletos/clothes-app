@@ -12,5 +12,5 @@ public interface IUserService
 
     Task<UserDto> Update(long userId, UserInputInfoDto userInputInfoDto);
 
-    Task<string> Login(UserLoginDto userLoginDto);
+    Task<DtoToLocalStorage> Login(UserLoginDto userLoginDto);
 }

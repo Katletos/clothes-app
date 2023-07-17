@@ -5,8 +5,10 @@ namespace Application.Interfaces.Repositories;
 
 public interface IProductsRepository : IBaseRepository<Product>
 {
+    Task<bool> DoesEnoughQuantity(long productId, long quantity);
+
     Task<Product> Delete(Product product);
-    
+
     Task<bool> AnyProductOfBrandIdExists(long id);
 
     Task<bool> DoesExist(string name);
@@ -18,4 +20,6 @@ public interface IProductsRepository : IBaseRepository<Product>
     Task<bool> DoesExistRange(IList<long> ids);
 
     Task<IList<Product>> GetRange(IList<long> ids);
+
+    Task UpdateQuantity(long productId, long incDecQuantity);
 }

@@ -6,9 +6,9 @@ public class CustomCorsConfiguration
 
     public readonly static string[] Origins =
     {
-        "http://127.0.0.1:5500",
-        "http://127.0.0.1:5500",
-        "https://127.0.0.1:5500",
-        "https://127.0.0.1:5500",
+        "http://localhost:5500",
+        "http://localhost:5500",
+        "http://localhost:3000",
+        "https://localhost:3000",
     };
 }
