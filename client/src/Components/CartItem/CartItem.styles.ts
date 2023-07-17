@@ -10,10 +10,10 @@ export const Wrapper = styled.div`
     div {
         flex: 1;
     }
-
+    
     .information,
     .buttons {
-         display: flex;
+        display: flex;
         justify-content: space-between;
     }
 

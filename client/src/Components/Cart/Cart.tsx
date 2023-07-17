@@ -1,32 +1,35 @@
 import CartItem from '../CartItem/CartItem';
-
 import Button from '@mui/material/Button';
-
 import { Wrapper } from './Cart.styles';
-
-import { Product } from '../App';
+import { Product, CartItemType } from '../../Types';
+import React from "react";
 
 type Props = {
-    cartItems: Product[];
+    cartItems: CartItemType[];
     addToCart: (clickedItem: Product) => void;
     removeFromCart: (id: number) => void;
+    deleteItemFromCart: (id: number) => void;
 };
 
-const Cart: React.FC<Props> = ({ cartItems, addToCart, removeFromCart}) => {
-    const calculateTotal = (items: Product[]) => 
-        items.reduce((ack: number, item) => ack + item.quantity * item.price, 0);
-
+const Cart: React.FC<Props> = ({ cartItems,
+                                   addToCart,
+                                   removeFromCart,
+                                   deleteItemFromCart
+                                  }) => {
+    const calculateTotal = (items: CartItemType[]) =>
+        items.reduce((ack: number, item) => ack + item.quantity * item.product.price, 0);
 
     return (
         <Wrapper>
             <h2>Your Shopping Cart</h2>
             {cartItems.length === 0 ? <p>No items in cart.</p> : null}
-            {cartItems.map(item => (
+            {cartItems.sort((a, b) => a.productId - b.productId).map(item => (
                 <CartItem 
-                    key={item.id}
+                    key={item.productId}
                     item={item}
                     addToCart={addToCart}
                     removeFromCart={removeFromCart}
+                    deleteItemFromCart={deleteItemFromCart}
                 />
             ))}
             <div>
