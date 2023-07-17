@@ -2,10 +2,10 @@ using Domain.Enums;
 
 namespace Application.Dtos.Orders;
 
-public class OrderDto
+public struct OrderDto
 {
     public long Id { get; set; }
-    
+
     public OrderStatusType OrderStatus { get; set; }
 
     public long UserId { get; set; }

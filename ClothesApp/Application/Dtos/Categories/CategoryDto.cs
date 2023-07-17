@@ -1,6 +1,6 @@
 namespace Application.Dtos.Categories;
 
-public class CategoryDto
+public struct CategoryDto
 {
     public long Id { get; set; }
 

@@ -1,6 +1,6 @@
 namespace Application.Dtos.Categories;
 
-public class CategoryInputDto
+public struct CategoryInputDto
 {
     public long? ParentCategoryId { get; set; }
 

@@ -1,6 +1,6 @@
 namespace Application.Dtos.Sections;
 
-public class SectionInputDto
+public struct SectionInputDto
 {
     public string Name { get; set; }
 }

@@ -1,6 +1,6 @@
 namespace Application.Dtos.Addresses;
 
-public class AddAddressDto
+public struct AddAddressDto
 {
     public long UserId { get; set; }
 

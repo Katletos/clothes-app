@@ -2,7 +2,7 @@ using Application.Dtos.OrderItems;
 
 namespace Application.Dtos.Orders;
 
-public class OrderInputDto
+public struct OrderInputDto
 {
     public long UserId { get; set; }
 

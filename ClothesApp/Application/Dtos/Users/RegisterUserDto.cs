@@ -2,9 +2,9 @@ using Domain.Enums;
 
 namespace Application.Dtos.Users;
 
-public class RegisterUserDto
+public struct RegisterUserDto
 {
-    public UserType UserType { get; set; } 
+    public UserType UserType { get; set; }
 
     public string Email { get; set; }
 

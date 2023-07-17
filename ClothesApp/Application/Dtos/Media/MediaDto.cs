@@ -1,6 +1,6 @@
 namespace Application.Dtos.Media;
 
-public class MediaDto
+public struct MediaDto
 {
     public long Id { get; set; }
 

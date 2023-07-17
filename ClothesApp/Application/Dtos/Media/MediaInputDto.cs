@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Application.Dtos.Media;
 
-public class MediaInputDto
+public struct MediaInputDto
 {
     public long ProductId { get; set; }
 

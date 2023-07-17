@@ -1,6 +1,6 @@
 namespace Application.Dtos.Products;
 
-public class ProductInputDto
+public struct ProductInputDto
 {
     public long? BrandId { get; set; }
 

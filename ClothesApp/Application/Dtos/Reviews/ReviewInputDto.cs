@@ -1,9 +1,9 @@
 namespace Application.Dtos.Reviews;
 
-public class ReviewInputDto
+public struct ReviewInputDto
 {
     public long ProductId { get; set; }
- 
+
     public long UserId { get; set; }
 
     public short Rating { get; set; }

@@ -1,11 +1,9 @@
-using Domain.Enums;
-
 namespace Application.Dtos.Users;
 
-public class UserInputInfoDto
+public struct UserInputInfoDto
 {
     public string Email { get; set; }
-    
+
     public string Phone { get; set; }
 
     public string FirstName { get; set; }

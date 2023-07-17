@@ -1,6 +1,6 @@
 namespace Application.Dtos.Reviews;
 
-public class UpdateReviewDto
+public struct UpdateReviewDto
 {
     public short Rating { get; set; }
 

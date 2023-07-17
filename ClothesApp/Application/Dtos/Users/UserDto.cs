@@ -2,11 +2,11 @@ using Domain.Enums;
 
 namespace Application.Dtos.Users;
 
-public class UserDto
+public struct UserDto
 {
     public long Id { get; set; }
-    
-    public UserType UserType { get; set; } 
+
+    public UserType UserType { get; set; }
 
     public string Email { get; set; }
 

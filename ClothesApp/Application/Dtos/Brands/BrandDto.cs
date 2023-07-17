@@ -1,6 +1,6 @@
 namespace Application.Dtos.Brands;
 
-public class BrandDto
+public struct BrandDto
 {
     public long Id { get; set; }
 

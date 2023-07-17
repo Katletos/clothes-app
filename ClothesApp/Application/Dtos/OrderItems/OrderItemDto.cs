@@ -1,6 +1,6 @@
 namespace Application.Dtos.OrderItems;
 
-public class OrderItemDto
+public struct OrderItemDto
 {
     public long ProductId { get; set; }
 

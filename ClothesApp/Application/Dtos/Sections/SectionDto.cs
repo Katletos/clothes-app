@@ -1,6 +1,6 @@
 namespace Application.Dtos.Sections;
 
-public class SectionDto
+public struct SectionDto
 {
     public long Id { get; set; }
 
