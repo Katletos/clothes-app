@@ -1,5 +1,4 @@
 using Application.Dtos.Products;
-using Application.Dtos.Reviews;
 using Application.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,15 +18,26 @@ public class ProductsController : ControllerBase
     }
 
     [AllowAnonymous]
+    [HttpGet("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
+    public async Task<ActionResult> GetProductById([FromRoute] long id)
+    {
+        var productDto = await _productService.GetById(id);
+
+        return Ok(productDto);
+    }
+
+    [AllowAnonymous]
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<ReviewDto>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<ProductDto>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     public async Task<ActionResult> GetProductsBySectionAndCategory([FromQuery] long sectionId,
         [FromQuery] long categoryId)
     {
-        var reviewDto = await _productService.GetProductsBySectionAndCategory(sectionId, categoryId);
+        var productDtos = await _productService.GetProductsBySectionAndCategory(sectionId, categoryId);
 
-        return Ok(reviewDto);
+        return Ok(productDtos);
     }
 
     [Authorize(Policy = Policies.Admin)]

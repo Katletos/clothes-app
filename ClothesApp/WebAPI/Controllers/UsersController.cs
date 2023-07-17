@@ -71,12 +71,12 @@ public class UsersController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("/login")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DtoToLocalStorage))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
     public async Task<ActionResult> LoginUser([FromBody] UserLoginDto userLoginDto)
     {
-        var token = await _userService.Login(userLoginDto);
+        var dtoToLocalStorage = await _userService.Login(userLoginDto);
 
-        return Ok(token);
+        return Ok(dtoToLocalStorage);
     }
 }
