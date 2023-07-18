@@ -6,12 +6,11 @@ import React from "react";
 
 type Props = {
     item: CartItemType;
-    addToCart: (clickedItem: Product) => void;
-    removeFromCart: (id: number) => void;
-    deleteItemFromCart: (id: number) => void;
+    updateCartItem: (productId: number, newQuantity: number) => void;
+    deleteItemFromCart: (productId: number) => void;
 }
 
-const CartItem: React.FC<Props> = ({item, addToCart, removeFromCart, deleteItemFromCart}) => (
+const CartItem: React.FC<Props> = ({item, updateCartItem, deleteItemFromCart}) => (
     <Wrapper>
         <div>
             <h3>{item.product.name}</h3>
@@ -29,7 +28,7 @@ const CartItem: React.FC<Props> = ({item, addToCart, removeFromCart, deleteItemF
                     size="small"
                     disableElevation
                     variant="contained"
-                    onClick={() => removeFromCart(item.productId)}
+                    onClick={() => updateCartItem(item.productId, item.quantity - 1)}
                     >
                         -
                 </Button>
@@ -38,7 +37,7 @@ const CartItem: React.FC<Props> = ({item, addToCart, removeFromCart, deleteItemF
                     size="small"
                     disableElevation
                     variant="contained"
-                    onClick={() => addToCart(item.product)}
+                    onClick={() => updateCartItem(item.productId, item.quantity + 1)}
                     >
                         +
                 </Button>

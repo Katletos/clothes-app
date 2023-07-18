@@ -1,20 +1,26 @@
 import styled from "styled-components";
 
 export const Wrapper = styled.div`
+    margin: auto;
     display: flex;
     justify-content: space-between;
     flex-direction: column;
-    width: 100%;
+    max-width: 27%;
     border: 1px solid lightblue;
     border-radius: 20px;
-    height: 100%;
-    
+  
     button {
         border-radius: 0 0 20px 20px;
     }
 
+    .row {
+        display: flex;
+        flex-direction: row;
+    }
+  
     img {
-        max-height: 250px;
+        max-height: 300px;
+        max-width: 300px;
         object-fit: cover;
         border-radius: 20px 20px 0 0;
     }

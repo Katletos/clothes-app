@@ -6,16 +6,11 @@ import React from "react";
 
 type Props = {
     cartItems: CartItemType[];
-    addToCart: (clickedItem: Product) => void;
-    removeFromCart: (id: number) => void;
-    deleteItemFromCart: (id: number) => void;
+    updateCartItem: (productId: number, newQuantity: number) => void;
+    deleteItemFromCart: (productId: number) => void;
 };
 
-const Cart: React.FC<Props> = ({ cartItems,
-                                   addToCart,
-                                   removeFromCart,
-                                   deleteItemFromCart
-                                  }) => {
+const Cart: React.FC<Props> = ({ cartItems, updateCartItem, deleteItemFromCart }) => {
     const calculateTotal = (items: CartItemType[]) =>
         items.reduce((ack: number, item) => ack + item.quantity * item.product.price, 0);
 
@@ -27,8 +22,7 @@ const Cart: React.FC<Props> = ({ cartItems,
                 <CartItem 
                     key={item.productId}
                     item={item}
-                    addToCart={addToCart}
-                    removeFromCart={removeFromCart}
+                    updateCartItem={updateCartItem}
                     deleteItemFromCart={deleteItemFromCart}
                 />
             ))}

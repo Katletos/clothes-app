@@ -17,8 +17,8 @@ export const ShopPage = () => {
         navigate("/login");
     }
 
-    const token = JSON.parse(localStorage.getItem("user") || "").token;
-    const userId = JSON.parse(localStorage.getItem("user") || "").userId;
+    const token: string = JSON.parse(localStorage.getItem("user") || "").token;
+    const userId: number = JSON.parse(localStorage.getItem("user") || "").userId;
 
     const [cartOpen, setCartOpen] = useState(false);
     const [connection, setConnection] = useState<null | signalR.HubConnection>(null);
@@ -26,11 +26,8 @@ export const ShopPage = () => {
     const handleAddToCart = async (clickedItem: Product) => {
         try {
             await axios.post(
-                `http://localhost:5103/api/cart`,
+                `http://localhost:5103/api/cart/${userId}/items/${clickedItem.id}`,
                 {
-                    quantity: 1,
-                    productId: clickedItem.id,
-                    userId: userId,
                 },
                 {
                     headers: {
@@ -43,14 +40,11 @@ export const ShopPage = () => {
         }
     };
 
-    const handleRemoveFromCart = async (id: number) => {
+    const handleUpdateCartItem = async (productId: number, newQuantity: number) => {
         try {
             await axios.put(
-                `http://localhost:5103/api/cart`,
+                `http://localhost:5103/api/cart/${userId}/items/${productId}?newQuantity=${newQuantity}`,
                 {
-                    quantity: 1,
-                    productId: id,
-                    userId: userId,
                 },
                 {
                     headers: {
@@ -66,16 +60,11 @@ export const ShopPage = () => {
     const getTotalItems = (items: CartItemType[]) =>
         items.reduce((ack: number, items) => ack + items.quantity, 0);
 
-    const handleDropItemFromCart = async (id: number) => {
+    const handleDeleteItemFromCart = async (productId: number) => {
         try {
             await axios.delete(
-                `http://localhost:5103/api/cart`,
+                `http://localhost:5103/api/cart/${userId}/items/${productId}`,
                 {
-                    data: {
-                        quantity: 0,
-                        productId: id,
-                        userId: userId,
-                    },
                     headers: {
                         Authorization: `Bearer ${token}`,
                     }
@@ -128,14 +117,6 @@ export const ShopPage = () => {
                     .catch(function (err) {
                         return console.error(err.toString());
                     });
-                    // hubConnection.invoke("GetReservedQuantity", productId)
-                    //     .catch(function (err) {
-                    //         return console.error(err.toString());
-                    //     });
-                    // hubConnection.invoke("GetAvailableQuantity", productId)
-                    //     .catch(function (err) {
-                    //         return console.error(err.toString());
-                    //     });
                 })
                 .catch((error) => console.log(error));
 
@@ -181,9 +162,8 @@ export const ShopPage = () => {
             <Drawer anchor='right' open={cartOpen} onClose={() => setCartOpen(false)}>
                 <Cart
                     cartItems={cartItems}
-                    addToCart={handleAddToCart}
-                    removeFromCart={handleRemoveFromCart}
-                    deleteItemFromCart={handleDropItemFromCart}
+                    updateCartItem={handleUpdateCartItem}
+                    deleteItemFromCart={handleDeleteItemFromCart}
                 />
             </Drawer>
             <StyledButton onClick={() => setCartOpen(true)}>
