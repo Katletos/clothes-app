@@ -1,12 +1,12 @@
-import { Wrapper } from './Product.styles';
-import { useParams, useBeforeUnload} from 'react-router-dom';
+import {Wrapper} from './Product.styles';
+import {useBeforeUnload, useParams} from 'react-router-dom';
 import {CartItemType, Product} from '../../Types';
-import { useState, useEffect } from "react";
-import { useQuery } from "react-query";
+import {useEffect, useState} from "react";
+import {useQuery} from "react-query";
 import * as signalR from '@microsoft/signalr';
+import {LogLevel} from '@microsoft/signalr';
 import {Badge, Drawer, LinearProgress} from "@mui/material";
-import  ProductOnOwnPage from "../../Components/ProductOnOwnPage/ProductOnOwnPage";
-import {LogLevel} from "@microsoft/signalr";
+import ProductOnOwnPage from "../../Components/ProductOnOwnPage/ProductOnOwnPage";
 import axios from "../../axiosConfig";
 import Cart from "../../Components/Cart/Cart";
 import {StyledButton} from "../Shop/Shop.styles";
@@ -28,9 +28,8 @@ export const ProductPage = () => {
     const handleAddToCart = async (clickedItem: Product) => {
         try {
             await axios.post(
-                `http://localhost:5103/api/cart/${userId}/items/${clickedItem.id}`,
-                {
-                },
+                `http://localhost:5103/api/cart/${userId}/items?productId=${clickedItem.id}`,
+                {},
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -149,7 +148,7 @@ export const ProductPage = () => {
         } catch (error) {
             console.error(`Error: ${error}`);
         }
-    }, []);
+    },);
 
     useBeforeUnload(() => {
         connection?.invoke("LeaveCart", cartItems.map((item) => item.productId),userId)

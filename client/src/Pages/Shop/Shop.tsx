@@ -1,15 +1,15 @@
-import { Product, CartItemType } from "../../Types";
-import { useState, useEffect } from "react";
-import { useQuery } from "react-query";
-import { Drawer, LinearProgress, Grid, Badge } from "@mui/material";
+import {CartItemType, Product} from "../../Types";
+import {useEffect, useState} from "react";
+import {useQuery} from "react-query";
+import {Badge, Drawer, Grid, LinearProgress} from "@mui/material";
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import { Wrapper, StyledButton } from "./Shop.styles";
-import Cart  from "../../Components/Cart/Cart";
+import {StyledButton, Wrapper} from "./Shop.styles";
+import Cart from "../../Components/Cart/Cart";
 import ShopItem from "../../Components/ProductItem/Product";
 import axios from '../../axiosConfig';
 import {useBeforeUnload, useNavigate} from "react-router-dom";
-import {LogLevel} from "@microsoft/signalr";
 import * as signalR from "@microsoft/signalr";
+import {LogLevel} from "@microsoft/signalr";
 
 export const ShopPage = () => {
     const navigate = useNavigate();
@@ -26,9 +26,8 @@ export const ShopPage = () => {
     const handleAddToCart = async (clickedItem: Product) => {
         try {
             await axios.post(
-                `http://localhost:5103/api/cart/${userId}/items/${clickedItem.id}`,
-                {
-                },
+                `http://localhost:5103/api/cart/${userId}/items?productId=${clickedItem.id}`,
+                {},
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
