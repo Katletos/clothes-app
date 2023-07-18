@@ -1,6 +1,5 @@
 using System.Security.Claims;
 using Domain.Enums;
-using Infrastructure.Authentication;
 
 namespace WebAPI.Authentication;
 

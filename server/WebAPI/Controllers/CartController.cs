@@ -5,11 +5,11 @@ using Application.Interfaces.Services;
 using Domain.Entities;
 using Domain.Enums;
 using Hangfire;
-using Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using WebAPI.Authentication;
+using WebAPI.Options;
 using WebAPI.Services;
 
 namespace WebAPI.Controllers;
@@ -65,7 +65,7 @@ public class CartController : ControllerBase
 
             BackgroundJob.Schedule(
                 () => _realTimeService.DeleteExpiredCartItem(productId, userId),
-                TimeSpan.FromSeconds(_reservationOptions.ReservationTimeMinutes));
+                TimeSpan.FromMinutes(_reservationOptions.ReservationTimeMinutes));
 
             return Ok(cartItem);
         }

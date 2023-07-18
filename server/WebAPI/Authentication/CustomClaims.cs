@@ -1,4 +1,4 @@
-namespace Infrastructure.Authentication;
+namespace WebAPI.Authentication;
 
 public abstract class CustomClaims
 {

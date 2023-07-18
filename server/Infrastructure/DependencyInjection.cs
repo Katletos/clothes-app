@@ -1,6 +1,4 @@
-using Application.Interfaces;
 using Application.Interfaces.Repositories;
-using Infrastructure.Authentication;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -22,13 +20,6 @@ public static class DependencyInjection
         services.AddDbContext<ClothesAppContext>(options =>
             options.UseNpgsql(connectionString));
 
-        services.Configure<JwtOptions>(
-            configuration.GetSection(JwtOptions.SectionName));
-
-        services.Configure<ReservationOptions>(
-            configuration.GetSection(ReservationOptions.SectionName));
-
-        services.AddScoped<IJwtProvider, JwtProvider>();
         services.AddScoped<IProductsRepository, ProductsRepository>();
         services.AddScoped<IBrandsRepository, BrandsRepository>();
         services.AddScoped<IReviewsRepository, ReviewsRepository>();

@@ -1,4 +1,4 @@
-namespace Infrastructure.Authentication;
+namespace WebAPI.Options;
 
 public class JwtOptions
 {

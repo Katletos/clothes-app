@@ -5,8 +5,9 @@ using Application.Interfaces;
 using Domain.Entities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using WebAPI.Options;
 
-namespace Infrastructure.Authentication;
+namespace WebAPI.Authentication;
 
 public class JwtProvider : IJwtProvider
 {

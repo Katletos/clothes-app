@@ -1,25 +1,41 @@
 using System.Text;
 using Application;
+using Application.Interfaces;
 using Domain.Enums;
 using Hangfire;
 using Infrastructure;
-using Infrastructure.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using WebAPI.Authentication;
-using WebAPI.Cors;
 using WebAPI.Hubs;
 using WebAPI.Middlewares;
+using WebAPI.Options;
 using WebAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.Configure<ReservationOptions>(
+    builder.Configuration.GetSection(ReservationOptions.SectionName));
+
+builder.Services.Configure<JwtOptions>(
+    builder.Configuration.GetSection(JwtOptions.SectionName));
+
+var corsOptions = builder
+    .Configuration
+    .GetSection(CorsOptions.SectionName)
+    .Get<CorsOptions>();
+
+var jwtOptions = builder
+    .Configuration
+    .GetSection(JwtOptions.SectionName)
+    .Get<JwtOptions>();
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(CustomCorsConfiguration.Name,
+    options.AddPolicy(corsOptions.Name,
         policy =>
         {
-            policy.WithOrigins(CustomCorsConfiguration.Origins)
+            policy.WithOrigins(corsOptions.Origins)
                 .AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowCredentials();
@@ -34,7 +50,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidateIssuerSigningKey = true,
         ValidateIssuer = false,
         ValidateAudience = false,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"])),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey)),
     };
 });
 builder.Services.AddAuthorization(options =>
@@ -51,6 +67,7 @@ builder.Services.AddHangfire(config => config
     .UseRecommendedSerializerSettings()
     .UseInMemoryStorage()
 );
+
 builder.Services.AddHangfireServer();
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 builder.Services.AddApplication();
@@ -61,6 +78,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddSingleton<ProductViewsService>();
 builder.Services.AddScoped<IRealTimeService, RealTimeService>();
+builder.Services.AddScoped<IJwtProvider, JwtProvider>();
 
 var app = builder.Build();
 
@@ -70,7 +88,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors(CustomCorsConfiguration.Name);
+app.UseCors(corsOptions.Name);
 app.UseHttpsRedirection();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseAuthentication();
