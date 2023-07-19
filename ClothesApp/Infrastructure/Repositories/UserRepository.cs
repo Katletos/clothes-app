@@ -45,6 +45,11 @@ public class UserRepository : IUserRepository
         return await _dbContext.Users.AnyAsync(u => u.Id == id);
     }
 
+    public async Task<bool> DidUserBuyProduct(long userId, long productId)
+    {
+        return await _dbContext.OrdersItems.AnyAsync(oi => oi.ProductId == productId && oi.Order.UserId == userId);
+    }
+
     public async Task<bool> AreSameEmail(long userId, string email)
     {
         return await _dbContext.Users.AnyAsync(u => u.Email == email && u.Id != userId);
@@ -66,5 +71,10 @@ public class UserRepository : IUserRepository
     public Task<bool> Login(UserLoginDto userLoginDto)
     {
         return _dbContext.Users.AnyAsync(u => u.Email == userLoginDto.Email && u.Password == userLoginDto.Password);
+    }
+
+    public async Task<User> GetByEmail(string email)
+    {
+        return await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
     }
 }

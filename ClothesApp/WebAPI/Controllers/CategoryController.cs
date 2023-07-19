@@ -1,7 +1,9 @@
 using Application.Dtos.Categories;
 using Application.Dtos.SectionCategories;
 using Application.Interfaces.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Authentication;
 
 namespace WebAPI.Controllers;
 
@@ -16,6 +18,7 @@ public class CategoryController : ControllerBase
         _categoryService = categoryService;
     }
 
+    [AllowAnonymous]
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IList<CategoryDto>))]
     public async Task<ActionResult> GetTopLevelCategories()
@@ -25,6 +28,7 @@ public class CategoryController : ControllerBase
         return Ok(categories);
     }
 
+    [AllowAnonymous]
     [HttpGet("tree")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CategoryTree))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
@@ -35,6 +39,7 @@ public class CategoryController : ControllerBase
         return Ok(tree);
     }
 
+    [Authorize(Policy = Policies.Admin)]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CategoryDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
@@ -45,6 +50,7 @@ public class CategoryController : ControllerBase
         return Ok(categoryDto);
     }
 
+    [Authorize(Policy = Policies.Admin)]
     [HttpPut("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CategoryDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
@@ -55,6 +61,7 @@ public class CategoryController : ControllerBase
         return Ok(categoryDto);
     }
 
+    [Authorize(Policy = Policies.Admin)]
     [HttpPut("{id}/link-to-section/{sectionId}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(SectionCategoryDto))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(ProblemDetails))]
