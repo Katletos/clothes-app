@@ -64,7 +64,7 @@ public class AddressServiceTests : BaseTest
 
         var address = await Context.Addresses.FirstAsync(a =>
             a.UserId == testCase.AddAddressDto.UserId && a.AddressLine == testCase.AddAddressDto.AddressLine);
-        var addressDto = Mapper.Map<AddressDto>(address);
+        var addressDto = Mapper.Map<AddAddressDto>(address);
         addressDto.Should().BeEquivalentTo(testCase.AddAddressDto);
     }
 

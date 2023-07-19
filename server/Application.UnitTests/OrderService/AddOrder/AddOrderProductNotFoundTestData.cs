@@ -6,9 +6,9 @@ using Domain.Enums;
 
 namespace UnitTests.OrderService.AddOrder;
 
-public class AddOrderTestData : TestDataBase<AddOrderTestCase>
+public class AddOrderProductNotFoundTestData : TestDataBase<AddOrderProductNotFoundTestCase>
 {
-    protected override IEnumerable<AddOrderTestCase> GetTestData()
+    protected override IEnumerable<AddOrderProductNotFoundTestCase> GetTestData()
     {
         var faker = new Faker();
         var userId = faker.Random.Long(1);
@@ -20,13 +20,13 @@ public class AddOrderTestData : TestDataBase<AddOrderTestCase>
 
         var product = new Product()
         {
-            Id = productId,
+            Id = productId + 1,
             Price = productPrice,
             Quantity = productQuantity,
             BrandId = faker.Random.Long(1),
             Name = faker.Commerce.ProductName(),
         };
-        yield return new AddOrderTestCase()
+        yield return new AddOrderProductNotFoundTestCase()
         {
             Description = "Add order with one product",
             User = new User()

@@ -3,7 +3,7 @@ using Domain.Entities;
 
 namespace UnitTests.OrderService.AddOrder;
 
-public class AddOrderTestCase
+public class AddOrderProductNotFoundTestCase
 {
     public string Description { get; set; }
 

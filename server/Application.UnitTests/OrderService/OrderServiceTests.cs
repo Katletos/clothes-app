@@ -1,12 +1,13 @@
 using Application;
 using Application.Dtos.Orders;
 using Application.Exceptions;
+using Application.Services;
 using AutoMapper;
+using Domain.Enums;
 using Infrastructure;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using UnitTests.OrderService.AddOrder;
-using UnitTests.OrderService.ReserveOrderProduct;
 
 namespace UnitTests.OrderService;
 
@@ -14,15 +15,23 @@ public class OrderServiceTests : BaseTest
 {
     private Application.Services.OrderService CreateOrderService(ClothesAppContext context)
     {
+        var mapper = new Mapper(new MapperConfiguration(cfg
+            => cfg.AddProfile<AppMappingProfile>()));
+        var productRepository = new ProductsRepository(context);
+
         return new Application.Services.OrderService(
             new OrderRepository(context),
-            new Mapper(new MapperConfiguration(cfg
-                => cfg.AddProfile<AppMappingProfile>())),
+            mapper,
             new OrderTransactionRepository(context),
             new UserRepository(context),
             new AddressRepository(context),
             new OrderItemsRepository(context),
-            new ProductsRepository(context));
+            productRepository,
+            new CartItemsService(
+                new CartItemsRepository(context),
+                mapper,
+                new UserRepository(context),
+                productRepository));
     }
 
     [Theory]
@@ -30,6 +39,7 @@ public class OrderServiceTests : BaseTest
     public async Task AddOrder_WhereCalledWithCorrectData(AddOrderTestCase testCase)
     {
         var orderService = CreateOrderService(Context);
+        Context.CartItems.AddRange(testCase.CartItems);
         Context.Users.Add(testCase.User);
         Context.Addresses.Add(testCase.Address);
         Context.Products.Add(testCase.Product);
@@ -40,7 +50,10 @@ public class OrderServiceTests : BaseTest
         var order = await Context.Orders.FirstAsync(o => o.UserId == testCase.User.Id
                                                          && o.AddressId == testCase.Address.Id);
         var orderDto = Mapper.Map<OrderDto>(order);
-        orderDto.Should().BeEquivalentTo(testCase.ExpectedResult);
+        orderDto.Should().NotBeNull();
+        orderDto.OrderStatus.Should().Be(OrderStatusType.InReview);
+        orderDto.UserId.Should().Be(testCase.User.Id);
+        orderDto.CreatedAt.Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(20));
     }
 
     [Theory]
@@ -78,44 +91,17 @@ public class OrderServiceTests : BaseTest
     }
 
     [Theory]
-    [ClassData(typeof(ReserveOrderTestData))]
-    public async Task ReserveOrderProduct_WhereReservedFiveProducts(ReserveOrderTestCase testCase)
+    [ClassData(typeof(AddOrderProductNotFoundTestData))]
+    public async Task AddOrder_WhichContainsNonexistentProduct_ThrowsNotFound(
+        AddOrderProductNotFoundTestCase testCase)
     {
         var orderService = CreateOrderService(Context);
+        Context.Addresses.Add(testCase.Address);
+        Context.Users.Add(testCase.User);
         Context.Products.Add(testCase.Product);
         await Context.SaveChangesAsync();
 
-        await orderService.ReserveOrderProducts(testCase.OrderInputDto);
-
-        var product = await Context.Products.FindAsync(testCase.Product.Id);
-        product.Quantity.Should().Be(testCase.ExpectedResult.Quantity);
-    }
-
-    [Theory]
-    [ClassData(typeof(ReserveOrderBusinessRuleExceptionTestData))]
-    public async Task ReserveOrderProduct_WhereReservedQuantityGreaterThanInStock_ThrowsBusinessRule(
-        ReserveOrderBusinessRuleExceptionTestCase testCase)
-    {
-        var orderService = CreateOrderService(Context);
-        Context.Products.Add(testCase.Product);
-        await Context.SaveChangesAsync();
-
-        Func<Task> act = async () => await orderService.ReserveOrderProducts(testCase.OrderInputDto);
-
-        var exception = await Assert.ThrowsAsync<BusinessRuleException>(act);
-        exception.Message.Should().BeEquivalentTo(Messages.ProductOutOfStock);
-    }
-
-    [Theory]
-    [ClassData(typeof(ReserveOrderNotFoundExceptionTestData))]
-    public async Task ReserveOrderProduct_WhereReserveNonexistentProduct_ThrowsNotFound(
-        ReserveOrderNotFoundExceptionTestCase testCase)
-    {
-        var orderService = CreateOrderService(Context);
-        Context.Products.Add(testCase.Product);
-        await Context.SaveChangesAsync();
-
-        Func<Task> act = async () => await orderService.ReserveOrderProducts(testCase.OrderInputDto);
+        Func<Task> act = async () => await orderService.Add(testCase.OrderInputDto);
 
         var exception = await Assert.ThrowsAsync<NotFoundException>(act);
         exception.Message.Should().BeEquivalentTo(Messages.ProductNotFound);

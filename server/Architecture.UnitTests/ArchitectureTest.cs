@@ -1,6 +1,7 @@
+using FluentAssertions;
 using NetArchTest.Rules;
 
-namespace UnitTests.Architecture;
+namespace Architecture.UnitTests;
 
 public class ArchitectureTest
 {
