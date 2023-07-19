@@ -24,12 +24,14 @@ public class OrderService : IOrderService
 
     private readonly IOrderTransactionsRepository _transactionsRepository;
 
+    private readonly ICartItemsService _cartItemsService;
+
     private readonly IMapper _mapper;
 
     public OrderService(IOrderRepository orderRepository, IMapper mapper,
         IOrderTransactionsRepository transactionsRepository, IUserRepository userRepository,
         IAddressRepository addressRepository, IOrderItemsRepository orderItemsRepository,
-        IProductsRepository productsRepository)
+        IProductsRepository productsRepository, ICartItemsService cartItemsService)
     {
         _orderRepository = orderRepository;
         _mapper = mapper;
@@ -38,6 +40,7 @@ public class OrderService : IOrderService
         _addressRepository = addressRepository;
         _orderItemsRepository = orderItemsRepository;
         _productsRepository = productsRepository;
+        _cartItemsService = cartItemsService;
     }
 
     public async Task<IList<OrderDto>> GetAll()
@@ -78,12 +81,51 @@ public class OrderService : IOrderService
             throw new BusinessRuleException(Messages.AddressUserConstraint);
         }
 
-        var orderItems = await ReserveOrderProducts(orderInputDto);
-        var order = _mapper.Map<OrderInputDto, Order>(orderInputDto);
+        var productIds = orderInputDto.OrderItems.Select(oi => oi.ProductId).ToList();
+        exist = await _productsRepository.DoesExistRange(productIds);
 
-        order.Price = CalcOrderPrice(orderItems);
-        order.OrdersItems = orderItems;
+        if (!exist)
+        {
+            throw new NotFoundException(Messages.ProductNotFound);
+        }
+
+        var order = new Order()
+        {
+            OrdersItems = new List<OrderItem>(),
+        };
+        var orderItem = new OrderItem();
+        var cartItems = await _cartItemsService.GetUserCartItems(orderInputDto.UserId);
+
+        var doesSameItems = cartItems.Select(ci => ci.ProductId).ToHashSet().SetEquals(productIds.ToHashSet());
+        if (!doesSameItems)
+        {
+            throw new NotFoundException(Messages.CartItemNotFound);
+        }
+
+        foreach (var cartItem in cartItems)
+        {
+            var lessThanHalf = cartItem.Quantity > cartItem.Product.Quantity;
+
+            if (lessThanHalf)
+            {
+                throw new BusinessRuleException(Messages.MoreThanInStockQuantity);
+            }
+
+            orderItem.ProductId = cartItem.ProductId;
+            orderItem.Quantity = cartItem.Quantity;
+            orderItem.Price = cartItem.Product.Price;
+            orderItem.OrderId = order.Id;
+
+            order.OrdersItems.Add(orderItem);
+
+            await _cartItemsService.Delete(cartItem.ProductId, orderInputDto.UserId);
+        }
+
+        order.Price = CalcOrderPrice(order.OrdersItems);
         order.OrderStatus = OrderStatusType.InReview;
+        order.AddressId = orderInputDto.AddressId;
+        order.UserId = orderInputDto.UserId;
+        order.CreatedAt = DateTime.Now;
         await _orderRepository.Insert(order);
 
         var orderDto = _mapper.Map<OrderDto>(order);
@@ -91,7 +133,7 @@ public class OrderService : IOrderService
         return orderDto;
     }
 
-    private decimal CalcOrderPrice(IList<OrderItem> orderItems)
+    private decimal CalcOrderPrice(ICollection<OrderItem> orderItems)
     {
         decimal sum = 0;
         foreach (var item in orderItems)
@@ -100,43 +142,6 @@ public class OrderService : IOrderService
         }
 
         return sum;
-    }
-
-    public async Task<IList<OrderItem>> ReserveOrderProducts(OrderInputDto orderInputDto)
-    {
-        var orderItems = _mapper.Map<IList<OrderItem>>(orderInputDto.OrderItems);
-
-        var productIds = new List<long>();
-        foreach (var item in orderItems)
-        {
-            productIds.Add(item.ProductId);
-        }
-
-        var exist = await _productsRepository.DoesExistRange(productIds);
-        if (!exist)
-        {
-            throw new NotFoundException(Messages.ProductNotFound);
-        }
-
-        var products = await _productsRepository.GetRange(productIds);
-        for (var i = 0; i < products.Count; i++)
-        {
-            var enough = products[i].Quantity - orderItems[i].Quantity >= 0;
-
-            if (!enough)
-            {
-                throw new BusinessRuleException(Messages.ProductOutOfStock);
-            }
-
-            products[i].Quantity -= orderItems[i].Quantity;
-
-            orderItems[i].Price = products[i].Price;
-            orderItems[i].ProductId = products[i].Id;
-        }
-
-        await _productsRepository.UpdateRange(products);
-
-        return orderItems;
     }
 
     public async Task<OrderDto> UpdateStatus(long orderId, OrderStatusType newOrderStatus)

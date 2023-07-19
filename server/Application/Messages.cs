@@ -67,4 +67,6 @@ public class Messages
     public const string NotEnoughQuantity = "Don't enough quantity";
 
     public const string CartItemAlreadyExist = "Cart item already exist";
+
+    public const string MoreThanInStockQuantity = "You can’t submit an order with quantity more than in stock quantity";
 }

@@ -8,6 +8,7 @@ using Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebAPI.Authentication;
+using WebAPI.Services;
 
 namespace WebAPI.Controllers;
 
@@ -17,9 +18,12 @@ public class OrderController : ControllerBase
 {
     private readonly IOrderService _orderService;
 
-    public OrderController(IOrderService orderService)
+    private readonly IRealTimeService _realTimeService;
+
+    public OrderController(IOrderService orderService, IRealTimeService realTimeService)
     {
         _orderService = orderService;
+        _realTimeService = realTimeService;
     }
 
     [Authorize]
@@ -48,6 +52,14 @@ public class OrderController : ControllerBase
     public async Task<ActionResult<IList<OrderDto>>> CreateOrderForCustomer([FromBody] OrderInputDto orderInputDto)
     {
         var orderDto = await _orderService.Add(orderInputDto);
+
+        await _realTimeService.UpdateCart(orderInputDto.UserId);
+        foreach (var item in orderInputDto.OrderItems)
+        {
+            await Task.WhenAll(
+                _realTimeService.UpdateReservedQuantity(item.ProductId),
+                _realTimeService.UpdateAvailableQuantity(item.ProductId));
+        }
 
         return Ok(orderDto);
     }

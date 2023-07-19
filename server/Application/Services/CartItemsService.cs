@@ -73,7 +73,6 @@ public class CartItemsService : ICartItemsService
 
         product.Quantity -= 1;
         await _productsRepository.Update(product);
-        // await _productsRepository.UpdateQuantity(productId, product.Quantity - 1);
         CartItem cartItem = new()
         {
             Quantity = 1,

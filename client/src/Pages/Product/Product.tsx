@@ -25,6 +25,34 @@ export const ProductPage = () => {
     const token = JSON.parse(localStorage.getItem("user") || "").token;
     const userId = JSON.parse(localStorage.getItem("user") || "").userId;
 
+    const handleSubmitOrder = async (cartItems: CartItemType[]) => {
+        try {
+            const orderItems = cartItems.map(item => {
+                return {
+                    quantity: item.quantity,
+                    productId: item.productId
+                };
+            } );
+
+            console.log(orderItems);
+            await axios.post(
+                `http://localhost:5103/api/orders`,
+                {
+                    userId: userId,
+                    addressId: 1,
+                    orderItems: orderItems,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+        } catch (error) {
+            console.error(`Error: ${error}`);
+        }
+    };
+    
     const handleAddToCart = async (clickedItem: Product) => {
         try {
             await axios.post(
@@ -182,6 +210,7 @@ export const ProductPage = () => {
                     cartItems={cartItems}
                     updateCartItem={handleUpdateCartItem}
                     deleteItemFromCart={handleDeleteItemFromCart}
+                    submitOrder={handleSubmitOrder}
                 />
             </Drawer>
             <StyledButton onClick={() => setCartOpen(true)}>

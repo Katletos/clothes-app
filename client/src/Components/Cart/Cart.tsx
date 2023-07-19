@@ -8,9 +8,10 @@ type Props = {
     cartItems: CartItemType[];
     updateCartItem: (productId: number, newQuantity: number) => void;
     deleteItemFromCart: (productId: number) => void;
+    submitOrder: (cartItems: CartItemType[]) => void;
 };
 
-const Cart: React.FC<Props> = ({ cartItems, updateCartItem, deleteItemFromCart }) => {
+const Cart: React.FC<Props> = ({ cartItems, updateCartItem, deleteItemFromCart, submitOrder}) => {
     const calculateTotal = (items: CartItemType[]) =>
         items.reduce((ack: number, item) => ack + item.quantity * item.product.price, 0);
 
@@ -33,6 +34,7 @@ const Cart: React.FC<Props> = ({ cartItems, updateCartItem, deleteItemFromCart }
                             size="large"
                             disableElevation
                             variant="contained"
+                            onClick={() => submitOrder(cartItems)}
                             >
                                 submit
                         </Button> 

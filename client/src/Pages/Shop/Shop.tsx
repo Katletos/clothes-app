@@ -153,6 +153,34 @@ export const ShopPage = () => {
         'products',
         getProducts);
 
+    const handleSubmitOrder = async (cartItems: CartItemType[]) => {
+        try {
+            const orderItems = cartItems.map(item => {
+                return {
+                    quantity: item.quantity,
+                    productId: item.productId
+                };
+            } );
+
+            console.log(orderItems);
+            await axios.post(
+                `http://localhost:5103/api/orders`,
+                {
+                    userId: userId,
+                    addressId: 1,
+                    orderItems: orderItems,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+        } catch (error) {
+            console.error(`Error: ${error}`);
+        }
+    };
+
     if (isLoading) return <LinearProgress />;
     if (error) return <div>Something went wrong</div>
 
@@ -163,7 +191,7 @@ export const ShopPage = () => {
                     cartItems={cartItems}
                     updateCartItem={handleUpdateCartItem}
                     deleteItemFromCart={handleDeleteItemFromCart}
-                />
+                    submitOrder={handleSubmitOrder}/>
             </Drawer>
             <StyledButton onClick={() => setCartOpen(true)}>
                 <Badge badgeContent={getTotalItems(cartItems)} color='error'>
